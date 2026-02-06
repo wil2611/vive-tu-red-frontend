@@ -1,0 +1,2 @@
+:HL["/vive-tu-red-frontend/_next/static/chunks/8d77d38f5a991a76.css","style"]
+0:{"buildId":"FHZX9e3tOOC5aB0otnWWu","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"rutas","paramType":null,"paramKey":"rutas","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
