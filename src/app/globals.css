@@ -645,8 +645,372 @@ label {
   margin: 32px 0;
 }
 
+/* ── Redes Visualizer ── */
+.redes-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 0;
+  min-height: 640px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: white;
+}
+.redes-panel-form {
+  padding: 28px 28px 24px;
+  background: #faf9f5;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  max-height: 780px;
+}
+.redes-panel-graph {
+  background: #f5f0e1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.redes-progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.redes-progress-track {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.redes-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1D3E2A, #00555A);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+.redes-progress-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #5a7d66;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  white-space: nowrap;
+}
+.redes-form-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #1D3E2A;
+  margin: 0 0 8px;
+  font-family: Georgia, serif;
+}
+.redes-form-desc {
+  font-size: 14px;
+  color: #5a7d66;
+  line-height: 1.65;
+  margin: 0 0 24px;
+}
+.redes-field {
+  margin-bottom: 20px;
+}
+.redes-field label {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #1D3E2A;
+  margin-bottom: 8px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.redes-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.redes-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  background: white;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: #5a7d66;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.redes-chip:hover {
+  border-color: #1D3E2A;
+  color: #1D3E2A;
+}
+.redes-chip-active {
+  border-color: #1D3E2A;
+  background: #1D3E2A;
+  color: white;
+}
+.redes-chip-active:hover {
+  color: white;
+}
+.redes-strength-label {
+  font-size: 13px;
+  font-weight: 800;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-style: italic;
+}
+.redes-slider {
+  width: 100%;
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 8px 0 4px;
+  height: 6px;
+}
+.redes-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #5a7d66;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.redes-add-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 2px dashed var(--border);
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: #1D3E2A;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 20px;
+}
+.redes-add-btn:hover:not(:disabled) {
+  border-color: #1D3E2A;
+  background: rgba(29, 62, 42, 0.04);
+}
+.redes-add-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.redes-nodes-section {
+  margin-bottom: 20px;
+}
+.redes-nodes-header {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #5a7d66;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  margin-bottom: 12px;
+}
+.redes-nodes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.redes-node-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.redes-node-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.redes-node-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.redes-node-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1D3E2A;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.redes-node-rel {
+  font-size: 11px;
+  color: #5a7d66;
+}
+.redes-node-badge {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.redes-node-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #d4cdaf;
+  font-size: 13px;
+  padding: 2px;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+.redes-node-remove:hover {
+  color: #C96A4A;
+}
+.redes-disclaimer {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  background: rgba(0, 85, 90, 0.06);
+  border-radius: 10px;
+  border: 1px solid rgba(0, 85, 90, 0.12);
+  margin-top: auto;
+}
+.redes-disclaimer p {
+  font-size: 12px;
+  color: #00555A;
+  line-height: 1.6;
+  margin: 0;
+}
+.redes-disclaimer strong {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.redes-legend {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: white;
+  border-radius: 12px;
+  padding: 14px 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  z-index: 2;
+  min-width: 160px;
+}
+.redes-legend-title {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #5a7d66;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  margin-bottom: 10px;
+}
+.redes-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: #1D3E2A;
+  margin-bottom: 6px;
+}
+.redes-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.redes-graph-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  min-height: 400px;
+}
+.redes-graph-empty {
+  text-align: center;
+  color: #5a7d66;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.redes-graph-empty p {
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+}
+.redes-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #1D3E2A 0%, #00555A 100%);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.5px;
+}
+.redes-status-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.redes-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: redes-pulse 2s infinite;
+}
+@keyframes redes-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.redes-status-right {
+  opacity: 0.8;
+}
+.redes-graph-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
+  .redes-layout {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .redes-panel-form {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    max-height: none;
+    padding: 24px 20px;
+  }
+  .redes-panel-graph {
+    min-height: 400px;
+  }
+  .redes-legend {
+    position: static;
+    margin: 16px 16px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    padding: 12px 14px;
+  }
+  .redes-legend-title {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+  .redes-legend-item {
+    margin-bottom: 0;
+  }
   .hero {
     padding: 36px 24px;
   }
