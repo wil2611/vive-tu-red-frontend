@@ -59,14 +59,14 @@ const infographics = [
 export default function RecursosPage() {
   return (
     <div>
-      {/* Header */}
-      <section className="container">
-        <div className="page-header">
-          <span className="badge" style={{ background: "rgba(220,161,93,0.2)", color: "#DCA15D", marginBottom: 12 }}>
-            Materiales educativos
-          </span>
-          <h1>Recursos</h1>
-          <p>
+      {/* Hero */}
+      <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
+        <div className="container">
+          <span className="hero-badge">Materiales educativos</span>
+          <h1 style={{ fontSize: "clamp(2rem, 4vw, 2.6rem)", fontWeight: 800, color: "#1D3E2A", margin: "16px 0 12px", fontFamily: "Georgia, serif", lineHeight: 1.15 }}>
+            Recursos
+          </h1>
+          <p style={{ fontSize: "1.05rem", lineHeight: 1.75, color: "#5a7d66", maxWidth: 600, margin: 0 }}>
             Repositorio de materiales educativos y metodológicos derivados del proyecto
             #ViveTuRed. Descarga cartillas, guías e infografías.
           </p>
@@ -74,7 +74,8 @@ export default function RecursosPage() {
       </section>
 
       {/* Documentos descargables */}
-      <section className="container" style={{ paddingTop: 16 }}>
+      <section style={{ background: "var(--bg)" }}>
+      <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <div className="accent-bar" />
         <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
           Documentos descargables
@@ -132,12 +133,12 @@ export default function RecursosPage() {
             </div>
           ))}
         </div>
+      </div>
       </section>
 
-      <hr className="divider" style={{ maxWidth: 1120, margin: "32px auto" }} />
-
       {/* Infografías y material visual */}
-      <section className="container" style={{ paddingTop: 0 }}>
+      <section style={{ background: "#f5f0e1" }}>
+      <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <div className="accent-bar" />
         <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
           Infografías y material visual
@@ -177,12 +178,12 @@ export default function RecursosPage() {
             </div>
           ))}
         </div>
+      </div>
       </section>
 
-      <hr className="divider" style={{ maxWidth: 1120, margin: "32px auto" }} />
-
       {/* Recursos metodológicos */}
-      <section className="container" style={{ paddingTop: 0, paddingBottom: 24 }}>
+      <section style={{ background: "var(--bg)" }}>
+      <div className="container" style={{ paddingTop: 48, paddingBottom: 56 }}>
         <div className="accent-bar" />
         <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
           Recursos metodológicos
@@ -208,6 +209,7 @@ export default function RecursosPage() {
             </div>
           ))}
         </div>
+      </div>
       </section>
     </div>
   );

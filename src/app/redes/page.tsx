@@ -53,14 +53,14 @@ export default function RedesPage() {
 
   return (
     <div>
-      {/* Header */}
-      <section className="container">
-        <div className="page-header">
-          <span className="badge" style={{ background: "rgba(0,85,90,0.2)", color: "#7dd3d7", marginBottom: 12 }}>
-            Herramienta educativa
-          </span>
-          <h1>Visualizador de redes</h1>
-          <p>
+      {/* Hero */}
+      <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
+        <div className="container">
+          <span className="hero-badge">Herramienta educativa</span>
+          <h1 style={{ fontSize: "clamp(2rem, 4vw, 2.6rem)", fontWeight: 800, color: "#1D3E2A", margin: "16px 0 12px", fontFamily: "Georgia, serif", lineHeight: 1.15 }}>
+            Visualizador de redes
+          </h1>
+          <p style={{ fontSize: "1.05rem", lineHeight: 1.75, color: "#5a7d66", maxWidth: 600, margin: 0 }}>
             Explora y visualiza tus redes personales de apoyo de forma gráfica.
             Tus datos son completamente anonimizados y no se almacenan.
           </p>
@@ -68,7 +68,8 @@ export default function RedesPage() {
       </section>
 
       {step === "intro" && (
-        <section className="container" style={{ paddingTop: 16 }}>
+        <section style={{ background: "var(--bg)" }}>
+        <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
           {/* Disclaimer */}
           <div className="notice notice-info" style={{ marginBottom: 32, maxWidth: 760 }}>
             <span style={{ fontSize: 20 }}>ℹ️</span>
@@ -137,11 +138,13 @@ export default function RedesPage() {
               Comenzar →
             </button>
           </div>
+        </div>
         </section>
       )}
 
       {step === "form" && (
-        <section className="container" style={{ paddingTop: 16 }}>
+        <section style={{ background: "#f5f0e1" }}>
+        <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
           <div style={{ maxWidth: 760 }}>
             <div className="accent-bar" />
             <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 24, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
@@ -272,11 +275,13 @@ export default function RedesPage() {
               </p>
             )}
           </div>
+        </div>
         </section>
       )}
 
       {step === "result" && (
-        <section className="container" style={{ paddingTop: 16 }}>
+        <section style={{ background: "var(--bg)" }}>
+        <div className="container" style={{ paddingTop: 48, paddingBottom: 56 }}>
           <div style={{ maxWidth: 860 }}>
             <div className="accent-bar" />
             <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 24, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
@@ -467,6 +472,7 @@ export default function RedesPage() {
               </button>
             </div>
           </div>
+        </div>
         </section>
       )}
     </div>

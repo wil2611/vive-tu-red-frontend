@@ -1,315 +1,221 @@
 import Link from "next/link";
 
-const features = [
+const lines = [
   {
     icon: "📖",
-    title: "Libro digital",
-    desc: "Lee el cuento de ficción #ViveTuRed dividido en 3 episodios. Disponible en web y descargable en PDF.",
+    title: "Libro Digital",
+    desc: "Lee el cuento de ficción #ViveTuRed, una herramienta de investigación y narrativa. Disponible en 3 episodios.",
     href: "/libro",
+    cta: "Leer ahora",
     color: "#C96A4A",
-    bg: "rgba(201, 106, 74, 0.08)",
+    gradient: "linear-gradient(135deg, #C96A4A 0%, #d4836a 100%)",
   },
   {
     icon: "🛤️",
-    title: "Rutas de atención",
-    desc: "Directorio de instituciones, contactos de emergencia e información sobre procesos de atención.",
+    title: "Rutas de Atención",
+    desc: "Directorio de instituciones y contactos de emergencia para situaciones de Violencia Basada en Género.",
     href: "/rutas",
+    cta: "Ver directorio",
     color: "#00555A",
-    bg: "rgba(0, 85, 90, 0.06)",
+    gradient: "linear-gradient(135deg, #00555A 0%, #007a80 100%)",
   },
   {
     icon: "📚",
-    title: "Recursos educativos",
-    desc: "Cartillas, guías, infografías y materiales metodológicos derivados del proyecto.",
+    title: "Recursos Educativos",
+    desc: "Cartillas, guías, infografías y materiales metodológicos creados para educadores y familias.",
     href: "/recursos",
+    cta: "Acceder",
     color: "#DCA15D",
-    bg: "rgba(220, 161, 93, 0.1)",
+    gradient: "linear-gradient(135deg, #DCA15D 0%, #e4b87e 100%)",
   },
-  {
-    icon: "🔗",
-    title: "Visualizador de redes",
-    desc: "Herramienta educativa para visualizar tus redes personales de forma gráfica y anonimizada.",
-    href: "/redes",
-    color: "#1D3E2A",
-    bg: "rgba(29, 62, 42, 0.06)",
-  },
+];
+
+const bulletPoints = [
+  { text: "Fomento de la cultura digital responsable" },
+  { text: "Prevención de violencia en cada espacio digital" },
+  { text: "Recursos creativos para la sensibilización" },
 ];
 
 export default function HomePage() {
   return (
     <div>
-      {/* ── Hero Banner ── */}
-      <section className="container">
-        <div className="hero" style={{ marginTop: 8 }}>
-          <div style={{ position: "relative", zIndex: 1, maxWidth: 640 }}>
-            <span
-              className="badge"
-              style={{
-                background: "rgba(220, 161, 93, 0.2)",
-                color: "#DCA15D",
-                marginBottom: 16,
-              }}
-            >
-              Proyecto de investigación–creación
-            </span>
-            <h1
-              style={{
-                fontSize: "clamp(2rem, 5vw, 3rem)",
-                fontWeight: 800,
-                margin: "16px 0",
-                lineHeight: 1.15,
-                fontFamily: "ui-sans-serif, system-ui, sans-serif",
-              }}
-            >
-              #ViveTuRed
-            </h1>
-            <p
-              style={{
-                fontSize: "clamp(1rem, 2vw, 1.15rem)",
-                lineHeight: 1.8,
-                color: "rgba(255,255,255,0.85)",
-                marginBottom: 28,
-                maxWidth: 560,
-              }}
-            >
-              Sensibilización y prevención de Violencia Basada en Género (VBG) en
-              entornos universitarios. Conoce las redes de apoyo, accede a recursos
-              educativos y navega el libro digital.
-            </p>
+      {/* ── Hero ── */}
+      <section className="hero-section">
+        <div className="container">
+          <div className="hero-grid">
+            <div className="hero-content">
+              <span className="hero-badge">Investigación–creación y prevención</span>
+              <h1 className="hero-title">
+                Transformando realidades a través de la red.
+              </h1>
+              <p className="hero-desc">
+                Sensibilización social, concienciación y creación de redes de apoyo
+                para navegar el entorno universitario con propósito y seguridad.
+              </p>
+              <div className="hero-actions">
+                <Link className="btn btn-primary" href="/sobre">
+                  Descubre el Proyecto →
+                </Link>
+                <Link className="btn btn-outline" href="/rutas">
+                  Rutas de Apoyo
+                </Link>
+              </div>
+              <div className="hero-trust">
+                <div className="hero-trust-avatars">
+                  <div className="hero-trust-avatar" style={{ background: "#C96A4A" }}>V</div>
+                  <div className="hero-trust-avatar" style={{ background: "#00555A" }}>T</div>
+                  <div className="hero-trust-avatar" style={{ background: "#DCA15D" }}>R</div>
+                </div>
+                <span className="hero-trust-text">Redes de Apoyo<br /><small>Comunidad universitaria</small></span>
+              </div>
+            </div>
 
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <Link className="btn btn-primary" href="/libro">
-                📖 Leer el libro
-              </Link>
-              <Link className="btn btn-gold" href="/rutas">
-                🛤️ Rutas de atención
-              </Link>
-              <Link className="btn" href="/recursos" style={{ background: "rgba(255,255,255,0.15)", color: "white", border: "1px solid rgba(255,255,255,0.25)" }}>
-                📚 Recursos
-              </Link>
+            <div className="hero-visual">
+              <div className="hero-card-main">
+                <div className="hero-card-inner">
+                  <span style={{ fontSize: 14, opacity: 0.85, letterSpacing: 1 }}>#ViveTuRed</span>
+                  <div style={{ fontSize: 28, fontWeight: 300, lineHeight: 1.3, marginTop: 12 }}>
+                    Comunidad
+                  </div>
+                  <div style={{ fontSize: 13, opacity: 0.6, marginTop: 8 }}>redes que protegen</div>
+                </div>
+              </div>
+              <div className="hero-card-float">
+                <div style={{ fontSize: 20, marginBottom: 4 }}>🤝</div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: "#1D3E2A" }}>Red activa</div>
+                <div style={{ fontSize: 11, color: "#5a7d66" }}>Apoyo mutuo</div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Mensaje de sensibilización ── */}
-      <section className="container" style={{ paddingTop: 48 }}>
-        <div
-          style={{
-            textAlign: "center",
-            maxWidth: 700,
-            margin: "0 auto",
-          }}
-        >
-          <div className="accent-bar" style={{ margin: "0 auto 16px" }} />
-          <h2
-            style={{
-              fontSize: "1.6rem",
-              fontWeight: 800,
-              color: "#1D3E2A",
-              marginBottom: 12,
-              fontFamily: "ui-sans-serif, system-ui, sans-serif",
-            }}
-          >
-            Las redes de apoyo salvan vidas
-          </h2>
-          <p
-            style={{
-              fontSize: "1.05rem",
-              lineHeight: 1.8,
-              color: "#5a7d66",
-            }}
-          >
-            Reconocer y fortalecer nuestras redes personales es un paso fundamental
-            para prevenir la violencia basada en género. Este proyecto busca que cada
-            persona pueda identificar, comprender y activar sus redes de apoyo.
-          </p>
+      {/* ── Misión / About ── */}
+      <section style={{ background: "#f5f0e1" }}>
+      <div className="container" style={{ paddingTop: 72, paddingBottom: 48 }}>
+        <div className="mission-grid">
+          <div className="mission-visual">
+            <div className="mission-image-block">
+              <div className="mission-image-main">
+                <span style={{ fontSize: 48 }}>📖</span>
+              </div>
+              <div className="mission-script">
+                <em style={{ fontFamily: "Georgia, serif", fontSize: 20, color: "#1D3E2A", lineHeight: 1.4 }}>
+                  Colectivo de<br />Investigación
+                </em>
+              </div>
+            </div>
+          </div>
+          <div className="mission-content">
+            <span className="badge badge-teal" style={{ marginBottom: 12 }}>Sobre #ViveTuRed</span>
+            <h2 className="section-title" style={{ fontSize: "1.75rem", marginBottom: 16 }}>
+              Un puente entre la investigación y la acción creativa.
+            </h2>
+            <p style={{ lineHeight: 1.8, color: "#5a7d66", marginBottom: 24 }}>
+              Somos un colectivo dedicado a la investigación social que busca
+              entender y mejorar nuestras interacciones en el entorno universitario.
+              A través de todas las herramientas, talleres y materiales de apoyo,
+              construimos un espacio seguro para todos.
+            </p>
+            <div className="mission-bullets">
+              {bulletPoints.map((bp) => (
+                <div key={bp.text} className="mission-bullet">
+                  <div className="mission-bullet-icon">✓</div>
+                  <span>{bp.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
+      </div>
       </section>
 
-      {/* ── Secciones principales ── */}
-      <section className="container" style={{ paddingTop: 48 }}>
-        <h2
-          className="section-title"
-          style={{
-            textAlign: "center",
-            marginBottom: 8,
-            fontFamily: "ui-sans-serif, system-ui, sans-serif",
-          }}
-        >
-          Explora el proyecto
-        </h2>
-        <p
-          className="section-subtitle"
-          style={{ textAlign: "center", margin: "0 auto 32px" }}
-        >
-          Accede a los diferentes espacios del repositorio digital #ViveTuRed.
-        </p>
+      {/* ── Líneas de acción ── */}
+      <section style={{ background: "var(--bg)" }}>
+      <div className="container" style={{ paddingTop: 64, paddingBottom: 48 }}>
+        <div style={{ textAlign: "center", marginBottom: 40 }}>
+          <h2 className="section-title" style={{ marginBottom: 8 }}>
+            Nuestras Líneas de Acción
+          </h2>
+          <p className="section-subtitle" style={{ margin: "0 auto" }}>
+            Accede a herramientas diseñadas para informar, proteger y empoderar a
+            nuestra comunidad en el ecosistema universitario.
+          </p>
+        </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: 20,
-          }}
-        >
-          {features.map((f) => (
-            <Link key={f.href} href={f.href} className="card" style={{ display: "block" }}>
-              <div
-                style={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: 12,
-                  background: f.bg,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 22,
-                  marginBottom: 16,
-                }}
-              >
-                {f.icon}
+        <div className="lines-grid">
+          {lines.map((item) => (
+            <Link key={item.href} href={item.href} className="line-card">
+              <div className="line-card-image" style={{ background: item.gradient }}>
+                <span style={{ fontSize: 36 }}>{item.icon}</span>
               </div>
-              <h3
-                style={{
-                  fontWeight: 700,
-                  fontSize: 17,
-                  color: f.color,
-                  marginBottom: 8,
-                  fontFamily: "ui-sans-serif, system-ui, sans-serif",
-                }}
-              >
-                {f.title}
-              </h3>
-              <p style={{ fontSize: 14, lineHeight: 1.7, color: "#5a7d66", margin: 0 }}>
-                {f.desc}
-              </p>
+              <div className="line-card-body">
+                <h3 className="line-card-title" style={{ color: item.color }}>
+                  {item.title}
+                </h3>
+                <p className="line-card-desc">{item.desc}</p>
+                <span className="line-card-link" style={{ color: item.color }}>
+                  {item.cta} →
+                </span>
+              </div>
             </Link>
           ))}
         </div>
+      </div>
       </section>
 
-      {/* ── Sobre el proyecto (resumen) ── */}
-      <section className="container" style={{ paddingTop: 56 }}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: 32,
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <div className="accent-bar" />
-            <h2
-              style={{
-                fontSize: "1.5rem",
-                fontWeight: 800,
-                color: "#1D3E2A",
-                marginBottom: 12,
-                fontFamily: "ui-sans-serif, system-ui, sans-serif",
-              }}
-            >
-              Sobre el proyecto
-            </h2>
-            <p style={{ lineHeight: 1.8, color: "#5a7d66", marginBottom: 20 }}>
-              #ViveTuRed es un proyecto de investigación–creación que busca
-              sensibilizar a la comunidad universitaria sobre la Violencia Basada en
-              Género, promoviendo el reconocimiento y fortalecimiento de las redes de
-              apoyo personales e institucionales.
-            </p>
-            <Link className="btn btn-outline" href="/sobre">
-              Conocer más →
-            </Link>
+      {/* ── Redes (extra card) ── */}
+      <section style={{ background: "#f5f0e1" }}>
+      <div className="container" style={{ paddingTop: 40, paddingBottom: 40 }}>
+        <Link href="/redes" className="card redes-card">
+          <div className="redes-card-inner">
+            <div>
+              <span style={{ fontSize: 28, marginRight: 12 }}>🔗</span>
+              <h3 style={{ display: "inline", fontWeight: 700, fontSize: 17, color: "#1D3E2A" }}>
+                Visualizador de Redes
+              </h3>
+              <p style={{ fontSize: 14, lineHeight: 1.7, color: "#5a7d66", margin: "8px 0 0" }}>
+                Herramienta educativa para mapear y visualizar tus redes personales de forma gráfica y anonimizada.
+              </p>
+            </div>
+            <span className="btn btn-secondary" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+              Explorar →
+            </span>
           </div>
-
-          <div
-            style={{
-              background: "linear-gradient(135deg, rgba(29,62,42,0.05), rgba(0,85,90,0.05))",
-              borderRadius: 20,
-              padding: 32,
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 20,
-            }}
-          >
-            {[
-              { label: "Episodios", value: "3", sub: "del cuento digital" },
-              { label: "Instituciones", value: "5+", sub: "aliadas al proyecto" },
-              { label: "Recursos", value: "10+", sub: "materiales educativos" },
-              { label: "Enfoque", value: "VBG", sub: "prevención y acción" },
-            ].map((stat) => (
-              <div key={stat.label} style={{ textAlign: "center" }}>
-                <div
-                  style={{
-                    fontSize: 28,
-                    fontWeight: 800,
-                    color: "#C96A4A",
-                    fontFamily: "ui-sans-serif, system-ui, sans-serif",
-                  }}
-                >
-                  {stat.value}
-                </div>
-                <div
-                  style={{
-                    fontSize: 13,
-                    color: "#5a7d66",
-                    fontFamily: "ui-sans-serif, system-ui, sans-serif",
-                  }}
-                >
-                  {stat.sub}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        </Link>
+      </div>
       </section>
 
       {/* ── CTA final ── */}
-      <section className="container" style={{ paddingTop: 56, paddingBottom: 24 }}>
-        <div
-          style={{
-            background: "linear-gradient(135deg, #00555A, #1D3E2A)",
-            borderRadius: 20,
-            padding: "40px 32px",
-            textAlign: "center",
-            color: "white",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "1.5rem",
-              fontWeight: 800,
-              marginBottom: 12,
-              fontFamily: "ui-sans-serif, system-ui, sans-serif",
-            }}
-          >
-            ¿Necesitas orientación o apoyo?
+      <section style={{ background: "var(--bg)" }}>
+      <div className="container" style={{ paddingTop: 64, paddingBottom: 40 }}>
+        <div className="cta-block">
+          <h2 className="cta-title">
+            Tu bienestar es nuestra prioridad.
           </h2>
-          <p
-            style={{
-              color: "rgba(255,255,255,0.8)",
-              maxWidth: 480,
-              margin: "0 auto 24px",
-              lineHeight: 1.7,
-            }}
-          >
-            Consulta las rutas de atención institucional o comunícate con nosotros
-            a través del formulario de contacto.
+          <p className="cta-desc">
+            Únete a nuestra red de investigación y sé parte del cambio. Juntos
+            podemos construir un ecosistema universitario más humano, consciente y
+            seguro.
           </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <Link className="btn btn-primary" href="/rutas">
-              Ver rutas de atención
+          <div className="cta-actions">
+            <Link className="btn btn-primary" href="/contacto">
+              Contáctanos
             </Link>
             <Link
               className="btn"
-              href="/contacto"
-              style={{ background: "rgba(255,255,255,0.15)", color: "white", border: "1px solid rgba(255,255,255,0.25)" }}
+              href="/sobre"
+              style={{
+                background: "rgba(255,255,255,0.15)",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.3)",
+              }}
             >
-              Contacto
+              Ver Investigación
             </Link>
           </div>
         </div>
+      </div>
       </section>
     </div>
   );

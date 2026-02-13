@@ -55,14 +55,14 @@ const institutions = [
 export default function RutasPage() {
   return (
     <div>
-      {/* Header */}
-      <section className="container">
-        <div className="page-header">
-          <span className="badge" style={{ background: "rgba(201,106,74,0.2)", color: "#e4b87e", marginBottom: 12 }}>
-            Apoyo institucional
-          </span>
-          <h1>Rutas de atención</h1>
-          <p>
+      {/* Hero */}
+      <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
+        <div className="container">
+          <span className="hero-badge">Apoyo institucional</span>
+          <h1 style={{ fontSize: "clamp(2rem, 4vw, 2.6rem)", fontWeight: 800, color: "#1D3E2A", margin: "16px 0 12px", fontFamily: "Georgia, serif", lineHeight: 1.15 }}>
+            Rutas de atención
+          </h1>
+          <p style={{ fontSize: "1.05rem", lineHeight: 1.75, color: "#5a7d66", maxWidth: 600, margin: 0 }}>
             Directorio de instituciones, contactos de emergencia e información sobre
             procesos de atención y acompañamiento para víctimas de VBG.
           </p>
@@ -70,7 +70,8 @@ export default function RutasPage() {
       </section>
 
       {/* Contactos de emergencia */}
-      <section className="container" style={{ paddingTop: 16 }}>
+      <section style={{ background: "var(--bg)" }}>
+      <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <div className="accent-bar" />
         <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
           Contactos de emergencia
@@ -109,12 +110,12 @@ export default function RutasPage() {
             </div>
           ))}
         </div>
+      </div>
       </section>
 
-      <hr className="divider" style={{ maxWidth: 1120, margin: "32px auto" }} />
-
       {/* Directorio de instituciones */}
-      <section className="container" style={{ paddingTop: 0 }}>
+      <section style={{ background: "#f5f0e1" }}>
+      <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <div className="accent-bar" />
         <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
           Directorio de instituciones de atención
@@ -171,12 +172,12 @@ export default function RutasPage() {
             </div>
           ))}
         </div>
+      </div>
       </section>
 
-      <hr className="divider" style={{ maxWidth: 1120, margin: "32px auto" }} />
-
       {/* Información sobre procesos */}
-      <section className="container" style={{ paddingTop: 0, paddingBottom: 24 }}>
+      <section style={{ background: "var(--bg)" }}>
+      <div className="container" style={{ paddingTop: 48, paddingBottom: 56 }}>
         <div className="accent-bar" />
         <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 24, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
           ¿Cómo funcionan los procesos de atención?
@@ -242,6 +243,7 @@ export default function RutasPage() {
             </p>
           </div>
         </div>
+      </div>
       </section>
     </div>
   );
