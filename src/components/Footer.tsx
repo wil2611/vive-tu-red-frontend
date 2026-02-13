@@ -8,7 +8,7 @@ export default function Footer() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
             gap: 40,
             marginBottom: 40,
           }}
@@ -34,13 +34,13 @@ export default function Footer() {
                 style={{ height: 36, width: "auto" }}
               />
             </div>
-            <p style={{ fontSize: 14, lineHeight: 1.7, color: "rgba(226,220,194,0.7)", maxWidth: 280 }}>
+            <p style={{ fontSize: 13, lineHeight: 1.7, color: "rgba(226,220,194,0.6)", maxWidth: 260 }}>
               Proyecto de investigación–creación para la sensibilización y
-              prevención de Violencia Basada en Género en entornos universitarios.
+              prevención de VBG. Creando redes que protegen en entornos universitarios.
             </p>
           </div>
 
-          {/* Navegación */}
+          {/* Explorar */}
           <div>
             <h4
               style={{
@@ -53,21 +53,51 @@ export default function Footer() {
                 letterSpacing: 1,
               }}
             >
-              Navegación
+              Explorar
             </h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {[
                 { label: "Inicio", href: "/" },
                 { label: "Sobre el proyecto", href: "/sobre" },
                 { label: "Libro digital", href: "/libro" },
                 { label: "Rutas de atención", href: "/rutas" },
-                { label: "Recursos", href: "/recursos" },
-                { label: "Visualizador de redes", href: "/redes" },
               ].map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  style={{ fontSize: 14, color: "rgba(226,220,194,0.7)" }}
+                  style={{ fontSize: 13, color: "rgba(226,220,194,0.65)" }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Recursos */}
+          <div>
+            <h4
+              style={{
+                fontFamily: "ui-sans-serif, system-ui, sans-serif",
+                fontWeight: 700,
+                fontSize: 14,
+                marginBottom: 16,
+                color: "#DCA15D",
+                textTransform: "uppercase",
+                letterSpacing: 1,
+              }}
+            >
+              Recursos
+            </h4>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {[
+                { label: "Recursos educativos", href: "/recursos" },
+                { label: "Visualizador de redes", href: "/redes" },
+                { label: "Contacto", href: "/contacto" },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  style={{ fontSize: 13, color: "rgba(226,220,194,0.65)" }}
                 >
                   {item.label}
                 </Link>
@@ -94,9 +124,9 @@ export default function Footer() {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 8,
-                fontSize: 14,
-                color: "rgba(226,220,194,0.7)",
+                gap: 10,
+                fontSize: 13,
+                color: "rgba(226,220,194,0.65)",
               }}
             >
               <span>contacto@vivetured.edu.co</span>
@@ -110,20 +140,20 @@ export default function Footer() {
         {/* Línea de copyright */}
         <div
           style={{
-            borderTop: "1px solid rgba(226,220,194,0.15)",
+            borderTop: "1px solid rgba(226,220,194,0.12)",
             paddingTop: 20,
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             flexWrap: "wrap",
             gap: 12,
-            fontSize: 13,
-            color: "rgba(226,220,194,0.5)",
+            fontSize: 12,
+            color: "rgba(226,220,194,0.4)",
             fontFamily: "ui-sans-serif, system-ui, sans-serif",
           }}
         >
-          <span>© {new Date().getFullYear()} #ViveTuRed — Todos los derechos reservados</span>
-          <span>Proyecto de investigación–creación</span>
+          <span>© {new Date().getFullYear()} #ViveTuRed. Todos los derechos reservados.</span>
+          <span>Creado con empatía para el bienestar social</span>
         </div>
       </div>
     </footer>

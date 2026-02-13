@@ -66,14 +66,14 @@ export default function LibroPage() {
 
   return (
     <div>
-      {/* Header */}
-      <section className="container">
-        <div className="page-header">
-          <span className="badge" style={{ background: "rgba(220,161,93,0.2)", color: "#DCA15D", marginBottom: 12 }}>
-            Cuento de ficción
-          </span>
-          <h1>Libro digital #ViveTuRed</h1>
-          <p>
+      {/* Hero */}
+      <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
+        <div className="container">
+          <span className="hero-badge">Cuento de ficción</span>
+          <h1 style={{ fontSize: "clamp(2rem, 4vw, 2.6rem)", fontWeight: 800, color: "#1D3E2A", margin: "16px 0 12px", fontFamily: "Georgia, serif", lineHeight: 1.15 }}>
+            Libro digital #ViveTuRed
+          </h1>
+          <p style={{ fontSize: "1.05rem", lineHeight: 1.75, color: "#5a7d66", maxWidth: 600, margin: 0 }}>
             Lee el cuento de ficción dividido en 3 episodios. Navega por capítulos,
             descarga en PDF o disfruta la lectura directa en web.
           </p>
@@ -81,7 +81,8 @@ export default function LibroPage() {
       </section>
 
       {/* Opciones de descarga */}
-      <section className="container" style={{ paddingTop: 0, paddingBottom: 0 }}>
+      <section style={{ background: "var(--bg)" }}>
+      <div className="container" style={{ paddingTop: 24, paddingBottom: 0 }}>
         <div
           style={{
             display: "flex",
@@ -104,12 +105,14 @@ export default function LibroPage() {
             ⬇ Descargar PDF
           </button>
         </div>
-      </section>
+      </div>
 
       <hr className="divider" style={{ maxWidth: 1120, margin: "0 auto" }} />
+      </section>
 
       {/* Navegación por episodios */}
-      <section className="container" style={{ paddingTop: 24 }}>
+      <section style={{ background: "#f5f0e1" }}>
+      <div className="container" style={{ paddingTop: 40, paddingBottom: 48 }}>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 32 }}>
           {episodes.map((ep, i) => (
             <button
@@ -203,10 +206,12 @@ export default function LibroPage() {
             )}
           </div>
         </div>
+      </div>
       </section>
 
       {/* Elementos visuales de apoyo */}
-      <section className="container" style={{ paddingTop: 48, paddingBottom: 24 }}>
+      <section style={{ background: "var(--bg)" }}>
+      <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
         <div
           className="notice notice-info"
           style={{ maxWidth: 760, margin: "0 auto" }}
@@ -225,6 +230,7 @@ export default function LibroPage() {
             </p>
           </div>
         </div>
+      </div>
       </section>
     </div>
   );

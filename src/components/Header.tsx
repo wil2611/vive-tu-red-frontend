@@ -80,7 +80,7 @@ export default function Header() {
                 key={item.href}
                 href={item.href}
                 style={{
-                  padding: "8px 14px",
+                  padding: "8px 16px",
                   borderRadius: 10,
                   fontSize: 14,
                   fontWeight: isActive ? 700 : 500,

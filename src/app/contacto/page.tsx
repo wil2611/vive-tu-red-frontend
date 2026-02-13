@@ -18,21 +18,22 @@ export default function ContactoPage() {
 
   return (
     <div>
-      {/* Header */}
-      <section className="container">
-        <div className="page-header">
-          <span className="badge" style={{ background: "rgba(220,161,93,0.2)", color: "#DCA15D", marginBottom: 12 }}>
-            Comunicación
-          </span>
-          <h1>Contacto</h1>
-          <p>
+      {/* Hero */}
+      <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
+        <div className="container">
+          <span className="hero-badge">Comunicación</span>
+          <h1 style={{ fontSize: "clamp(2rem, 4vw, 2.6rem)", fontWeight: 800, color: "#1D3E2A", margin: "16px 0 12px", fontFamily: "Georgia, serif", lineHeight: 1.15 }}>
+            Contacto
+          </h1>
+          <p style={{ fontSize: "1.05rem", lineHeight: 1.75, color: "#5a7d66", maxWidth: 600, margin: 0 }}>
             Canal de comunicación institucional del proyecto #ViveTuRed.
             Escríbenos para consultas generales, sugerencias o colaboraciones.
           </p>
         </div>
       </section>
 
-      <section className="container" style={{ paddingTop: 16 }}>
+      <section style={{ background: "var(--bg)" }}>
+      <div className="container" style={{ paddingTop: 48, paddingBottom: 56 }}>
         <div
           style={{
             display: "grid",
@@ -291,6 +292,7 @@ export default function ContactoPage() {
             </div>
           </div>
         </div>
+      </div>
       </section>
     </div>
   );
