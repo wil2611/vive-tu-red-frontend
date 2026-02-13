@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "#ViveTuRed — Sensibilización y prevención de VBG",
+  description:
+    "Repositorio digital del proyecto de investigación–creación para sensibilización y prevención de Violencia Basada en Género (VBG) en entornos universitarios.",
+};
 
 export default function RootLayout({
   children,
@@ -10,13 +18,8 @@ export default function RootLayout({
     <html lang="es">
       <body>
         <Header />
-        <main className="container">{children}</main>
-        <footer className="footer">
-          <div className="container footerInner">
-            <span>© {new Date().getFullYear()} #ViveTuRed</span>
-            <span className="muted">Repositorio digital del proyecto</span>
-          </div>
-        </footer>
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
