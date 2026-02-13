@@ -1,23 +1,35 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 const nav = [
   { label: "Inicio", href: "/" },
-  { label: "Sobre", href: "/sobre" },
-  { label: "Libro", href: "/libro" },
-  { label: "Rutas", href: "/rutas" },
+  { label: "Sobre el proyecto", href: "/sobre" },
+  { label: "Libro digital", href: "/libro" },
+  { label: "Rutas de atención", href: "/rutas" },
   { label: "Recursos", href: "/recursos" },
-  { label: "Redes", href: "/redes" },
+  { label: "Visualizador", href: "/redes" },
   { label: "Contacto", href: "/contacto" },
 ];
 
 export default function Header() {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
 
   return (
-    <header style={{ borderBottom: "1px solid var(--border)" }}>
+    <header
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 100,
+        background: "rgba(250, 249, 245, 0.92)",
+        backdropFilter: "blur(12px)",
+        borderBottom: "1px solid #d4cdaf",
+      }}
+    >
       <div
         className="container"
         style={{
@@ -25,15 +37,38 @@ export default function Header() {
           alignItems: "center",
           justifyContent: "space-between",
           gap: 16,
-          paddingTop: 14,
-          paddingBottom: 14,
+          paddingTop: 12,
+          paddingBottom: 12,
         }}
       >
-        <Link href="/" style={{ fontWeight: 800 }}>
-          #ViveTuRed
+        {/* Logo */}
+        <Link
+          href="/"
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Image
+            src="/logo_principal.png"
+            alt="Vive Tu Red"
+            width={160}
+            height={50}
+            style={{ height: 40, width: "auto" }}
+            priority
+          />
         </Link>
 
-        <nav style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
+        {/* Desktop nav */}
+        <nav
+          style={{
+            display: "flex",
+            gap: 4,
+            flexWrap: "wrap",
+            alignItems: "center",
+          }}
+          className="desktop-nav"
+        >
           {nav.map((item) => {
             const isActive =
               item.href === "/"
@@ -45,11 +80,14 @@ export default function Header() {
                 key={item.href}
                 href={item.href}
                 style={{
-                  padding: "6px 10px",
+                  padding: "8px 14px",
                   borderRadius: 10,
-                  border: isActive ? "1px solid var(--border)" : "1px solid transparent",
-                  background: isActive ? "var(--soft)" : "transparent",
+                  fontSize: 14,
                   fontWeight: isActive ? 700 : 500,
+                  fontFamily: "ui-sans-serif, system-ui, sans-serif",
+                  color: isActive ? "#C96A4A" : "#1D3E2A",
+                  background: isActive ? "rgba(201, 106, 74, 0.08)" : "transparent",
+                  transition: "all 0.2s",
                 }}
               >
                 {item.label}
@@ -57,7 +95,72 @@ export default function Header() {
             );
           })}
         </nav>
+
+        {/* Mobile toggle */}
+        <button
+          onClick={() => setOpen(!open)}
+          className="mobile-toggle"
+          aria-label="Menú"
+          style={{
+            display: "none",
+            background: "none",
+            border: "none",
+            fontSize: 24,
+            cursor: "pointer",
+            color: "#1D3E2A",
+            padding: 4,
+          }}
+        >
+          {open ? "✕" : "☰"}
+        </button>
       </div>
+
+      {/* Mobile nav */}
+      {open && (
+        <nav
+          className="mobile-nav"
+          style={{
+            display: "none",
+            flexDirection: "column",
+            padding: "0 24px 16px",
+            gap: 2,
+          }}
+        >
+          {nav.map((item) => {
+            const isActive =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                style={{
+                  padding: "12px 16px",
+                  borderRadius: 10,
+                  fontSize: 15,
+                  fontWeight: isActive ? 700 : 500,
+                  fontFamily: "ui-sans-serif, system-ui, sans-serif",
+                  color: isActive ? "#C96A4A" : "#1D3E2A",
+                  background: isActive ? "rgba(201, 106, 74, 0.08)" : "transparent",
+                }}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      )}
+
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .desktop-nav { display: none !important; }
+          .mobile-toggle { display: block !important; }
+          .mobile-nav { display: flex !important; }
+        }
+      `}</style>
     </header>
   );
 }
