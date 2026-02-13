@@ -27,7 +27,7 @@ export default function Footer() {
               }}
             >
               <Image
-                src="/logo.png"
+                src="/logo_footer.png"
                 alt="Vive Tu Red"
                 width={160}
                 height={50}
