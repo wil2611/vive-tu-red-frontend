@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function SobrePage() {
   return (
     <div>
@@ -93,6 +95,12 @@ export default function SobrePage() {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div style={{ textAlign: "center", marginTop: 32 }}>
+            <Link className="btn btn-primary" href="/equipo">
+              Conoce más sobre el equipo →
+            </Link>
           </div>
         </div>
       </section>
