@@ -79,7 +79,7 @@ export default function EquipoPage() {
               lineHeight: 1.15,
             }}
           >
-            Equipo Investigador
+            Equipo investigador
           </h1>
           <p
             style={{
@@ -92,13 +92,13 @@ export default function EquipoPage() {
           >
             Conoce a las personas detrás de #ViveTuRed. Un equipo interdisciplinario
             comprometido con la investigación–creación y la prevención de la Violencia
-            Basada en Género en entornos universitarios.
+            Basada en Género (VBG) en entornos universitarios.
           </p>
         </div>
       </section>
 
       {/* Miembros del equipo */}
-      <section style={{ background: "var(--bg)" }}>
+      <section style={{ background: "#f5f0e1" }}>
         <div className="container" style={{ paddingTop: 56, paddingBottom: 48 }}>
           <div className="accent-bar" />
           <h2
@@ -156,7 +156,7 @@ export default function EquipoPage() {
       </section>
 
       {/* Valores del equipo */}
-      <section style={{ background: "#f5f0e1" }}>
+      <section style={{ background: "var(--bg)" }}>
         <div className="container" style={{ paddingTop: 56, paddingBottom: 48 }}>
           <div className="accent-bar" />
           <h2
@@ -199,7 +199,7 @@ export default function EquipoPage() {
       </section>
 
       {/* Enfoque metodológico */}
-      <section style={{ background: "var(--bg)" }}>
+      <section style={{ background: "#f5f0e1" }}>
         <div className="container" style={{ paddingTop: 56, paddingBottom: 48 }}>
           <div className="accent-bar" />
           <h2
@@ -244,7 +244,7 @@ export default function EquipoPage() {
       </section>
 
       {/* CTA */}
-      <section style={{ background: "#f5f0e1" }}>
+      <section style={{ background: "var(--bg)" }}>
         <div className="container" style={{ paddingTop: 56, paddingBottom: 56 }}>
           <div className="cta-block">
             <h2 className="cta-title">¿Quieres colaborar con nosotros?</h2>

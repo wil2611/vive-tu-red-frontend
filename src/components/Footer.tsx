@@ -34,9 +34,9 @@ export default function Footer() {
                 style={{ height: 36, width: "auto" }}
               />
             </div>
-            <p style={{ fontSize: 13, lineHeight: 1.7, color: "rgba(226,220,194,0.6)", maxWidth: 260 }}>
+            <p style={{ fontSize: 13, lineHeight: 1.7, color: "rgb(255, 255, 255)", maxWidth: 260 }}>
               Proyecto de investigación–creación para la sensibilización y
-              prevención de VBG. Creando redes que protegen en entornos universitarios.
+              prevención de Violencia Basada en Género (VBG). Creando redes que protegen en entornos universitarios.
             </p>
           </div>
 
@@ -65,7 +65,7 @@ export default function Footer() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  style={{ fontSize: 13, color: "rgba(226,220,194,0.65)" }}
+                  style={{ fontSize: 13, color: "rgb(255, 255, 255)" }}
                 >
                   {item.label}
                 </Link>
@@ -97,7 +97,7 @@ export default function Footer() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  style={{ fontSize: 13, color: "rgba(226,220,194,0.65)" }}
+                  style={{ fontSize: 13, color: "rgb(255, 255, 255)" }}
                 >
                   {item.label}
                 </Link>
@@ -126,7 +126,7 @@ export default function Footer() {
                 flexDirection: "column",
                 gap: 10,
                 fontSize: 13,
-                color: "rgba(226,220,194,0.65)",
+                color: "rgb(255, 255, 255)",
               }}
             >
               <span>contacto@vivetured.edu.co</span>

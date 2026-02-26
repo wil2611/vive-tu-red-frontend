@@ -7,13 +7,13 @@ import { useState } from "react";
 
 const nav = [
   { label: "Inicio", href: "/" },
-  { label: "Sobre el proyecto", href: "/sobre" },
+  { label: "Conoce el Proyecto", href: "/sobre" },
   { label: "Equipo", href: "/equipo" },
   // { label: "Libro digital", href: "/libro" },
   { label: "Rutas de atención", href: "/rutas" },
   { label: "Recursos", href: "/recursos" },
-  { label: "Visualizador", href: "/redes" },
-  { label: "Contacto", href: "/contacto" },
+  { label: "Visualiza tu red", href: "/redes" },
+  { label: "Contáctanos", href: "/contacto" },
 ];
 
 export default function Header() {

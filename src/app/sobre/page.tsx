@@ -12,13 +12,13 @@ export default function SobrePage() {
           </h1>
           <p style={{ fontSize: "1.05rem", lineHeight: 1.75, color: "#5a7d66", maxWidth: 600, margin: 0 }}>
             Conoce la naturaleza, los objetivos y el equipo detrás de #ViveTuRed, un proyecto
-            de investigación–creación orientado a la prevención de la VBG en entornos universitarios.
+            de investigación–creación orientado a la prevención de la Violencia Basada en Género (VBG) en entornos universitarios.
           </p>
         </div>
       </section>
 
       {/* Naturaleza del proyecto */}
-      <section style={{ background: "var(--bg)" }}>
+      <section style={{ background: "#f5f0e1" }}>
         <div className="container" style={{ paddingTop: 56, paddingBottom: 48 }}>
           <div className="accent-bar" />
           <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 12, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
@@ -28,7 +28,7 @@ export default function SobrePage() {
             <p>
               #ViveTuRed es un proyecto de <strong style={{ color: "#1D3E2A" }}>investigación–creación</strong> que
               articula procesos de investigación formativa con estrategias de creación artística y comunicativa 
-              para abordar la <strong style={{ color: "#1D3E2A" }}>Violencia Basada en Género (VBG)</strong> en 
+              para abordar la <strong style={{ color: "#1D3E2A" }}>VBG</strong> en 
               contextos universitarios.
             </p>
             <p>
@@ -42,7 +42,7 @@ export default function SobrePage() {
       </section>
 
       {/* Objetivos */}
-      <section style={{ background: "#f5f0e1" }}>
+      <section style={{ background: "var(--bg)" }}>
         <div className="container" style={{ paddingTop: 56, paddingBottom: 48 }}>
           <div className="accent-bar" />
           <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 24, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
@@ -71,7 +71,7 @@ export default function SobrePage() {
       </section>
 
       {/* Equipo investigador */}
-      <section style={{ background: "var(--bg)" }}>
+      <section style={{ background: "#f5f0e1" }}>
         <div className="container" style={{ paddingTop: 56, paddingBottom: 48 }}>
           <div className="accent-bar" />
           <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 24, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
@@ -106,7 +106,7 @@ export default function SobrePage() {
       </section>
 
       {/* Instituciones aliadas */}
-      <section style={{ background: "#f5f0e1" }}>
+      <section style={{ background: "var(--bg)" }}>
         <div className="container" style={{ paddingTop: 56, paddingBottom: 56 }}>
           <div className="accent-bar" />
           <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 24, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>

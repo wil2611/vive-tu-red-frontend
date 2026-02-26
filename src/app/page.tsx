@@ -54,10 +54,10 @@ export default function HomePage() {
               </p>
               <div className="hero-actions">
                 <Link className="btn btn-primary" href="/sobre">
-                  Descubre el Proyecto →
+                  Conoce el Proyecto →
                 </Link>
                 <Link className="btn btn-outline" href="/rutas">
-                  Rutas de Apoyo
+                  Rutas de Atención
                 </Link>
               </div>
               <div className="hero-trust">
@@ -135,7 +135,7 @@ export default function HomePage() {
       <div className="container" style={{ paddingTop: 64, paddingBottom: 48 }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <h2 className="section-title" style={{ marginBottom: 8 }}>
-            Nuestras Líneas de Acción
+            Nuestras líneas de acción
           </h2>
           <p className="section-subtitle" style={{ margin: "0 auto" }}>
             Accede a herramientas diseñadas para informar, proteger y empoderar a
@@ -171,7 +171,7 @@ export default function HomePage() {
           <div style={{ textAlign: "center", marginBottom: 32 }}>
             <span style={{ fontSize: 40, marginBottom: 12, display: "block" }}>🔗</span>
             <h2 className="section-title" style={{ marginBottom: 12, fontSize: "1.85rem" }}>
-              Visualizador de Redes Personales
+              Visualizador de redes personales
             </h2>
             <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", maxWidth: 640, margin: "0 auto" }}>
               Herramienta interactiva y educativa para mapear, analizar y visualizar tus redes 
@@ -199,7 +199,7 @@ export default function HomePage() {
                 marginBottom: 6,
                 fontFamily: "ui-sans-serif, system-ui, sans-serif"
               }}>
-                Información General
+                Información general
               </h4>
               <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
                 Configura tu perfil anónimo
@@ -220,7 +220,7 @@ export default function HomePage() {
                 marginBottom: 6,
                 fontFamily: "ui-sans-serif, system-ui, sans-serif"
               }}>
-                Mapea Conexiones
+                Mapea conexiones
               </h4>
               <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
                 Agrega personas y sus relaciones
@@ -241,7 +241,7 @@ export default function HomePage() {
                 marginBottom: 6,
                 fontFamily: "ui-sans-serif, system-ui, sans-serif"
               }}>
-                Funciones de Apoyo
+                Funciones de apoyo
               </h4>
               <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
                 7 tipos de soporte identificables
@@ -262,7 +262,7 @@ export default function HomePage() {
                 marginBottom: 6,
                 fontFamily: "ui-sans-serif, system-ui, sans-serif"
               }}>
-                Visualización Gráfica
+                Visualización gráfica
               </h4>
               <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
                 Grafo interactivo de tu red

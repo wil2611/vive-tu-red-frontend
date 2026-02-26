@@ -32,7 +32,7 @@ export default function ContactoPage() {
         </div>
       </section>
 
-      <section style={{ background: "var(--bg)" }}>
+      <section style={{ background: "#f5f0e1" }}>
       <div className="container" style={{ paddingTop: 48, paddingBottom: 56 }}>
         <div
           style={{
