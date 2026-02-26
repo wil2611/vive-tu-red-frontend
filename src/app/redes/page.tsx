@@ -102,9 +102,9 @@ function NodeIcon({ relation, x, y }: { relation: string; x: number; y: number }
 
 /* ── Step indicator ── */
 const steps = [
-  { id: 1, label: "Info General", icon: "📋" },
+  { id: 1, label: "Info general", icon: "📋" },
   { id: 2, label: "Conexiones", icon: "👥" },
-  { id: 3, label: "Funciones de Apoyo", icon: "🤲" },
+  { id: 3, label: "Funciones de apoyo", icon: "🤲" },
   { id: 4, label: "Matriz", icon: "🔗" },
 ];
 
@@ -341,7 +341,7 @@ export default function RedesPage() {
               lineHeight: 1.15,
             }}
           >
-            Cuestionario de Redes Personales
+            Visualiza tu red de apoyo
           </h1>
           <p
             style={{
@@ -349,13 +349,78 @@ export default function RedesPage() {
               lineHeight: 1.75,
               color: "#5a7d66",
               maxWidth: 660,
-              margin: 0,
+              margin: "0 0 28px",
             }}
           >
-            Identifica y visualiza tu red de apoyo personal. Completa cada paso
-            para mapear las personas con las que cuentas para tratar tus asuntos
-            personales. Tus datos no se almacenan ni se comparten.
+            Identifica y mapea las personas con las que cuentas para tratar tus
+            asuntos personales. Completa cada paso para construir una
+            representación visual de tu red de apoyo.
           </p>
+
+          {/* Info cards */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: 14,
+              maxWidth: 760,
+            }}
+          >
+            {[
+              {
+                icon: "🎓",
+                title: "Propósito educativo",
+                desc: "Esta herramienta tiene fines pedagógicos y de sensibilización dentro del proyecto #ViveTuRed. Su objetivo es ayudarte a reflexionar sobre tus redes de apoyo.",
+              },
+              {
+                icon: "🩺",
+                title: "No es un diagnóstico",
+                desc: "Los resultados no constituyen una evaluación clínica ni psicológica. Si necesitas apoyo profesional, consulta las rutas de atención disponibles.",
+              },
+              {
+                icon: "🔒",
+                title: "Datos anonimizados",
+                desc: "Toda la información se procesa localmente en tu dispositivo. No se almacena, no se transmite y no se comparte con terceros.",
+              },
+            ].map((card) => (
+              <div
+                key={card.title}
+                style={{
+                  background: "white",
+                  border: `1px`,
+                  borderLeft: `4px`,
+                  borderRadius: 12,
+                  padding: "16px 18px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 6,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 20, lineHeight: 1 }}>{card.icon}</span>
+                  <span
+                    style={{
+                      fontWeight: 700,
+                      fontSize: 14,
+                      fontFamily: "ui-sans-serif, system-ui, sans-serif",
+                    }}
+                  >
+                    {card.title}
+                  </span>
+                </div>
+                <p
+                  style={{
+                    fontSize: 13,
+                    color: "#5a7d66",
+                    margin: 0,
+                    lineHeight: 1.65,
+                  }}
+                >
+                  {card.desc}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -825,9 +890,7 @@ export default function RedesPage() {
               <div className="redes-disclaimer" style={{ marginTop: 20 }}>
                 <span>🔒</span>
                 <p>
-                  <strong>Aviso:</strong> Esta herramienta es educativa y no
-                  constituye un diagnóstico clínico. Los datos se procesan
-                  localmente y no se almacenan.
+                  Los datos se procesan localmente y no se almacenan ni se comparten.
                 </p>
               </div>
             </div>
