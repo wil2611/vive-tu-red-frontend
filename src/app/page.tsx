@@ -1,15 +1,15 @@
 import Link from "next/link";
 
 const lines = [
-  {
-    icon: "📖",
-    title: "Libro Digital",
-    desc: "Lee el cuento de ficción #ViveTuRed, una herramienta de investigación y narrativa. Disponible en 3 episodios.",
-    href: "/libro",
-    cta: "Leer ahora",
-    color: "#C96A4A",
-    gradient: "linear-gradient(135deg, #C96A4A 0%, #d4836a 100%)",
-  },
+  // {
+  //   icon: "📖",
+  //   title: "Libro Digital",
+  //   desc: "Lee el cuento de ficción #ViveTuRed, una herramienta de investigación y narrativa. Disponible en 3 episodios.",
+  //   href: "/libro",
+  //   cta: "Leer ahora",
+  //   color: "#C96A4A",
+  //   gradient: "linear-gradient(135deg, #C96A4A 0%, #d4836a 100%)",
+  // },
   {
     icon: "🛤️",
     title: "Rutas de Atención",
@@ -166,23 +166,126 @@ export default function HomePage() {
 
       {/* ── Redes (extra card) ── */}
       <section style={{ background: "#f5f0e1" }}>
-      <div className="container" style={{ paddingTop: 40, paddingBottom: 40 }}>
-        <Link href="/redes" className="card redes-card">
-          <div className="redes-card-inner">
-            <div>
-              <span style={{ fontSize: 28, marginRight: 12 }}>🔗</span>
-              <h3 style={{ display: "inline", fontWeight: 700, fontSize: 17, color: "#1D3E2A" }}>
-                Visualizador de Redes
-              </h3>
-              <p style={{ fontSize: 14, lineHeight: 1.7, color: "#5a7d66", margin: "8px 0 0" }}>
-                Herramienta educativa para mapear y visualizar tus redes personales de forma gráfica y anonimizada.
+      <div className="container" style={{ paddingTop: 56, paddingBottom: 56 }}>
+        <div style={{ maxWidth: 920, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <span style={{ fontSize: 40, marginBottom: 12, display: "block" }}>🔗</span>
+            <h2 className="section-title" style={{ marginBottom: 12, fontSize: "1.85rem" }}>
+              Visualizador de Redes Personales
+            </h2>
+            <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", maxWidth: 640, margin: "0 auto" }}>
+              Herramienta interactiva y educativa para mapear, analizar y visualizar tus redes 
+              de apoyo de forma totalmente anónima y privada.
+            </p>
+          </div>
+
+          <div style={{ 
+            display: "grid", 
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
+            gap: 16, 
+            marginBottom: 32 
+          }}>
+            <div style={{
+              background: "white",
+              padding: "20px",
+              borderRadius: 12,
+              border: "1px solid #e0d9bd",
+            }}>
+              <div style={{ fontSize: 26, marginBottom: 8 }}>📋</div>
+              <h4 style={{ 
+                fontSize: 14, 
+                fontWeight: 700, 
+                color: "#1D3E2A", 
+                marginBottom: 6,
+                fontFamily: "ui-sans-serif, system-ui, sans-serif"
+              }}>
+                Información General
+              </h4>
+              <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
+                Configura tu perfil anónimo
               </p>
             </div>
-            <span className="btn btn-secondary" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
-              Explorar →
-            </span>
+
+            <div style={{
+              background: "white",
+              padding: "20px",
+              borderRadius: 12,
+              border: "1px solid #e0d9bd",
+            }}>
+              <div style={{ fontSize: 26, marginBottom: 8 }}>👥</div>
+              <h4 style={{ 
+                fontSize: 14, 
+                fontWeight: 700, 
+                color: "#1D3E2A", 
+                marginBottom: 6,
+                fontFamily: "ui-sans-serif, system-ui, sans-serif"
+              }}>
+                Mapea Conexiones
+              </h4>
+              <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
+                Agrega personas y sus relaciones
+              </p>
+            </div>
+
+            <div style={{
+              background: "white",
+              padding: "20px",
+              borderRadius: 12,
+              border: "1px solid #e0d9bd",
+            }}>
+              <div style={{ fontSize: 26, marginBottom: 8 }}>🤲</div>
+              <h4 style={{ 
+                fontSize: 14, 
+                fontWeight: 700, 
+                color: "#1D3E2A", 
+                marginBottom: 6,
+                fontFamily: "ui-sans-serif, system-ui, sans-serif"
+              }}>
+                Funciones de Apoyo
+              </h4>
+              <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
+                7 tipos de soporte identificables
+              </p>
+            </div>
+
+            <div style={{
+              background: "white",
+              padding: "20px",
+              borderRadius: 12,
+              border: "1px solid #e0d9bd",
+            }}>
+              <div style={{ fontSize: 26, marginBottom: 8 }}>📊</div>
+              <h4 style={{ 
+                fontSize: 14, 
+                fontWeight: 700, 
+                color: "#1D3E2A", 
+                marginBottom: 6,
+                fontFamily: "ui-sans-serif, system-ui, sans-serif"
+              }}>
+                Visualización Gráfica
+              </h4>
+              <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
+                Grafo interactivo de tu red
+              </p>
+            </div>
           </div>
-        </Link>
+
+          <div className="notice notice-info" style={{ marginBottom: 24 }}>
+            <span style={{ fontSize: 20 }}>🔒</span>
+            <div>
+              <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>100% anónimo y privado</strong>
+              <p style={{ margin: "4px 0 0", fontSize: 14 }}>
+                Toda la información se procesa localmente en tu navegador. No se almacena ni envía ningún dato personal.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ textAlign: "center" }}>
+            <Link className="btn btn-primary" href="/redes" style={{ fontSize: 15, padding: "12px 32px" }}>
+              Comenzar a Mapear tu Red →
+            </Link>
+          </div>
+        </div>
       </div>
       </section>
 
