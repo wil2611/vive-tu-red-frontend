@@ -86,24 +86,14 @@ export default function LibroPage() {
         <div
           style={{
             display: "flex",
-            gap: 12,
+            gap: 8,
             flexWrap: "wrap",
-            alignItems: "center",
-            justifyContent: "space-between",
             padding: "16px 0",
           }}
         >
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <span className="badge badge-terracotta">📖 3 episodios</span>
-            <span className="badge badge-teal">6 capítulos</span>
-            <span className="badge badge-gold">Lectura en línea</span>
-          </div>
-          <button
-            className="btn btn-outline"
-            style={{ fontSize: 14, padding: "10px 20px" }}
-          >
-            ⬇ Descargar PDF
-          </button>
+          <span className="badge badge-terracotta">📖 3 episodios</span>
+          <span className="badge badge-teal">6 capítulos</span>
+          <span className="badge badge-gold">Lectura en línea</span>
         </div>
       </div>
 
