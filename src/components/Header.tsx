@@ -102,6 +102,8 @@ export default function Header() {
           onClick={() => setOpen(!open)}
           className="mobile-toggle"
           aria-label="Menú"
+          aria-expanded={open}
+          aria-controls="main-mobile-nav"
           style={{
             display: "none",
             background: "none",
@@ -119,6 +121,7 @@ export default function Header() {
       {/* Mobile nav */}
       {open && (
         <nav
+          id="main-mobile-nav"
           className="mobile-nav"
           style={{
             display: "none",

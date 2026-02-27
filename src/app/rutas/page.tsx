@@ -1,5 +1,4 @@
 import type React from "react";
-import Link from "next/link";
 
 const emergencyContacts = [
   { name: "Línea 155", desc: "Orientación a mujeres víctimas de violencia", phone: "155" },

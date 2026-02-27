@@ -183,7 +183,7 @@ export default function HomePage() {
       </div>
       </section>
 
-      {/* ── Redes (introduccion) ── */}
+      {/* ── Redes (introducción) ── */}
       <section style={{ background: "#f5f0e1" }}>
       <div className="container" style={{ paddingTop: 56, paddingBottom: 56 }}>
         <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
@@ -195,15 +195,15 @@ export default function HomePage() {
             en momentos importantes.
           </p>
           <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", maxWidth: 660, margin: "0 auto 28px" }}>
-            No necesitas experiencia previa: encontraras una guia simple para empezar paso a paso.
+            No necesitas experiencia previa: encontrarás una guía simple para empezar paso a paso.
           </p>
 
           <div className="notice notice-info" style={{ margin: "0 auto 24px", maxWidth: 660, textAlign: "left" }}>
             <span style={{ fontSize: 20 }}>🔒</span>
             <div>
-              <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Privado y anonimo</strong>
+              <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Privado y anónimo</strong>
               <p style={{ margin: "4px 0 0", fontSize: 14 }}>
-                Tu informacion se procesa solo en tu navegador. No guardamos ni enviamos datos personales.
+                Tu información se procesa solo en tu navegador. No guardamos ni enviamos datos personales.
               </p>
             </div>
           </div>
