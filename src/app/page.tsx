@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const lines = [
@@ -13,27 +14,31 @@ const lines = [
   {
     icon: "🛤️",
     title: "Rutas de Atención",
-    desc: "Directorio de instituciones y contactos de emergencia para situaciones de Violencia Basada en Género.",
+    desc: "Encuentra instituciones y contactos de emergencia si necesitas orientación o apoyo inmediato.",
     href: "/rutas",
-    cta: "Ver directorio",
+    cta: "Ir a rutas",
     color: "#00555A",
     gradient: "linear-gradient(135deg, #00555A 0%, #007a80 100%)",
+    badge: "Atención inmediata",
+    badgeClass: "badge-teal",
   },
   {
     icon: "📚",
     title: "Recursos Educativos",
-    desc: "Cartillas, guías, infografías y materiales metodológicos creados para educadores y familias.",
+    desc: "Explora cartillas, guías e infografías para prevenir violencias y fortalecer redes de cuidado.",
     href: "/recursos",
-    cta: "Acceder",
+    cta: "Ver recursos",
     color: "#DCA15D",
     gradient: "linear-gradient(135deg, #DCA15D 0%, #e4b87e 100%)",
+    badge: "Formación y prevención",
+    badgeClass: "badge-gold",
   },
 ];
 
 const bulletPoints = [
-  { text: "Fomento de la cultura digital responsable" },
-  { text: "Prevención de violencia en cada espacio digital" },
-  { text: "Recursos creativos para la sensibilización" },
+  { text: "Aprende a identificar señales de riesgo" },
+  { text: "Conoce rutas de apoyo confiables" },
+  { text: "Fortalece tu red de cuidado en la universidad" },
 ];
 
 export default function HomePage() {
@@ -44,7 +49,6 @@ export default function HomePage() {
         <div className="container">
           <div className="hero-grid">
             <div className="hero-content">
-              <span className="hero-badge">Investigación–creación y prevención</span>
               <h1 className="hero-title">
                 Transformando realidades a través de la red.
               </h1>
@@ -72,18 +76,13 @@ export default function HomePage() {
 
             <div className="hero-visual">
               <div className="hero-card-main">
+                <div className="hero-card-watermark" aria-hidden="true" />
                 <div className="hero-card-inner">
-                  <span style={{ fontSize: 14, opacity: 0.85, letterSpacing: 1 }}>#ViveTuRed</span>
                   <div style={{ fontSize: 28, fontWeight: 300, lineHeight: 1.3, marginTop: 12 }}>
-                    Comunidad
+                    #ViveTuRed
                   </div>
                   <div style={{ fontSize: 13, opacity: 0.6, marginTop: 8 }}>redes que protegen</div>
                 </div>
-              </div>
-              <div className="hero-card-float">
-                <div style={{ fontSize: 20, marginBottom: 4 }}>🤝</div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: "#1D3E2A" }}>Red activa</div>
-                <div style={{ fontSize: 11, color: "#5a7d66" }}>Apoyo mutuo</div>
               </div>
             </div>
           </div>
@@ -95,27 +94,35 @@ export default function HomePage() {
       <div className="container" style={{ paddingTop: 72, paddingBottom: 48 }}>
         <div className="mission-grid">
           <div className="mission-visual">
-            <div className="mission-image-block">
-              <div className="mission-image-main">
-                <span style={{ fontSize: 48 }}>📖</span>
+            <div className="mission-visual-card">
+              <div className="mission-visual-media" aria-hidden="true">
+                <span className="mission-visual-tag">#ViveTuRed</span>
+                <Image
+                  src="/Icono_Blanco.png"
+                  alt=""
+                  aria-hidden="true"
+                  width={170}
+                  height={170}
+                  className="mission-visual-logo"
+                />
               </div>
-              <div className="mission-script">
-                <em style={{ fontFamily: "Georgia, serif", fontSize: 20, color: "#1D3E2A", lineHeight: 1.4 }}>
-                  Colectivo de<br />Investigación
-                </em>
-              </div>
+              <h3 className="mission-visual-title">Acompañamiento para actuar</h3>
+              <p className="mission-visual-desc">
+                Información clara, rutas de atención y recursos prácticos para tomar decisiones con más seguridad.
+              </p>
             </div>
           </div>
           <div className="mission-content">
-            <span className="badge badge-teal" style={{ marginBottom: 12 }}>Sobre #ViveTuRed</span>
             <h2 className="section-title" style={{ fontSize: "1.75rem", marginBottom: 16 }}>
-              Un puente entre la investigación y la acción creativa.
+              Qué es #ViveTuRed y cómo te acompaña
             </h2>
             <p style={{ lineHeight: 1.8, color: "#5a7d66", marginBottom: 24 }}>
-              Somos un colectivo dedicado a la investigación social que busca
-              entender y mejorar nuestras interacciones en el entorno universitario.
-              A través de todas las herramientas, talleres y materiales de apoyo,
-              construimos un espacio seguro para todos.
+              #ViveTuRed conecta investigación y herramientas prácticas para prevenir la
+              violencia basada en género en el entorno universitario.
+            </p>
+            <p style={{ lineHeight: 1.8, color: "#5a7d66", marginBottom: 24 }}>
+              Aquí encontrarás rutas de atención, recursos educativos y espacios para
+              fortalecer tu red de apoyo personal e institucional.
             </p>
             <div className="mission-bullets">
               {bulletPoints.map((bp) => (
@@ -134,12 +141,12 @@ export default function HomePage() {
       <section style={{ background: "var(--bg)" }}>
       <div className="container" style={{ paddingTop: 64, paddingBottom: 48 }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <h2 className="section-title" style={{ marginBottom: 8 }}>
-            Nuestras líneas de acción
+          <h2 className="section-title" style={{ marginBottom: 10 }}>
+            Elige por dónde empezar
           </h2>
           <p className="section-subtitle" style={{ margin: "0 auto" }}>
-            Accede a herramientas diseñadas para informar, proteger y empoderar a
-            nuestra comunidad en el ecosistema universitario.
+            Cada recurso responde a una necesidad distinta: apoyo inmediato o
+            materiales para aprender y compartir.
           </p>
         </div>
 
@@ -147,12 +154,12 @@ export default function HomePage() {
           {lines.map((item) => (
             <Link key={item.href} href={item.href} className="line-card">
               <div className="line-card-image" style={{ background: item.gradient }}>
-                <span style={{ fontSize: 36 }}>{item.icon}</span>
+                <h3 className="line-card-image-title">{item.title}</h3>
               </div>
               <div className="line-card-body">
-                <h3 className="line-card-title" style={{ color: item.color }}>
-                  {item.title}
-                </h3>
+                <span className={`badge ${item.badgeClass}`} style={{ marginBottom: 10 }}>
+                  {item.badge}
+                </span>
                 <p className="line-card-desc">{item.desc}</p>
                 <span className="line-card-link" style={{ color: item.color }}>
                   {item.cta} →
@@ -161,129 +168,119 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
+
+        <div className="notice notice-warning lines-urgent" style={{ maxWidth: 860, margin: "24px auto 0" }}>
+          <span style={{ fontSize: 18 }}>⚠️</span>
+          <div>
+            <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Si necesitas ayuda urgente</strong>
+            <p style={{ margin: "4px 0 0", fontSize: 14 }}>
+              Empieza por Rutas de Atención para encontrar contactos e instituciones de apoyo.
+            </p>
+          </div>
+        </div>
       </div>
       </section>
 
-      {/* ── Redes (extra card) ── */}
+      {/* ── Redes (introducción) ── */}
       <section style={{ background: "#f5f0e1" }}>
       <div className="container" style={{ paddingTop: 56, paddingBottom: 56 }}>
-        <div style={{ maxWidth: 920, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 32 }}>
-            <span style={{ fontSize: 40, marginBottom: 12, display: "block" }}>🔗</span>
+        <div className="redes-intro-shell">
+          <div className="redes-intro-heading">
             <h2 className="section-title" style={{ marginBottom: 12, fontSize: "1.85rem" }}>
               Visualizador de redes personales
             </h2>
-            <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", maxWidth: 640, margin: "0 auto" }}>
-              Herramienta interactiva y educativa para mapear, analizar y visualizar tus redes 
-              de apoyo de forma totalmente anónima y privada.
-            </p>
           </div>
 
-          <div style={{ 
-            display: "grid", 
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
-            gap: 16, 
-            marginBottom: 32 
-          }}>
-            <div style={{
-              background: "white",
-              padding: "20px",
-              borderRadius: 12,
-              border: "1px solid #e0d9bd",
-            }}>
-              <div style={{ fontSize: 26, marginBottom: 8 }}>📋</div>
-              <h4 style={{ 
-                fontSize: 14, 
-                fontWeight: 700, 
-                color: "#1D3E2A", 
-                marginBottom: 6,
-                fontFamily: "ui-sans-serif, system-ui, sans-serif"
-              }}>
-                Información general
-              </h4>
-              <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
-                Configura tu perfil anónimo
-              </p>
+          <div className="redes-intro-layout">
+            <div className="redes-intro-visual" aria-hidden="true">
+              <div className="redes-intro-graph">
+                <svg viewBox="0 0 360 250" className="redes-intro-svg">
+                  <g className="redes-intro-rings">
+                    <circle cx="180" cy="130" r="56" className="redes-intro-ring" />
+                    <circle cx="180" cy="130" r="94" className="redes-intro-ring" />
+                    <circle cx="180" cy="130" r="132" className="redes-intro-ring" />
+                  </g>
+
+                  <g className="redes-intro-edges">
+                    <line x1="180" y1="130" x2="180" y2="42" className="redes-intro-edge redes-intro-edge-gold" />
+                    <line x1="180" y1="130" x2="278" y2="196" className="redes-intro-edge redes-intro-edge-forest" />
+                    <line x1="180" y1="130" x2="72" y2="200" className="redes-intro-edge redes-intro-edge-danger" />
+                  </g>
+
+                  <g className="redes-intro-nodes">
+                    <circle cx="180" cy="130" r="33" className="redes-intro-node-halo" />
+
+                    <g transform="translate(180 130)">
+                      <circle r="27" className="redes-intro-node redes-intro-node-ego" />
+                      <text y="6" textAnchor="middle" className="redes-intro-center-label">TÚ</text>
+                    </g>
+
+                    <g transform="translate(180 42)">
+                      <circle r="26" className="redes-intro-node redes-intro-node-gold" />
+                      <g transform="translate(-8 -8)" className="redes-intro-node-icon-shape">
+                        <circle cx="6" cy="5" r="3.5" />
+                        <circle cx="13" cy="5" r="3.5" />
+                        <path d="M1 14c0-2.8 2.2-4.8 5-4.8s5 2 5 4.8H1z" />
+                        <path d="M8 14c0-2.8 2.2-4.8 5-4.8s5 2 5 4.8H8z" />
+                      </g>
+                    </g>
+                    <text x="180" y="80" textAnchor="middle" className="redes-intro-node-label-dark">Familia</text>
+
+                    <g transform="translate(278 196)">
+                      <circle r="28" className="redes-intro-node-halo-soft" />
+                      <circle r="25" className="redes-intro-node redes-intro-node-forest" />
+                      <g transform="translate(-8 -9)" className="redes-intro-node-icon-shape">
+                        <path d="M1 6L8 2l7 4H1z" />
+                        <path d="M2 7h2v7H2zM6 7h2v7H6zM10 7h2v7h-2z" />
+                        <path d="M0 14h16v2H0z" />
+                      </g>
+                    </g>
+                    <text x="278" y="230" textAnchor="middle" className="redes-intro-node-label-dark">Universidad</text>
+
+                    <g transform="translate(72 200)">
+                      <circle r="23" className="redes-intro-node-halo-soft" />
+                      <circle r="20" className="redes-intro-node redes-intro-node-danger" />
+                      <g transform="translate(-8 -8)">
+                        <circle cx="8" cy="8" r="5.2" fill="none" stroke="white" strokeWidth="1.4" />
+                        <path d="M2.8 8h10.4" fill="none" stroke="white" strokeWidth="1.2" strokeLinecap="round" />
+                        <path d="M8 2.8c-1.8 1.6-1.8 8.8 0 10.4" fill="none" stroke="white" strokeWidth="1.2" strokeLinecap="round" />
+                        <path d="M8 2.8c1.8 1.6 1.8 8.8 0 10.4" fill="none" stroke="white" strokeWidth="1.2" strokeLinecap="round" />
+                      </g>
+                    </g>
+                    <text x="72" y="228" textAnchor="middle" className="redes-intro-node-label-dark">Comunidad</text>
+                  </g>
+                </svg>
+              </div>
+              <div className="redes-intro-chips">
+                <span className="redes-intro-chip">Nodos: 4</span>
+                <span className="redes-intro-chip">Aristas: 3</span>
+                <span className="redes-intro-chip">Anillos de cercanía</span>
+              </div>
             </div>
 
-            <div style={{
-              background: "white",
-              padding: "20px",
-              borderRadius: 12,
-              border: "1px solid #e0d9bd",
-            }}>
-              <div style={{ fontSize: 26, marginBottom: 8 }}>👥</div>
-              <h4 style={{ 
-                fontSize: 14, 
-                fontWeight: 700, 
-                color: "#1D3E2A", 
-                marginBottom: 6,
-                fontFamily: "ui-sans-serif, system-ui, sans-serif"
-              }}>
-                Mapea conexiones
-              </h4>
-              <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
-                Agrega personas y sus relaciones
+            <div className="redes-intro-content">
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", margin: "0 0 14px" }}>
+                Esta herramienta te ayuda a reconocer las personas e instituciones con las que puedes contar
+                en momentos importantes.
               </p>
-            </div>
-
-            <div style={{
-              background: "white",
-              padding: "20px",
-              borderRadius: 12,
-              border: "1px solid #e0d9bd",
-            }}>
-              <div style={{ fontSize: 26, marginBottom: 8 }}>🤲</div>
-              <h4 style={{ 
-                fontSize: 14, 
-                fontWeight: 700, 
-                color: "#1D3E2A", 
-                marginBottom: 6,
-                fontFamily: "ui-sans-serif, system-ui, sans-serif"
-              }}>
-                Funciones de apoyo
-              </h4>
-              <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
-                7 tipos de soporte identificables
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", margin: "0 0 18px" }}>
+                No necesitas experiencia previa: encontrarás una guía simple para empezar paso a paso.
               </p>
-            </div>
 
-            <div style={{
-              background: "white",
-              padding: "20px",
-              borderRadius: 12,
-              border: "1px solid #e0d9bd",
-            }}>
-              <div style={{ fontSize: 26, marginBottom: 8 }}>📊</div>
-              <h4 style={{ 
-                fontSize: 14, 
-                fontWeight: 700, 
-                color: "#1D3E2A", 
-                marginBottom: 6,
-                fontFamily: "ui-sans-serif, system-ui, sans-serif"
-              }}>
-                Visualización gráfica
-              </h4>
-              <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
-                Grafo interactivo de tu red
-              </p>
-            </div>
-          </div>
+              <div className="notice notice-info redes-intro-notice" style={{ marginBottom: 22 }}>
+                <span style={{ fontSize: 20 }}>🔒</span>
+                <div>
+                  <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Privado y anónimo</strong>
+                  <p style={{ margin: "4px 0 0", fontSize: 14 }}>
+                    Tu información se procesa solo en tu navegador. No guardamos ni enviamos datos personales.
+                  </p>
+                </div>
+              </div>
 
-          <div className="notice notice-info" style={{ marginBottom: 24 }}>
-            <span style={{ fontSize: 20 }}>🔒</span>
-            <div>
-              <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>100% anónimo y privado</strong>
-              <p style={{ margin: "4px 0 0", fontSize: 14 }}>
-                Toda la información se procesa localmente en tu navegador. No se almacena ni envía ningún dato personal.
-              </p>
+              <Link className="btn btn-primary" href="/redes" style={{ fontSize: 15, padding: "12px 32px" }}>
+                Entrar al visualizador →
+              </Link>
             </div>
-          </div>
-
-          <div style={{ textAlign: "center" }}>
-            <Link className="btn btn-primary" href="/redes" style={{ fontSize: 15, padding: "12px 32px" }}>
-              Comenzar a Mapear tu Red →
-            </Link>
           </div>
         </div>
       </div>

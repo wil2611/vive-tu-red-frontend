@@ -256,51 +256,38 @@ a { color: inherit; text-decoration: none; }
   min-height: 340px;
 }
 .hero-card-main {
-  width: 280px;
-  height: 320px;
+  width: 320px;
+  height: 370px;
   border-radius: 24px;
-  background: linear-gradient(145deg, #3a6b5a 0%, #1D3E2A 100%);
+  background: #2f5f4e;
   display: flex;
   align-items: flex-end;
-  padding: 32px;
+  padding: 36px;
   color: white;
   box-shadow: 0 24px 48px rgba(29, 62, 42, 0.2);
   position: relative;
+  overflow: hidden;
+}
+.hero-card-watermark {
+  position: absolute;
+  inset: 0;
+  background-image: url("/Icono_Blanco.png");
+  background-size: 200px;
+  background-position: center 40%;
+  background-repeat: no-repeat;
+  opacity: 0.2;
+  z-index: 0;
+  pointer-events: none;
 }
 .hero-card-inner {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 .hero-card-main::before {
-  content: "";
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  width: 80px;
-  height: 80px;
-  border: 2px solid rgba(255,255,255,0.12);
-  border-radius: 50%;
+  content: none;
 }
 .hero-card-main::after {
-  content: "";
-  position: absolute;
-  top: 48px;
-  right: 48px;
-  width: 120px;
-  height: 120px;
-  border: 2px solid rgba(255,255,255,0.06);
-  border-radius: 50%;
-}
-.hero-card-float {
-  position: absolute;
-  bottom: 16px;
-  right: -16px;
-  background: white;
-  border-radius: 16px;
-  padding: 14px 18px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  text-align: center;
-  z-index: 2;
+  content: none;
 }
 
 /* ── Mission / About section ── */
@@ -314,27 +301,64 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   justify-content: center;
 }
-.mission-image-block {
-  position: relative;
-}
-.mission-image-main {
-  width: 260px;
-  height: 280px;
-  border-radius: 20px;
-  background: linear-gradient(145deg, #d4cdaf 0%, #E2DCC2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.06);
-}
-.mission-script {
-  position: absolute;
-  bottom: -16px;
-  right: -32px;
+.mission-visual-card {
+  width: 100%;
+  max-width: 340px;
   background: white;
-  border-radius: 16px;
-  padding: 20px 24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 14px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.06);
+}
+.mission-visual-media {
+  height: 190px;
+  border-radius: 14px;
+  padding: 12px;
+  background: linear-gradient(155deg, rgba(58, 107, 90, 0.95) 0%, rgba(29, 62, 42, 0.95) 100%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.mission-visual-tag {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.24);
+  color: rgba(255,255,255,0.92);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.03em;
+  position: relative;
+  z-index: 2;
+}
+.mission-visual-logo {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: auto;
+  opacity: 0.28;
+  z-index: 1;
+  pointer-events: none;
+}
+.mission-visual-title {
+  margin: 14px 8px 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1D3E2A;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.mission-visual-desc {
+  margin: 0 8px 8px;
+  color: #5a7d66;
+  line-height: 1.7;
+  font-size: 14px;
 }
 .mission-content {
   max-width: 520px;
@@ -369,7 +393,7 @@ a { color: inherit; text-decoration: none; }
 /* ── Lines of action cards ── */
 .lines-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
 }
 .line-card {
@@ -378,7 +402,9 @@ a { color: inherit; text-decoration: none; }
   border-radius: 20px;
   overflow: hidden;
   transition: all 0.3s ease;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .line-card:hover {
   border-color: transparent;
@@ -386,24 +412,60 @@ a { color: inherit; text-decoration: none; }
   transform: translateY(-4px);
 }
 .line-card-image {
-  height: 160px;
+  height: 134px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding: 16px 18px;
   position: relative;
   overflow: hidden;
 }
-.line-card-image::after {
+.line-card-image-title {
+  margin: 0;
+  color: rgba(255,255,255,0.96);
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 800;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.01em;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px 14px rgba(0,0,0,0.18);
+}
+.line-card-image::before {
   content: "";
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 40px;
-  background: linear-gradient(transparent, rgba(255,255,255,0.4));
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18) 0%, transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.12) 0%, transparent 40%);
+}
+.line-card-image::after {
+  content: none;
+}
+.line-card-icon {
+  width: 66px;
+  height: 66px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.28);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+  position: relative;
+  z-index: 1;
+}
+.line-card-icon-emoji {
+  font-size: 36px;
+  line-height: 1;
 }
 .line-card-body {
   padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 .line-card-title {
   font-weight: 700;
@@ -416,6 +478,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.7;
   color: #5a7d66;
   margin: 0 0 16px;
+  flex: 1;
 }
 .line-card-link {
   font-size: 14px;
@@ -423,16 +486,154 @@ a { color: inherit; text-decoration: none; }
   font-family: ui-sans-serif, system-ui, sans-serif;
   transition: gap 0.2s;
 }
-
-/* ── Redes card ── */
-.redes-card {
-  display: block;
+.lines-urgent {
+  border-width: 1px;
+  background: rgba(220, 161, 93, 0.1);
+  box-shadow: 0 8px 18px rgba(201, 106, 74, 0.08);
 }
-.redes-card-inner {
-  display: flex;
+
+/* ── Redes intro section ── */
+.redes-intro-shell {
+  max-width: 980px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.56);
+  border: 1px solid #d4cdaf;
+  border-radius: 24px;
+  padding: 34px 34px 30px;
+  box-shadow: 0 12px 28px rgba(29, 62, 42, 0.08);
+}
+.redes-intro-heading {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.redes-intro-layout {
+  display: grid;
+  grid-template-columns: 0.95fr 1.15fr;
+  gap: 26px;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+}
+.redes-intro-visual {
+  min-height: 330px;
+  border-radius: 18px;
+  padding: 16px;
+  background: #e5dfcf;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(29, 62, 42, 0.08);
+}
+.redes-intro-visual::before {
+  content: none;
+}
+.redes-intro-graph {
+  height: 260px;
+  border-radius: 14px;
+  border: 1px solid rgba(29, 62, 42, 0.08);
+  background: #e5dfcf;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.redes-intro-svg {
+  width: 100%;
+  height: 100%;
+}
+.redes-intro-ring {
+  fill: none;
+  stroke: rgba(199, 179, 143, 0.45);
+  stroke-width: 1.2;
+  stroke-dasharray: 8 8;
+}
+.redes-intro-edge {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.redes-intro-edge-gold {
+  stroke: rgba(217, 173, 110, 0.6);
+}
+.redes-intro-edge-forest {
+  stroke: rgba(74, 108, 87, 0.6);
+  stroke-width: 5;
+}
+.redes-intro-edge-danger {
+  stroke: rgba(201, 106, 74, 0.4);
+  stroke-dasharray: 8 7;
+  stroke-width: 2.5;
+}
+.redes-intro-node-halo {
+  fill: none;
+  stroke: rgba(29, 62, 42, 0.14);
+  stroke-width: 3;
+}
+.redes-intro-node-halo-soft {
+  fill: none;
+  stroke: rgba(29, 62, 42, 0.12);
+  stroke-width: 8;
+}
+.redes-intro-node {
+  stroke: rgba(255,255,255,0.75);
+  stroke-width: 2;
+}
+.redes-intro-node-ego {
+  fill: #1D3E2A;
+}
+.redes-intro-node-gold {
+  fill: #DCA15D;
+}
+.redes-intro-node-forest {
+  fill: #1D3E2A;
+}
+.redes-intro-node-danger {
+  fill: #C96A4A;
+}
+.redes-intro-center-label {
+  fill: white;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.redes-intro-node-icon {
+  fill: white;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.redes-intro-node-icon-shape {
+  fill: white;
+}
+.redes-intro-node-label-dark {
+  fill: #1D3E2A;
+  font-size: 10px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+}
+.redes-intro-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  position: relative;
+  z-index: 1;
+}
+.redes-intro-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(29, 62, 42, 0.08);
+  color: #1D3E2A;
+  border: 1px solid rgba(29, 62, 42, 0.12);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.redes-intro-content {
+  text-align: left;
+}
+.redes-intro-notice {
+  max-width: 100%;
 }
 
 /* ── CTA block ── */
@@ -1356,8 +1557,9 @@ label {
     min-height: 260px;
   }
   .hero-card-main {
-    width: 220px;
-    height: 260px;
+    width: 260px;
+    height: 300px;
+    padding: 28px;
   }
   .hero-title {
     font-size: 2rem;
@@ -1369,9 +1571,25 @@ label {
   .mission-visual {
     order: -1;
   }
-  .mission-script {
-    right: -12px;
-    bottom: -12px;
+  .mission-visual-card {
+    max-width: 100%;
+  }
+  .redes-intro-shell {
+    padding: 24px 20px 22px;
+    border-radius: 18px;
+  }
+  .redes-intro-layout {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .redes-intro-heading {
+    margin-bottom: 20px;
+  }
+  .redes-intro-visual {
+    min-height: 300px;
+  }
+  .redes-intro-graph {
+    height: 236px;
   }
   .lines-grid {
     grid-template-columns: 1fr;
@@ -1402,13 +1620,23 @@ label {
     padding: 24px 0 32px;
   }
   .hero-card-main {
-    width: 180px;
-    height: 220px;
+    width: 220px;
+    height: 260px;
     padding: 20px;
   }
-  .hero-card-float {
-    right: -4px;
-    bottom: 4px;
+  .redes-intro-shell {
+    padding: 18px 14px 16px;
+  }
+  .redes-intro-visual {
+    min-height: 260px;
+    padding: 14px;
+  }
+  .redes-intro-graph {
+    height: 206px;
+  }
+  .redes-intro-chip {
+    font-size: 11px;
+    padding: 5px 9px;
   }
 }
 
@@ -1485,6 +1713,281 @@ label {
   border: 1px solid;
 }
 
+/* Equipo page (updated) */
+.equipo-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.equipo-stat-item {
+  min-width: 150px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #d4cdaf;
+  background: rgba(255,255,255,0.68);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.equipo-stat-item strong {
+  font-size: 1.25rem;
+  color: #1D3E2A;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.equipo-stat-item span {
+  font-size: 12px;
+  color: #5a7d66;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.researchers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+.researcher-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(29, 62, 42, 0.06);
+  transition: transform 0.24s ease, box-shadow 0.24s ease;
+}
+.researcher-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 34px rgba(29, 62, 42, 0.11);
+}
+.researcher-card-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  min-height: 122px;
+}
+.researcher-photo-frame {
+  width: 88px;
+  height: 88px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.2);
+  border: 2px solid rgba(255,255,255,0.32);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.researcher-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.researcher-photo-icon {
+  color: rgba(255,255,255,0.95);
+  font-size: 1.6rem;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 800;
+}
+.researcher-head-text {
+  min-width: 0;
+}
+.researcher-name {
+  margin: 0 0 6px;
+  font-size: 1.6rem;
+  line-height: 1.18;
+  color: #fff;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  text-wrap: balance;
+}
+.researcher-head-role {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.17);
+  color: rgba(255,255,255,0.95);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.researcher-card-content {
+  padding: 20px 20px 18px;
+}
+.researcher-profile {
+  margin: 0;
+  color: #5a7d66;
+  line-height: 1.75;
+  font-size: 14px;
+}
+.researcher-meta {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed #d4cdaf;
+  display: grid;
+  gap: 10px;
+}
+.researcher-meta-item {
+  display: grid;
+  gap: 2px;
+}
+.researcher-meta-label {
+  font-size: 11px;
+  color: #1D3E2A;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.researcher-meta-value {
+  font-size: 13px;
+  color: #5a7d66;
+  line-height: 1.5;
+}
+.equipo-lines-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+.equipo-line-card {
+  background: #f7f3e7;
+  border: 1px solid #e0d7bc;
+  border-radius: 14px;
+  padding: 16px;
+}
+.equipo-line-card h3 {
+  margin: 0 0 8px;
+  color: #1D3E2A;
+  font-size: 16px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.equipo-line-card p {
+  margin: 0;
+  color: #5a7d66;
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+/* Allies section */
+.allies-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+.ally-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fcfbf7 100%);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 10px 22px rgba(29, 62, 42, 0.05);
+}
+.ally-card:nth-child(1) {
+  border-top: 4px solid #00555A;
+}
+.ally-card:nth-child(2) {
+  border-top: 4px solid #C96A4A;
+}
+.ally-card-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.ally-card-title {
+  margin: 0;
+  font-size: clamp(1.15rem, 1.55vw, 1.4rem);
+  color: #1D3E2A;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.ally-card-sections {
+  display: grid;
+  gap: 10px;
+}
+.ally-card-section {
+  background: #f7f3e7;
+  border: 1px solid #e0d7bc;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.ally-card-section h4 {
+  margin: 0 0 6px;
+  color: #1D3E2A;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.ally-card-section p {
+  margin: 0;
+  color: #5a7d66;
+  line-height: 1.7;
+}
+.ally-card-divider {
+  height: 1px;
+  background: #d8cfb2;
+  margin: 10px 0 10px;
+}
+
+/* About: team roles */
+.about-team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+.about-team-role-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(29, 62, 42, 0.05);
+  min-height: 124px;
+}
+.about-team-role-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.about-team-role-body {
+  min-width: 0;
+}
+.about-team-role-name {
+  margin: 0 0 4px;
+  color: #1D3E2A;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+.about-team-role-desc {
+  margin: 0;
+  color: #5a7d66;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.about-team-cta {
+  text-align: center;
+  margin-top: 30px;
+}
+
 /* Team approach */
 .team-approach-grid {
   display: grid;
@@ -1525,6 +2028,68 @@ label {
 }
 
 @media (max-width: 768px) {
+  .equipo-stats {
+    gap: 8px;
+  }
+  .equipo-stat-item {
+    min-width: 128px;
+    padding: 8px 10px;
+  }
+  .researchers-grid {
+    grid-template-columns: 1fr;
+  }
+  .researcher-card {
+    border-radius: 18px;
+  }
+  .researcher-card-head {
+    padding: 14px;
+    min-height: 98px;
+    gap: 12px;
+  }
+  .researcher-photo-frame {
+    width: 66px;
+    height: 66px;
+    border-radius: 16px;
+  }
+  .researcher-name {
+    font-size: 1.25rem;
+    margin-bottom: 4px;
+  }
+  .researcher-head-role {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  .researcher-card-content {
+    padding: 16px 14px 14px;
+  }
+  .ally-card {
+    padding: 18px 16px;
+  }
+  .allies-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .ally-card-title {
+    font-size: 1.18rem;
+  }
+  .about-team-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .about-team-role-card {
+    padding: 16px;
+    border-radius: 14px;
+    min-height: 0;
+  }
+  .about-team-role-badge {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+  .about-team-cta {
+    margin-top: 20px;
+  }
   .team-grid {
     grid-template-columns: 1fr;
   }

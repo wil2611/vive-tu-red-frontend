@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export default function ContactoPage() {
   const [form, setForm] = useState({ nombre: "", email: "", asunto: "", mensaje: "" });
@@ -21,7 +22,6 @@ export default function ContactoPage() {
       {/* Hero */}
       <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
         <div className="container">
-          <span className="hero-badge">Comunicación</span>
           <h1 style={{ fontSize: "clamp(2rem, 4vw, 2.6rem)", fontWeight: 800, color: "#1D3E2A", margin: "16px 0 12px", fontFamily: "Georgia, serif", lineHeight: 1.15 }}>
             Contacto
           </h1>
@@ -143,9 +143,9 @@ export default function ContactoPage() {
                   <p style={{ margin: 0, fontSize: 13 }}>
                     No envíes datos sensibles ni información personal a través de este formulario.
                     Si necesitas apoyo o atención, visita las{" "}
-                    <a href="/rutas" style={{ color: "#a8553a", fontWeight: 700, textDecoration: "underline" }}>
+                    <Link href="/rutas" style={{ color: "#a8553a", fontWeight: 700, textDecoration: "underline" }}>
                       Rutas de atención
-                    </a>.
+                    </Link>.
                   </p>
                 </div>
 
@@ -285,9 +285,9 @@ export default function ContactoPage() {
               <p style={{ margin: 0, fontSize: 13 }}>
                 Las respuestas se realizarán en un plazo de 3 a 5 días hábiles.
                 Para situaciones de emergencia, contacta directamente las{" "}
-                <a href="/rutas" style={{ color: "#00555A", fontWeight: 700, textDecoration: "underline" }}>
+                <Link href="/rutas" style={{ color: "#00555A", fontWeight: 700, textDecoration: "underline" }}>
                   líneas de atención
-                </a>.
+                </Link>.
               </p>
             </div>
           </div>

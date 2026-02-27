@@ -330,7 +330,6 @@ export default function RedesPage() {
         }}
       >
         <div className="container">
-          <span className="hero-badge">Cuestionario #ViveTuRed</span>
           <h1
             style={{
               fontSize: "clamp(2rem, 4vw, 2.6rem)",
