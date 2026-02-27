@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const lines = [
@@ -35,9 +36,9 @@ const lines = [
 ];
 
 const bulletPoints = [
-  { text: "Fomento de la cultura digital responsable" },
-  { text: "Prevención de violencia en cada espacio digital" },
-  { text: "Recursos creativos para la sensibilización" },
+  { text: "Aprende a identificar señales de riesgo" },
+  { text: "Conoce rutas de apoyo confiables" },
+  { text: "Fortalece tu red de cuidado en la universidad" },
 ];
 
 export default function HomePage() {
@@ -75,18 +76,13 @@ export default function HomePage() {
 
             <div className="hero-visual">
               <div className="hero-card-main">
+                <div className="hero-card-watermark" aria-hidden="true" />
                 <div className="hero-card-inner">
-                  <span style={{ fontSize: 14, opacity: 0.85, letterSpacing: 1 }}>#ViveTuRed</span>
                   <div style={{ fontSize: 28, fontWeight: 300, lineHeight: 1.3, marginTop: 12 }}>
-                    Comunidad
+                    #ViveTuRed
                   </div>
                   <div style={{ fontSize: 13, opacity: 0.6, marginTop: 8 }}>redes que protegen</div>
                 </div>
-              </div>
-              <div className="hero-card-float">
-                <div style={{ fontSize: 20, marginBottom: 4 }}>🤝</div>
-                <div style={{ fontSize: 12, fontWeight: 600, color: "#1D3E2A" }}>Red activa</div>
-                <div style={{ fontSize: 11, color: "#5a7d66" }}>Apoyo mutuo</div>
               </div>
             </div>
           </div>
@@ -98,27 +94,35 @@ export default function HomePage() {
       <div className="container" style={{ paddingTop: 72, paddingBottom: 48 }}>
         <div className="mission-grid">
           <div className="mission-visual">
-            <div className="mission-image-block">
-              <div className="mission-image-main">
-                <span style={{ fontSize: 48 }}>📖</span>
+            <div className="mission-visual-card">
+              <div className="mission-visual-media" aria-hidden="true">
+                <span className="mission-visual-tag">#ViveTuRed</span>
+                <Image
+                  src="/Icono_Blanco.png"
+                  alt=""
+                  aria-hidden="true"
+                  width={170}
+                  height={170}
+                  className="mission-visual-logo"
+                />
               </div>
-              <div className="mission-script">
-                <em style={{ fontFamily: "Georgia, serif", fontSize: 20, color: "#1D3E2A", lineHeight: 1.4 }}>
-                  Colectivo de<br />Investigación
-                </em>
-              </div>
+              <h3 className="mission-visual-title">Acompañamiento para actuar</h3>
+              <p className="mission-visual-desc">
+                Información clara, rutas de atención y recursos prácticos para tomar decisiones con más seguridad.
+              </p>
             </div>
           </div>
           <div className="mission-content">
-            <span className="badge badge-teal" style={{ marginBottom: 12 }}>Sobre #ViveTuRed</span>
             <h2 className="section-title" style={{ fontSize: "1.75rem", marginBottom: 16 }}>
-              Un puente entre la investigación y la acción creativa.
+              Qué es #ViveTuRed y cómo te acompaña
             </h2>
             <p style={{ lineHeight: 1.8, color: "#5a7d66", marginBottom: 24 }}>
-              Somos un colectivo dedicado a la investigación social que busca
-              entender y mejorar nuestras interacciones en el entorno universitario.
-              A través de todas las herramientas, talleres y materiales de apoyo,
-              construimos un espacio seguro para todos.
+              #ViveTuRed conecta investigación y herramientas prácticas para prevenir la
+              violencia basada en género en el entorno universitario.
+            </p>
+            <p style={{ lineHeight: 1.8, color: "#5a7d66", marginBottom: 24 }}>
+              Aquí encontrarás rutas de atención, recursos educativos y espacios para
+              fortalecer tu red de apoyo personal e institucional.
             </p>
             <div className="mission-bullets">
               {bulletPoints.map((bp) => (
@@ -137,9 +141,6 @@ export default function HomePage() {
       <section style={{ background: "var(--bg)" }}>
       <div className="container" style={{ paddingTop: 64, paddingBottom: 48 }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <span className="badge badge-forest" style={{ marginBottom: 12 }}>
-            Herramientas disponibles
-          </span>
           <h2 className="section-title" style={{ marginBottom: 10 }}>
             Elige por dónde empezar
           </h2>
@@ -153,7 +154,9 @@ export default function HomePage() {
           {lines.map((item) => (
             <Link key={item.href} href={item.href} className="line-card">
               <div className="line-card-image" style={{ background: item.gradient }}>
-                <span style={{ fontSize: 36 }}>{item.icon}</span>
+                <div className="line-card-icon" aria-hidden="true">
+                  <span className="line-card-icon-emoji">{item.icon}</span>
+                </div>
               </div>
               <div className="line-card-body">
                 <span className={`badge ${item.badgeClass}`} style={{ marginBottom: 10 }}>
@@ -171,7 +174,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        <div className="notice notice-warning" style={{ maxWidth: 860, margin: "24px auto 0" }}>
+        <div className="notice notice-warning lines-urgent" style={{ maxWidth: 860, margin: "24px auto 0" }}>
           <span style={{ fontSize: 18 }}>⚠️</span>
           <div>
             <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Si necesitas ayuda urgente</strong>
@@ -186,31 +189,104 @@ export default function HomePage() {
       {/* ── Redes (introducción) ── */}
       <section style={{ background: "#f5f0e1" }}>
       <div className="container" style={{ paddingTop: 56, paddingBottom: 56 }}>
-        <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
-          <h2 className="section-title" style={{ marginBottom: 12, fontSize: "1.85rem" }}>
-            Visualizador de redes personales
-          </h2>
-          <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", maxWidth: 660, margin: "0 auto 10px" }}>
-            Esta herramienta te ayuda a reconocer las personas e instituciones con las que puedes contar
-            en momentos importantes.
-          </p>
-          <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", maxWidth: 660, margin: "0 auto 28px" }}>
-            No necesitas experiencia previa: encontrarás una guía simple para empezar paso a paso.
-          </p>
-
-          <div className="notice notice-info" style={{ margin: "0 auto 24px", maxWidth: 660, textAlign: "left" }}>
-            <span style={{ fontSize: 20 }}>🔒</span>
-            <div>
-              <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Privado y anónimo</strong>
-              <p style={{ margin: "4px 0 0", fontSize: 14 }}>
-                Tu información se procesa solo en tu navegador. No guardamos ni enviamos datos personales.
-              </p>
-            </div>
+        <div className="redes-intro-shell">
+          <div className="redes-intro-heading">
+            <h2 className="section-title" style={{ marginBottom: 12, fontSize: "1.85rem" }}>
+              Visualizador de redes personales
+            </h2>
           </div>
 
-          <Link className="btn btn-primary" href="/redes" style={{ fontSize: 15, padding: "12px 32px" }}>
-            Entrar al visualizador →
-          </Link>
+          <div className="redes-intro-layout">
+            <div className="redes-intro-visual" aria-hidden="true">
+              <div className="redes-intro-graph">
+                <svg viewBox="0 0 360 250" className="redes-intro-svg">
+                  <g className="redes-intro-rings">
+                    <circle cx="180" cy="130" r="56" className="redes-intro-ring" />
+                    <circle cx="180" cy="130" r="94" className="redes-intro-ring" />
+                    <circle cx="180" cy="130" r="132" className="redes-intro-ring" />
+                  </g>
+
+                  <g className="redes-intro-edges">
+                    <line x1="180" y1="130" x2="180" y2="42" className="redes-intro-edge redes-intro-edge-gold" />
+                    <line x1="180" y1="130" x2="278" y2="196" className="redes-intro-edge redes-intro-edge-forest" />
+                    <line x1="180" y1="130" x2="72" y2="200" className="redes-intro-edge redes-intro-edge-danger" />
+                  </g>
+
+                  <g className="redes-intro-nodes">
+                    <circle cx="180" cy="130" r="33" className="redes-intro-node-halo" />
+
+                    <g transform="translate(180 130)">
+                      <circle r="27" className="redes-intro-node redes-intro-node-ego" />
+                      <text y="6" textAnchor="middle" className="redes-intro-center-label">TÚ</text>
+                    </g>
+
+                    <g transform="translate(180 42)">
+                      <circle r="26" className="redes-intro-node redes-intro-node-gold" />
+                      <g transform="translate(-8 -8)" className="redes-intro-node-icon-shape">
+                        <circle cx="6" cy="5" r="3.5" />
+                        <circle cx="13" cy="5" r="3.5" />
+                        <path d="M1 14c0-2.8 2.2-4.8 5-4.8s5 2 5 4.8H1z" />
+                        <path d="M8 14c0-2.8 2.2-4.8 5-4.8s5 2 5 4.8H8z" />
+                      </g>
+                    </g>
+                    <text x="180" y="80" textAnchor="middle" className="redes-intro-node-label-dark">Familia</text>
+
+                    <g transform="translate(278 196)">
+                      <circle r="28" className="redes-intro-node-halo-soft" />
+                      <circle r="25" className="redes-intro-node redes-intro-node-forest" />
+                      <g transform="translate(-8 -9)" className="redes-intro-node-icon-shape">
+                        <path d="M1 6L8 2l7 4H1z" />
+                        <path d="M2 7h2v7H2zM6 7h2v7H6zM10 7h2v7h-2z" />
+                        <path d="M0 14h16v2H0z" />
+                      </g>
+                    </g>
+                    <text x="278" y="230" textAnchor="middle" className="redes-intro-node-label-dark">Universidad</text>
+
+                    <g transform="translate(72 200)">
+                      <circle r="23" className="redes-intro-node-halo-soft" />
+                      <circle r="20" className="redes-intro-node redes-intro-node-danger" />
+                      <g transform="translate(-8 -8)">
+                        <circle cx="8" cy="8" r="5.2" fill="none" stroke="white" strokeWidth="1.4" />
+                        <path d="M2.8 8h10.4" fill="none" stroke="white" strokeWidth="1.2" strokeLinecap="round" />
+                        <path d="M8 2.8c-1.8 1.6-1.8 8.8 0 10.4" fill="none" stroke="white" strokeWidth="1.2" strokeLinecap="round" />
+                        <path d="M8 2.8c1.8 1.6 1.8 8.8 0 10.4" fill="none" stroke="white" strokeWidth="1.2" strokeLinecap="round" />
+                      </g>
+                    </g>
+                    <text x="72" y="228" textAnchor="middle" className="redes-intro-node-label-dark">Comunidad</text>
+                  </g>
+                </svg>
+              </div>
+              <div className="redes-intro-chips">
+                <span className="redes-intro-chip">Nodos: 4</span>
+                <span className="redes-intro-chip">Aristas: 3</span>
+                <span className="redes-intro-chip">Anillos de cercanía</span>
+              </div>
+            </div>
+
+            <div className="redes-intro-content">
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", margin: "0 0 14px" }}>
+                Esta herramienta te ayuda a reconocer las personas e instituciones con las que puedes contar
+                en momentos importantes.
+              </p>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", margin: "0 0 18px" }}>
+                No necesitas experiencia previa: encontrarás una guía simple para empezar paso a paso.
+              </p>
+
+              <div className="notice notice-info redes-intro-notice" style={{ marginBottom: 22 }}>
+                <span style={{ fontSize: 20 }}>🔒</span>
+                <div>
+                  <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Privado y anónimo</strong>
+                  <p style={{ margin: "4px 0 0", fontSize: 14 }}>
+                    Tu información se procesa solo en tu navegador. No guardamos ni enviamos datos personales.
+                  </p>
+                </div>
+              </div>
+
+              <Link className="btn btn-primary" href="/redes" style={{ fontSize: 15, padding: "12px 32px" }}>
+                Entrar al visualizador →
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
       </section>
