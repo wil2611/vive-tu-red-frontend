@@ -68,7 +68,6 @@ export default function EquipoPage() {
       {/* Hero */}
       <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
         <div className="container">
-          <span className="hero-badge">Quiénes somos</span>
           <h1
             style={{
               fontSize: "clamp(2rem, 4vw, 2.6rem)",

@@ -13,20 +13,24 @@ const lines = [
   {
     icon: "🛤️",
     title: "Rutas de Atención",
-    desc: "Directorio de instituciones y contactos de emergencia para situaciones de Violencia Basada en Género.",
+    desc: "Encuentra instituciones y contactos de emergencia si necesitas orientación o apoyo inmediato.",
     href: "/rutas",
-    cta: "Ver directorio",
+    cta: "Ir a rutas",
     color: "#00555A",
     gradient: "linear-gradient(135deg, #00555A 0%, #007a80 100%)",
+    badge: "Atención inmediata",
+    badgeClass: "badge-teal",
   },
   {
     icon: "📚",
     title: "Recursos Educativos",
-    desc: "Cartillas, guías, infografías y materiales metodológicos creados para educadores y familias.",
+    desc: "Explora cartillas, guías e infografías para prevenir violencias y fortalecer redes de cuidado.",
     href: "/recursos",
-    cta: "Acceder",
+    cta: "Ver recursos",
     color: "#DCA15D",
     gradient: "linear-gradient(135deg, #DCA15D 0%, #e4b87e 100%)",
+    badge: "Formación y prevención",
+    badgeClass: "badge-gold",
   },
 ];
 
@@ -44,7 +48,6 @@ export default function HomePage() {
         <div className="container">
           <div className="hero-grid">
             <div className="hero-content">
-              <span className="hero-badge">Investigación–creación y prevención</span>
               <h1 className="hero-title">
                 Transformando realidades a través de la red.
               </h1>
@@ -134,12 +137,15 @@ export default function HomePage() {
       <section style={{ background: "var(--bg)" }}>
       <div className="container" style={{ paddingTop: 64, paddingBottom: 48 }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <h2 className="section-title" style={{ marginBottom: 8 }}>
-            Nuestras líneas de acción
+          <span className="badge badge-forest" style={{ marginBottom: 12 }}>
+            Herramientas disponibles
+          </span>
+          <h2 className="section-title" style={{ marginBottom: 10 }}>
+            Elige por dónde empezar
           </h2>
           <p className="section-subtitle" style={{ margin: "0 auto" }}>
-            Accede a herramientas diseñadas para informar, proteger y empoderar a
-            nuestra comunidad en el ecosistema universitario.
+            Cada recurso responde a una necesidad distinta: apoyo inmediato o
+            materiales para aprender y compartir.
           </p>
         </div>
 
@@ -150,6 +156,9 @@ export default function HomePage() {
                 <span style={{ fontSize: 36 }}>{item.icon}</span>
               </div>
               <div className="line-card-body">
+                <span className={`badge ${item.badgeClass}`} style={{ marginBottom: 10 }}>
+                  {item.badge}
+                </span>
                 <h3 className="line-card-title" style={{ color: item.color }}>
                   {item.title}
                 </h3>
@@ -161,130 +170,47 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
+
+        <div className="notice notice-warning" style={{ maxWidth: 860, margin: "24px auto 0" }}>
+          <span style={{ fontSize: 18 }}>⚠️</span>
+          <div>
+            <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Si necesitas ayuda urgente</strong>
+            <p style={{ margin: "4px 0 0", fontSize: 14 }}>
+              Empieza por Rutas de Atención para encontrar contactos e instituciones de apoyo.
+            </p>
+          </div>
+        </div>
       </div>
       </section>
 
-      {/* ── Redes (extra card) ── */}
+      {/* ── Redes (introduccion) ── */}
       <section style={{ background: "#f5f0e1" }}>
       <div className="container" style={{ paddingTop: 56, paddingBottom: 56 }}>
-        <div style={{ maxWidth: 920, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 32 }}>
-            <span style={{ fontSize: 40, marginBottom: 12, display: "block" }}>🔗</span>
-            <h2 className="section-title" style={{ marginBottom: 12, fontSize: "1.85rem" }}>
-              Visualizador de redes personales
-            </h2>
-            <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", maxWidth: 640, margin: "0 auto" }}>
-              Herramienta interactiva y educativa para mapear, analizar y visualizar tus redes 
-              de apoyo de forma totalmente anónima y privada.
-            </p>
-          </div>
+        <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
+          <h2 className="section-title" style={{ marginBottom: 12, fontSize: "1.85rem" }}>
+            Visualizador de redes personales
+          </h2>
+          <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", maxWidth: 660, margin: "0 auto 10px" }}>
+            Esta herramienta te ayuda a reconocer las personas e instituciones con las que puedes contar
+            en momentos importantes.
+          </p>
+          <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", maxWidth: 660, margin: "0 auto 28px" }}>
+            No necesitas experiencia previa: encontraras una guia simple para empezar paso a paso.
+          </p>
 
-          <div style={{ 
-            display: "grid", 
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
-            gap: 16, 
-            marginBottom: 32 
-          }}>
-            <div style={{
-              background: "white",
-              padding: "20px",
-              borderRadius: 12,
-              border: "1px solid #e0d9bd",
-            }}>
-              <div style={{ fontSize: 26, marginBottom: 8 }}>📋</div>
-              <h4 style={{ 
-                fontSize: 14, 
-                fontWeight: 700, 
-                color: "#1D3E2A", 
-                marginBottom: 6,
-                fontFamily: "ui-sans-serif, system-ui, sans-serif"
-              }}>
-                Información general
-              </h4>
-              <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
-                Configura tu perfil anónimo
-              </p>
-            </div>
-
-            <div style={{
-              background: "white",
-              padding: "20px",
-              borderRadius: 12,
-              border: "1px solid #e0d9bd",
-            }}>
-              <div style={{ fontSize: 26, marginBottom: 8 }}>👥</div>
-              <h4 style={{ 
-                fontSize: 14, 
-                fontWeight: 700, 
-                color: "#1D3E2A", 
-                marginBottom: 6,
-                fontFamily: "ui-sans-serif, system-ui, sans-serif"
-              }}>
-                Mapea conexiones
-              </h4>
-              <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
-                Agrega personas y sus relaciones
-              </p>
-            </div>
-
-            <div style={{
-              background: "white",
-              padding: "20px",
-              borderRadius: 12,
-              border: "1px solid #e0d9bd",
-            }}>
-              <div style={{ fontSize: 26, marginBottom: 8 }}>🤲</div>
-              <h4 style={{ 
-                fontSize: 14, 
-                fontWeight: 700, 
-                color: "#1D3E2A", 
-                marginBottom: 6,
-                fontFamily: "ui-sans-serif, system-ui, sans-serif"
-              }}>
-                Funciones de apoyo
-              </h4>
-              <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
-                7 tipos de soporte identificables
-              </p>
-            </div>
-
-            <div style={{
-              background: "white",
-              padding: "20px",
-              borderRadius: 12,
-              border: "1px solid #e0d9bd",
-            }}>
-              <div style={{ fontSize: 26, marginBottom: 8 }}>📊</div>
-              <h4 style={{ 
-                fontSize: 14, 
-                fontWeight: 700, 
-                color: "#1D3E2A", 
-                marginBottom: 6,
-                fontFamily: "ui-sans-serif, system-ui, sans-serif"
-              }}>
-                Visualización gráfica
-              </h4>
-              <p style={{ fontSize: 13, lineHeight: 1.6, color: "#5a7d66", margin: 0 }}>
-                Grafo interactivo de tu red
-              </p>
-            </div>
-          </div>
-
-          <div className="notice notice-info" style={{ marginBottom: 24 }}>
+          <div className="notice notice-info" style={{ margin: "0 auto 24px", maxWidth: 660, textAlign: "left" }}>
             <span style={{ fontSize: 20 }}>🔒</span>
             <div>
-              <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>100% anónimo y privado</strong>
+              <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Privado y anonimo</strong>
               <p style={{ margin: "4px 0 0", fontSize: 14 }}>
-                Toda la información se procesa localmente en tu navegador. No se almacena ni envía ningún dato personal.
+                Tu informacion se procesa solo en tu navegador. No guardamos ni enviamos datos personales.
               </p>
             </div>
           </div>
 
-          <div style={{ textAlign: "center" }}>
-            <Link className="btn btn-primary" href="/redes" style={{ fontSize: 15, padding: "12px 32px" }}>
-              Comenzar a Mapear tu Red →
-            </Link>
-          </div>
+          <Link className="btn btn-primary" href="/redes" style={{ fontSize: 15, padding: "12px 32px" }}>
+            Entrar al visualizador →
+          </Link>
         </div>
       </div>
       </section>

@@ -369,7 +369,7 @@ a { color: inherit; text-decoration: none; }
 /* ── Lines of action cards ── */
 .lines-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
 }
 .line-card {
@@ -378,7 +378,9 @@ a { color: inherit; text-decoration: none; }
   border-radius: 20px;
   overflow: hidden;
   transition: all 0.3s ease;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .line-card:hover {
   border-color: transparent;
@@ -404,6 +406,9 @@ a { color: inherit; text-decoration: none; }
 }
 .line-card-body {
   padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 .line-card-title {
   font-weight: 700;
@@ -416,6 +421,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.7;
   color: #5a7d66;
   margin: 0 0 16px;
+  flex: 1;
 }
 .line-card-link {
   font-size: 14px;
