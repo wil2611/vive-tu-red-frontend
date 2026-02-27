@@ -154,17 +154,12 @@ export default function HomePage() {
           {lines.map((item) => (
             <Link key={item.href} href={item.href} className="line-card">
               <div className="line-card-image" style={{ background: item.gradient }}>
-                <div className="line-card-icon" aria-hidden="true">
-                  <span className="line-card-icon-emoji">{item.icon}</span>
-                </div>
+                <h3 className="line-card-image-title">{item.title}</h3>
               </div>
               <div className="line-card-body">
                 <span className={`badge ${item.badgeClass}`} style={{ marginBottom: 10 }}>
                   {item.badge}
                 </span>
-                <h3 className="line-card-title" style={{ color: item.color }}>
-                  {item.title}
-                </h3>
                 <p className="line-card-desc">{item.desc}</p>
                 <span className="line-card-link" style={{ color: item.color }}>
                   {item.cta} →
