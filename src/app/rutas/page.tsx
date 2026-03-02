@@ -1,9 +1,9 @@
-import type React from "react";
+﻿import type React from "react";
 
 const emergencyContacts = [
   { name: "Línea 155", desc: "Orientación a mujeres víctimas de violencia", phone: "155" },
   { name: "Línea 141", desc: "Protección de niños, niñas y adolescentes (ICBF)", phone: "141" },
-  { name: "Línea 123", desc: "Emergencias generales", phone: "123" },
+  { name: "Linea 123", desc: "Emergencias generales", phone: "123" },
   { name: "Línea 122", desc: "Fiscalía General de la Nación", phone: "122" },
 ];
 
@@ -14,7 +14,7 @@ const institutions = [
     desc: "Recepción de denuncias, medidas de protección y orientación jurídica para víctimas de violencia intrafamiliar y VBG.",
     badge: "Presencial",
     badgeColor: "#00555A",
-    icon: "🏛️",
+    icon: "CF",
   },
   {
     name: "Fiscalía General de la Nación",
@@ -22,7 +22,7 @@ const institutions = [
     desc: "Recepción de denuncias penales por delitos de violencia basada en género y acompañamiento en el proceso judicial.",
     badge: "Denuncia",
     badgeColor: "#C96A4A",
-    icon: "⚖️",
+    icon: "FG",
   },
   {
     name: "Secretaría de la Mujer",
@@ -30,7 +30,7 @@ const institutions = [
     desc: "Asesoría jurídica, psicológica y social para mujeres en situación de violencia.",
     badge: "Orientación",
     badgeColor: "#DCA15D",
-    icon: "🤝",
+    icon: "SM",
   },
   {
     name: "Bienestar Universitario",
@@ -38,7 +38,7 @@ const institutions = [
     desc: "Acompañamiento psicológico y orientación para estudiantes que enfrentan situaciones de violencia en el entorno universitario.",
     badge: "Universidad",
     badgeColor: "#1D3E2A",
-    icon: "🎓",
+    icon: "BU",
   },
   {
     name: "Defensoría del Pueblo",
@@ -46,7 +46,7 @@ const institutions = [
     desc: "Protección y promoción de derechos humanos, orientación gratuita y acompañamiento a víctimas.",
     badge: "Derechos",
     badgeColor: "#00555A",
-    icon: "🛡️",
+    icon: "DP",
   },
   {
     name: "Centros de atención a víctimas",
@@ -54,17 +54,19 @@ const institutions = [
     desc: "Servicios de salud, asesoría legal y apoyo psicosocial para víctimas de violencia basada en género.",
     badge: "Integral",
     badgeColor: "#DCA15D",
-    icon: "💙",
+    icon: "CA",
   },
 ];
 
-const whenToSeekHelp = [
-  { icon: "🚨", label: "Peligro inmediato", desc: "Sientes que tu integridad física o la de alguien cercano está en riesgo." },
-  { icon: "😰", label: "Miedo constante", desc: "Vives con temor a las reacciones de una persona o evitas situaciones por miedo." },
-  { icon: "💔", label: "Violencia emocional", desc: "Experimentas humillaciones, control excesivo, aislamiento o manipulación." },
-  { icon: "🤐", label: "No sabes a quién acudir", desc: "No tienes con quién hablar o sientes que nadie te creerá." },
-  { icon: "👀", label: "Eres testigo", desc: "Conoces a alguien que puede estar viviendo una situación de violencia." },
-  { icon: "📋", label: "Quieres denunciar", desc: "Deseas iniciar un proceso legal o simplemente necesitas orientación." },
+type SignalTone = "danger" | "caution" | "emotional" | "support" | "witness" | "report";
+
+const whenToSeekHelp: Array<{ tone: SignalTone; cue: string; label: string; desc: string }> = [
+  { tone: "danger", cue: "Urgente", label: "Peligro inmediato", desc: "Sientes que tu integridad física o la de alguien cercano está en riesgo." },
+  { tone: "caution", cue: "Alerta", label: "Miedo constante", desc: "Vives con temor a las reacciones de una persona o evitas situaciones por miedo." },
+  { tone: "emotional", cue: "Cuidado", label: "Violencia emocional", desc: "Experimentas humillaciones, control excesivo, aislamiento o manipulación." },
+  { tone: "support", cue: "Acompañamiento", label: "No sabes a quién acudir", desc: "No tienes con quién hablar o sientes que nadie te creerá." },
+  { tone: "witness", cue: "Observación", label: "Eres testigo", desc: "Conoces a alguien que puede estar viviendo una situación de violencia." },
+  { tone: "report", cue: "Acción legal", label: "Quieres denunciar", desc: "Deseas iniciar un proceso legal o simplemente necesitas orientación." },
 ];
 
 const processSteps = [
@@ -94,6 +96,27 @@ const processSteps = [
   },
 ];
 
+const quickSteps = [
+  {
+    num: "1",
+    title: "Cuándo acudir",
+    hint: "Señales de alerta y momentos clave para pedir apoyo.",
+    href: "#paso-1",
+  },
+  {
+    num: "2",
+    title: "A quién contactar",
+    hint: "Líneas e instituciones para orientación inmediata.",
+    href: "#paso-2",
+  },
+  {
+    num: "3",
+    title: "Qué esperar",
+    hint: "Cómo suele avanzar el proceso de atención.",
+    href: "#paso-3",
+  },
+];
+
 const stepLabelStyle: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
@@ -111,49 +134,40 @@ const stepLabelStyle: React.CSSProperties = {
 export default function RutasPage() {
   return (
     <div>
-      {/* ── Hero ── */}
+      {/* Hero */}
       <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
         <div className="container">
-          <h1 style={{ fontSize: "clamp(2rem, 4vw, 2.6rem)", fontWeight: 800, color: "#1D3E2A", margin: "16px 0 12px", fontFamily: "Georgia, serif", lineHeight: 1.15 }}>
-            Rutas de atención
-          </h1>
-          <p style={{ fontSize: "1.1rem", lineHeight: 1.8, color: "#5a7d66", maxWidth: 580, margin: "0 0 20px" }}>
-            Si tú o alguien cercano necesita apoyo…
-          </p>
-          <p style={{ fontSize: "1rem", lineHeight: 1.75, color: "#5a7d66", maxWidth: 600, margin: 0 }}>
-            Aquí encontrarás los pasos claros para saber cuándo pedir ayuda, a quién contactar
-            y qué esperar durante el proceso de atención en situaciones de Violencia Basada en Género (VBG).
-          </p>
-
-          {/* Paso a paso visual */}
-          <div style={{ display: "flex", gap: 0, marginTop: 40, flexWrap: "wrap" }}>
-            {[
-              { num: "1", label: "¿Cuándo acudir?", href: "#paso-1" },
-              { num: "2", label: "¿A quién contactar?", href: "#paso-2" },
-              { num: "3", label: "¿Qué esperar?", href: "#paso-3" },
-            ].map((s, i) => (
-              <div key={s.num} style={{ display: "flex", alignItems: "center", gap: 0 }}>
-                <a
-                  href={s.href}
-                  className="step-nav-btn"
-                >
-                  <span style={{ width: 28, height: 28, borderRadius: "50%", background: "#1D3E2A", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 13, fontFamily: "ui-sans-serif, system-ui, sans-serif", flexShrink: 0 }}>
-                    {s.num}
-                  </span>
-                  <span style={{ fontWeight: 600, fontSize: 14, color: "#1D3E2A", fontFamily: "ui-sans-serif, system-ui, sans-serif", whiteSpace: "nowrap" }}>
-                    {s.label}
-                  </span>
-                </a>
-                {i < 2 && (
-                  <span style={{ padding: "0 4px", color: "#d4cdaf", fontSize: 18, userSelect: "none" }}>›</span>
-                )}
+          <div className="rutas-hero-shell">
+            <div className="rutas-hero-grid">
+              <div className="rutas-hero-copy">
+                <h1 className="rutas-hero-title">Rutas de atención</h1>
+                <p className="rutas-hero-lead">
+                  Si tú o alguien cercano necesita apoyo, aquí tienes una ruta simple para actuar con más claridad.
+                </p>
+                <p className="rutas-hero-desc">
+                  Encontrarás cuándo pedir ayuda, a quién contactar y qué esperar durante el proceso de atención
+                  en situaciones de Violencia Basada en Género (VBG).
+                </p>
               </div>
-            ))}
+
+              <div className="rutas-hero-nav" aria-label="Pasos principales">
+                {quickSteps.map((step) => (
+                  <a key={step.num} href={step.href} className="rutas-step-link">
+                    <span className="rutas-step-num">{step.num}</span>
+                    <span className="rutas-step-copy">
+                      <strong>{step.title}</strong>
+                      <small>{step.hint}</small>
+                    </span>
+                    <span className="rutas-step-arrow" aria-hidden="true">&gt;</span>
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── PASO 1: ¿Cuándo acudir? ── */}
+      {/* PASO 1 */}
       <section id="paso-1" style={{ background: "#f5f0e1" }}>
         <div className="container" style={{ paddingTop: 52, paddingBottom: 52 }}>
           <div style={stepLabelStyle}>
@@ -169,29 +183,27 @@ export default function RutasPage() {
             Estas son algunas situaciones en las que es importante buscar apoyo:
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
+          <div className="rutas-signal-grid">
             {whenToSeekHelp.map((item) => (
-              <div
+              <article
                 key={item.label}
-                className="card"
-                style={{ display: "flex", gap: 16, alignItems: "flex-start", padding: "20px 22px" }}
+                className={`rutas-signal-card rutas-signal-${item.tone}`}
               >
-                <span style={{ fontSize: 26, flexShrink: 0, lineHeight: 1 }}>{item.icon}</span>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 15, color: "#1D3E2A", marginBottom: 4, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                    {item.label}
+                <div className="rutas-signal-content">
+                  <div className="rutas-signal-head">
+                    <h3 className="rutas-signal-title">{item.label}</h3>
+                    <span className="rutas-signal-cue">{item.cue}</span>
                   </div>
-                  <p style={{ fontSize: 13.5, color: "#5a7d66", margin: 0, lineHeight: 1.65 }}>{item.desc}</p>
+                  <p className="rutas-signal-desc">{item.desc}</p>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
 
-          <div className="notice notice-warning" style={{ maxWidth: 720, marginTop: 28 }}>
-            <span style={{ fontSize: 20 }}>⚠️</span>
+          <div className="notice notice-warning rutas-danger-box" style={{ maxWidth: 900, marginTop: 28 }}>
             <div>
-              <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Si estás en peligro ahora mismo</strong>
-              <p style={{ margin: "4px 0 0" }}>
+              <strong className="rutas-danger-title">Si estás en peligro ahora mismo</strong>
+              <p className="rutas-danger-text" style={{ margin: "4px 0 0" }}>
                 Llama al <strong>155</strong> o al <strong>123</strong>. No necesitas estar segura/o para pedir ayuda. No estás sola/solo.
               </p>
             </div>
@@ -199,7 +211,7 @@ export default function RutasPage() {
         </div>
       </section>
 
-      {/* ── PASO 2: ¿A quién contactar? ── */}
+      {/* PASO 2 */}
       <section id="paso-2" style={{ background: "var(--bg)" }}>
         <div className="container" style={{ paddingTop: 52, paddingBottom: 52 }}>
           <div style={stepLabelStyle}>
@@ -214,75 +226,57 @@ export default function RutasPage() {
             Dependiendo de tu situación, puedes acudir a una línea de emergencia o a una institución especializada.
           </p>
 
-          {/* Líneas de emergencia */}
-          <h3 style={{ fontSize: "0.8rem", fontWeight: 700, color: "#1D3E2A", marginBottom: 14, fontFamily: "ui-sans-serif, system-ui, sans-serif", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-            📞 Líneas de emergencia — disponibles las 24 horas
+          <h3 className="rutas-step2-subtitle">
+            Líneas de emergencia - disponibles las 24 horas
           </h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 36 }}>
+          <div className="rutas-emergency-grid">
             {emergencyContacts.map((c) => (
               <div
                 key={c.phone}
-                style={{
-                  background: "rgba(201, 106, 74, 0.07)",
-                  border: "2px solid rgba(201, 106, 74, 0.18)",
-                  borderRadius: 14,
-                  padding: "18px 22px",
-                  textAlign: "center",
-                }}
+                className="rutas-emergency-card"
               >
-                <div style={{ fontSize: 26, fontWeight: 800, color: "#C96A4A", fontFamily: "ui-sans-serif, system-ui, sans-serif", marginBottom: 4 }}>
+                <div className="rutas-emergency-phone">
                   {c.phone}
                 </div>
-                <div style={{ fontWeight: 700, fontSize: 14, color: "#1D3E2A", fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                <div className="rutas-emergency-name">
                   {c.name}
                 </div>
-                <div style={{ fontSize: 12.5, color: "#5a7d66", marginTop: 4, lineHeight: 1.5 }}>{c.desc}</div>
+                <div className="rutas-emergency-desc">{c.desc}</div>
+                <a className="rutas-call-btn" href={`tel:${c.phone}`}>
+                  Llamar
+                </a>
               </div>
             ))}
           </div>
 
-          {/* Instituciones */}
-          <h3 style={{ fontSize: "0.8rem", fontWeight: 700, color: "#1D3E2A", marginBottom: 14, fontFamily: "ui-sans-serif, system-ui, sans-serif", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-            🏛️ Instituciones de atención
+          <h3 className="rutas-step2-subtitle">
+            Instituciones de atención
           </h3>
-          <div style={{ display: "grid", gap: 14 }}>
+          <div className="rutas-institutions-grid">
             {institutions.map((inst) => (
               <div
                 key={inst.name}
-                className="card"
-                style={{ display: "flex", gap: 18, alignItems: "flex-start", flexWrap: "wrap", padding: "20px 24px" }}
+                className="rutas-inst-card"
               >
                 <div
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 12,
-                    background: `${inst.badgeColor}14`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 20,
-                    flexShrink: 0,
-                  }}
+                  className="rutas-inst-icon"
+                  style={{ background: `${inst.badgeColor}14`, color: inst.badgeColor }}
                 >
                   {inst.icon}
                 </div>
-                <div style={{ flex: 1, minWidth: 200 }}>
-                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginBottom: 2 }}>
-                    <h4 style={{ fontWeight: 700, fontSize: 15, color: "#1D3E2A", margin: 0, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                <div className="rutas-inst-content">
+                  <div className="rutas-inst-head">
+                    <h4 className="rutas-inst-title">
                       {inst.name}
                     </h4>
-                    <span
-                      className="badge"
-                      style={{ background: `${inst.badgeColor}14`, color: inst.badgeColor, fontSize: 11 }}
-                    >
+                    <span className="badge rutas-inst-badge" style={{ background: `${inst.badgeColor}14`, color: inst.badgeColor }}>
                       {inst.badge}
                     </span>
                   </div>
-                  <div style={{ fontSize: 12.5, color: "#5a7d66", marginBottom: 5, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                  <div className="rutas-inst-type">
                     {inst.type}
                   </div>
-                  <p style={{ fontSize: 13.5, lineHeight: 1.65, color: "#5a7d66", margin: 0 }}>
+                  <p className="rutas-inst-desc">
                     {inst.desc}
                   </p>
                 </div>
@@ -292,7 +286,7 @@ export default function RutasPage() {
         </div>
       </section>
 
-      {/* ── PASO 3: ¿Qué esperar del proceso? ── */}
+      {/* PASO 3 */}
       <section id="paso-3" style={{ background: "#f5f0e1" }}>
         <div className="container" style={{ paddingTop: 52, paddingBottom: 56 }}>
           <div style={stepLabelStyle}>
@@ -307,36 +301,29 @@ export default function RutasPage() {
             Conocer el camino reduce la incertidumbre. Así funciona generalmente la atención:
           </p>
 
-          {/* Línea de tiempo del proceso */}
-          <div style={{ display: "grid", gap: 0, maxWidth: 760, marginBottom: 40 }}>
+          <div className="rutas-process-timeline">
             {processSteps.map((step, i) => (
-              <div key={step.num} style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
-                {/* Línea vertical */}
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: step.color, color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 13, fontFamily: "ui-sans-serif, system-ui, sans-serif", flexShrink: 0 }}>
+              <article
+                key={step.num}
+                className={`rutas-process-item ${i === processSteps.length - 1 ? "is-last" : ""}`}
+              >
+                <div className="rutas-process-marker-col">
+                  <div className="rutas-process-marker" style={{ background: step.color }}>
                     {step.num}
                   </div>
-                  {i < processSteps.length - 1 && (
-                    <div style={{ width: 2, flex: 1, minHeight: 24, background: "#d4cdaf", margin: "4px 0" }} />
-                  )}
+                  {i < processSteps.length - 1 && <div className="rutas-process-line" />}
                 </div>
-                {/* Contenido */}
-                <div style={{ paddingBottom: i < processSteps.length - 1 ? 24 : 0, paddingTop: 8 }}>
-                  <h3 style={{ fontWeight: 700, fontSize: 16, color: "#1D3E2A", margin: "0 0 6px", fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                    {step.title}
-                  </h3>
-                  <p style={{ fontSize: 14, color: "#5a7d66", margin: 0, lineHeight: 1.7 }}>
-                    {step.desc}
-                  </p>
+                <div className="rutas-process-content">
+                  <h3 className="rutas-process-title">{step.title}</h3>
+                  <p className="rutas-process-desc">{step.desc}</p>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
-
         </div>
       </section>
 
-      {/* ── Preguntas frecuentes ── */}
+      {/* FAQ */}
       <section style={{ background: "var(--bg)" }}>
         <div className="container" style={{ paddingTop: 52, paddingBottom: 56 }}>
           <div className="accent-bar" />
