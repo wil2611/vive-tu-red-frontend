@@ -101,45 +101,32 @@ export default function EquipoPage() {
       {/* Hero */}
       <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
         <div className="container">
-          <h1
-            style={{
-              fontSize: "clamp(2rem, 4vw, 2.6rem)",
-              fontWeight: 800,
-              color: "#1D3E2A",
-              margin: "16px 0 12px",
-              fontFamily: "Georgia, serif",
-              lineHeight: 1.15,
-            }}
-          >
-            Equipo investigador
-          </h1>
-          <p
-            style={{
-              fontSize: "1.05rem",
-              lineHeight: 1.75,
-              color: "#5a7d66",
-              maxWidth: 800,
-              margin: "0 0 18px",
-            }}
-          >
-            Conoce a las investigadoras e investigadores que integran #ViveTuRed.
-            El equipo reúne perfiles de ciencias sociales, educación, derecho, diseño,
-            ciencias básicas e ingeniería para abordar la prevención de la VBG desde
-            una perspectiva interdisciplinaria.
-          </p>
+          <div className="equipo-hero-shell">
+            <h1 className="equipo-hero-title">
+              Equipo investigador
+            </h1>
+            <p className="equipo-hero-desc">
+              Conoce a las investigadoras e investigadores que integran #ViveTuRed.
+              El equipo reúne perfiles de ciencias sociales, educación, derecho, diseño,
+              ciencias básicas e ingeniería para abordar la prevención de la VBG desde
+              una perspectiva interdisciplinaria.
+            </p>
 
-          <div className="equipo-stats">
-            <div className="equipo-stat-item">
-              <strong>{researchers.length}</strong>
-              <span>Investigadores/as</span>
-            </div>
-            <div className="equipo-stat-item">
-              <strong>{departmentCount}</strong>
-              <span>Departamentos</span>
-            </div>
-            <div className="equipo-stat-item">
-              <strong>{divisionCount}</strong>
-              <span>Divisiones académicas</span>
+            <div className="equipo-hero-panel">
+              <div className="equipo-stats">
+                <div className="equipo-stat-item">
+                  <strong>{researchers.length}</strong>
+                  <span>Investigadores/as</span>
+                </div>
+                <div className="equipo-stat-item">
+                  <strong>{departmentCount}</strong>
+                  <span>Departamentos</span>
+                </div>
+                <div className="equipo-stat-item">
+                  <strong>{divisionCount}</strong>
+                  <span>Divisiones académicas</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

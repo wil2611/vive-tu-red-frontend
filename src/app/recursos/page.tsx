@@ -1,7 +1,7 @@
 const categories = [
-  { id: "prevencion", label: "Prevención", icon: "🛡️", color: "#C96A4A" },
-  { id: "orientacion", label: "Orientación", icon: "🧭", color: "#00555A" },
-  { id: "formacion", label: "Formación", icon: "📚", color: "#1D3E2A" },
+  { id: "prevencion", label: "Prevención", color: "#C96A4A", hint: "Señales y prevención" },
+  { id: "orientacion", label: "Orientación", color: "#00555A", hint: "Rutas y acompañamiento" },
+  { id: "formacion", label: "Formación", color: "#1D3E2A", hint: "Guías y metodología" },
 ];
 
 const resources = [
@@ -111,29 +111,38 @@ const resources = [
 ];
 
 export default function RecursosPage() {
+  const prevencionDocs = resources.filter((r) => r.category === "prevencion");
+
   return (
     <div>
       {/* ── Hero ── */}
       <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
         <div className="container">
-          <h1 style={{ fontSize: "clamp(2rem, 4vw, 2.6rem)", fontWeight: 800, color: "#1D3E2A", margin: "16px 0 12px", fontFamily: "Georgia, serif", lineHeight: 1.15 }}>
-            Recursos y materiales de apoyo
-          </h1>
-          <p style={{ fontSize: "1rem", lineHeight: 1.75, color: "#5a7d66", maxWidth: 600, margin: "0 0 32px" }}>
-            Herramientas para la prevención, orientación y formación en Violencia Basada en Género (VBG).
-            Todos los materiales son de acceso libre y descarga gratuita.
-          </p>
+          <div className="recursos-hero-shell">
+            <h1 className="recursos-hero-title">
+              Recursos y materiales de apoyo
+            </h1>
+            <p className="recursos-hero-desc">
+              Herramientas para la prevención, orientación y formación en Violencia Basada en Género (VBG).
+              Todos los materiales son de acceso libre y descarga gratuita.
+            </p>
 
-          {/* Accesos rápidos por categoría */}
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            {categories.map((cat) => (
-              <a key={cat.id} href={`#${cat.id}`} className="step-nav-btn">
-                <span style={{ fontSize: 18, lineHeight: 1 }}>{cat.icon}</span>
-                <span style={{ fontWeight: 600, fontSize: 14, color: cat.color, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                  {cat.label}
-                </span>
-              </a>
-            ))}
+            {/* Accesos rápidos por categoría */}
+            <div className="recursos-quick-nav" aria-label="Accesos rápidos por categoría">
+              {categories.map((cat) => (
+                <a
+                  key={cat.id}
+                  href={`#${cat.id}`}
+                  className="recursos-quick-link"
+                >
+                  <span className="recursos-quick-copy">
+                    <strong>{cat.label}</strong>
+                    <small>{cat.hint}</small>
+                  </span>
+                  <span className="recursos-quick-arrow" aria-hidden="true">&gt;</span>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -142,7 +151,7 @@ export default function RecursosPage() {
       <section id="prevencion" style={{ background: "#f5f0e1" }}>
         <div className="container" style={{ paddingTop: 52, paddingBottom: 52 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(201,106,74,0.12)", color: "#a8553a", borderRadius: 20, padding: "5px 14px", fontSize: 13, fontWeight: 700, fontFamily: "ui-sans-serif, system-ui, sans-serif", marginBottom: 16 }}>
-            🛡️ Prevención
+             Prevención
           </div>
           <div className="accent-bar" />
           <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
@@ -151,8 +160,9 @@ export default function RecursosPage() {
           <p style={{ color: "#5a7d66", marginBottom: 28, lineHeight: 1.7, maxWidth: 640 }}>
             Materiales para reconocer la VBG, identificar señales de alerta y fortalecer la cultura de prevención.
           </p>
-          <div style={{ display: "grid", gap: 16 }}>
-            {resources.filter((r) => r.category === "prevencion").map((doc) => (
+
+          <div className="recursos-list">
+            {prevencionDocs.map((doc) => (
               <ResourceCard key={doc.title} doc={doc} />
             ))}
           </div>
@@ -163,7 +173,7 @@ export default function RecursosPage() {
       <section id="orientacion" style={{ background: "var(--bg)" }}>
         <div className="container" style={{ paddingTop: 52, paddingBottom: 52 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(0,85,90,0.10)", color: "#00555A", borderRadius: 20, padding: "5px 14px", fontSize: 13, fontWeight: 700, fontFamily: "ui-sans-serif, system-ui, sans-serif", marginBottom: 16 }}>
-            🧭 Orientación
+             Orientación
           </div>
           <div className="accent-bar" />
           <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
@@ -172,7 +182,7 @@ export default function RecursosPage() {
           <p style={{ color: "#5a7d66", marginBottom: 28, lineHeight: 1.7, maxWidth: 640 }}>
             Guías e infografías para saber a dónde acudir y cómo navegar las rutas de atención disponibles.
           </p>
-          <div style={{ display: "grid", gap: 16 }}>
+          <div className="recursos-list">
             {resources.filter((r) => r.category === "orientacion").map((doc) => (
               <ResourceCard key={doc.title} doc={doc} />
             ))}
@@ -184,7 +194,7 @@ export default function RecursosPage() {
       <section id="formacion" style={{ background: "#f5f0e1" }}>
         <div className="container" style={{ paddingTop: 52, paddingBottom: 56 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(29,62,42,0.10)", color: "#1D3E2A", borderRadius: 20, padding: "5px 14px", fontSize: 13, fontWeight: 700, fontFamily: "ui-sans-serif, system-ui, sans-serif", marginBottom: 16 }}>
-            📚 Formación
+             Formación
           </div>
           <div className="accent-bar" />
           <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
@@ -193,7 +203,7 @@ export default function RecursosPage() {
           <p style={{ color: "#5a7d66", marginBottom: 28, lineHeight: 1.7, maxWidth: 640 }}>
             Manuales, guías metodológicas e instrumentos para docentes, facilitadores/as e investigadores/as.
           </p>
-          <div style={{ display: "grid", gap: 16 }}>
+          <div className="recursos-list">
             {resources.filter((r) => r.category === "formacion").map((doc) => (
               <ResourceCard key={doc.title} doc={doc} />
             ))}
@@ -206,46 +216,31 @@ export default function RecursosPage() {
 
 function ResourceCard({ doc }: { doc: (typeof resources)[number] }) {
   return (
-    <div className="card" style={{ display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
-      <div
-        style={{
-          width: 52,
-          height: 52,
-          borderRadius: 14,
-          background: `${doc.color}12`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 24,
-          flexShrink: 0,
-        }}
-      >
-        {doc.icon}
-      </div>
-
-      <div style={{ flex: 1, minWidth: 220 }}>
-        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginBottom: 10 }}>
-          <h3 style={{ fontWeight: 700, fontSize: 15, color: "#1D3E2A", margin: 0, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+    <article className="card recursos-card">
+      <div className="recursos-card-main">
+        <div className="recursos-card-head">
+          <h3 className="recursos-card-title">
             {doc.title}
           </h3>
-          <span className="badge" style={{ background: `${doc.color}14`, color: doc.color, fontSize: 11 }}>{doc.type}</span>
-          <span className="badge badge-forest" style={{ fontSize: 11 }}>{doc.size}</span>
+          <div className="recursos-card-chips">
+            <span className="badge" style={{ background: `${doc.color}14`, color: doc.color, fontSize: 11 }}>{doc.type}</span>
+            <span className="badge badge-forest" style={{ fontSize: 11 }}>{doc.size}</span>
+          </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "max-content 1fr", gap: "5px 12px", fontSize: 13.5, lineHeight: 1.6 }}>
-          <span style={{ fontWeight: 700, color: "#1D3E2A", fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>¿Para quién?</span>
-          <span style={{ color: "#5a7d66" }}>{doc.forWho}</span>
-          <span style={{ fontWeight: 700, color: "#1D3E2A", fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>¿Para qué sirve?</span>
-          <span style={{ color: "#5a7d66" }}>{doc.forWhat}</span>
-        </div>
+        <dl className="recursos-card-meta">
+          <dt>¿Para quién?</dt>
+          <dd>{doc.forWho}</dd>
+          <dt>¿Para qué sirve?</dt>
+          <dd>{doc.forWhat}</dd>
+        </dl>
       </div>
 
       <button
-        className="btn btn-outline"
-        style={{ fontSize: 13, padding: "8px 16px", flexShrink: 0, alignSelf: "center" }}
+        className="btn btn-outline recursos-card-btn"
       >
         ⬇ Descargar
       </button>
-    </div>
+    </article>
   );
 }

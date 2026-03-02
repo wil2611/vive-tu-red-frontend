@@ -138,30 +138,24 @@ export default function RutasPage() {
       <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
         <div className="container">
           <div className="rutas-hero-shell">
-            <div className="rutas-hero-grid">
-              <div className="rutas-hero-copy">
-                <h1 className="rutas-hero-title">Rutas de atención</h1>
-                <p className="rutas-hero-lead">
-                  Si tú o alguien cercano necesita apoyo, aquí tienes una ruta simple para actuar con más claridad.
-                </p>
-                <p className="rutas-hero-desc">
-                  Encontrarás cuándo pedir ayuda, a quién contactar y qué esperar durante el proceso de atención
-                  en situaciones de Violencia Basada en Género (VBG).
-                </p>
-              </div>
+            <h1 className="rutas-hero-title">Rutas de atención</h1>
+            <p className="rutas-hero-lead">
+              Si tú o alguien cercano necesita apoyo, aquí tienes una ruta simple para actuar con más claridad.
+              Encontrarás cuándo pedir ayuda, a quién contactar y qué esperar durante el proceso de atención
+              en situaciones de Violencia Basada en Género (VBG).
+            </p>
 
-              <div className="rutas-hero-nav" aria-label="Pasos principales">
-                {quickSteps.map((step) => (
-                  <a key={step.num} href={step.href} className="rutas-step-link">
-                    <span className="rutas-step-num">{step.num}</span>
-                    <span className="rutas-step-copy">
-                      <strong>{step.title}</strong>
-                      <small>{step.hint}</small>
-                    </span>
-                    <span className="rutas-step-arrow" aria-hidden="true">&gt;</span>
-                  </a>
-                ))}
-              </div>
+            <div className="rutas-hero-nav" aria-label="Pasos principales">
+              {quickSteps.map((step) => (
+                <a key={step.num} href={step.href} className="rutas-step-link">
+                  <span className="rutas-step-num">{step.num}</span>
+                  <span className="rutas-step-copy">
+                    <strong>{step.title}</strong>
+                    <small>{step.hint}</small>
+                  </span>
+                  <span className="rutas-step-arrow" aria-hidden="true">&gt;</span>
+                </a>
+              ))}
             </div>
           </div>
         </div>
