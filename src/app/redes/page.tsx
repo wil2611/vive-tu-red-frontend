@@ -1,143 +1,29 @@
 "use client";
 
 import { useState, useMemo, useCallback, useRef } from "react";
-
-/* ── Types ── */
-interface GeneralInfo {
-  sex: string;
-  age: string;
-  institution: string;
-  occupation: string;
-  academicProgram: string;
-}
-
-interface SupportFunctions {
-  A: boolean;
-  B: boolean;
-  C: boolean;
-  D: boolean;
-  E: boolean;
-  F: boolean;
-  G: boolean;
-}
-
-interface Person {
-  name: string;
-  age: string;
-  sex: string;
-  relationType: string;
-  relationOther: string;
-  residence: string;
-  universityContext: boolean;
-  supportFunctions: SupportFunctions;
-}
-
-const MAX_PEOPLE = 30;
-
-const supportLabels: { key: keyof SupportFunctions; short: string; label: string; icon: string }[] = [
-  { key: "A", short: "Intimidad", label: "Asuntos privados, íntimos o cuestiones muy personales", icon: "💬" },
-  { key: "B", short: "Ayuda material", label: "Pedir dinero o algún otro tipo de ayuda material", icon: "💰" },
-  { key: "C", short: "Consejo", label: "Consejo, orientación o ayuda para tomar decisiones", icon: "🧭" },
-  { key: "D", short: "Comprensión", label: "Comparten tu forma de pensar y te sientes comprendido/a", icon: "🤝" },
-  { key: "E", short: "Colaboración", label: "Ayuda en el trabajo o en el estudio para realizar tareas", icon: "📚" },
-  { key: "F", short: "Ocio", label: "Tiempo libre: cine, salir, compañía, etc.", icon: "🎉" },
-  { key: "G", short: "Género", label: "Apoyo en situaciones de vulnerabilidad de género", icon: "🛡️" },
-];
-
-const relationTypes = [
-  { value: "Pareja", icon: "💛" },
-  { value: "Pariente", icon: "🏠" },
-  { value: "Amigo", icon: "👫" },
-  { value: "Conocido", icon: "👤" },
-  { value: "Otra", icon: "✦" },
-];
-
-const colorMap: Record<string, string> = {
-  Pareja: "#DCA15D",
-  Pariente: "#1D3E2A",
-  Amigo: "#00555A",
-  Conocido: "#C96A4A",
-  Otra: "#9C8D70",
-};
-
-const defaultSupport: SupportFunctions = { A: false, B: false, C: false, D: false, E: false, F: false, G: false };
-
-/* ── SVG Node Icon ── */
-function NodeIcon({ relation, x, y }: { relation: string; x: number; y: number }) {
-  const size = 14;
-  const dx = x - size / 2;
-  const dy = y - size / 2;
-  switch (relation) {
-    case "Pariente":
-      return (
-        <g transform={`translate(${dx},${dy})`}>
-          <path d="M7 1L1 6h2v6h3V9h2v3h3V6h2L7 1z" fill="white" />
-        </g>
-      );
-    case "Amigo":
-      return (
-        <g transform={`translate(${dx},${dy})`}>
-          <circle cx="4.5" cy="4" r="2.5" fill="white" />
-          <circle cx="9.5" cy="4" r="2.5" fill="white" />
-          <path d="M1 12c0-2.5 2-4 3.5-4s2.5.8 2.5.8S8.5 8 10.5 8 14 9.5 14 12H1z" fill="white" />
-        </g>
-      );
-    case "Pareja":
-      return (
-        <g transform={`translate(${dx},${dy})`}>
-          <path d="M7 13l-5.5-5.5a3.2 3.2 0 010-4.5 3.2 3.2 0 014.5 0L7 4.1l1-1.1a3.2 3.2 0 014.5 0 3.2 3.2 0 010 4.5L7 13z" fill="white" />
-        </g>
-      );
-    case "Conocido":
-      return (
-        <g transform={`translate(${dx},${dy})`}>
-          <circle cx="7" cy="4" r="3" fill="white" />
-          <path d="M2 13c0-3 2.2-5 5-5s5 2 5 5H2z" fill="white" />
-        </g>
-      );
-    default:
-      return <circle cx={x} cy={y} r="5" fill="white" />;
-  }
-}
-
-/* ── Step indicator ── */
-const steps = [
-  { id: 1, label: "Paso 1: Info general", icon: "" },
-  { id: 2, label: "Paso 2: Conexiones", icon: "" },
-  { id: 3, label: "Paso 3: Funciones de apoyo", icon: "" },
-  { id: 4, label: "Paso 4: Matriz", icon: "" },
-];
-
-const heroNotes = [
-  {
-    tone: "edu",
-    title: "Propósito educativo",
-    desc: "Esta herramienta tiene fines pedagógicos y de sensibilización dentro del proyecto #ViveTuRed.",
-  },
-  {
-    tone: "care",
-    title: "No es un diagnóstico",
-    desc: "Los resultados no constituyen una evaluación clínica ni psicológica. Si necesitas apoyo profesional, consulta las rutas de atención.",
-  },
-  {
-    tone: "safe",
-    title: "Privacidad de datos",
-    desc: "Toda la información se procesa localmente en tu dispositivo. No se almacena ni se comparte con terceros.",
-  },
-];
+import styles from "./page.module.css";
+import {
+  createInitialGeneralInfo,
+  createInitialSupportFunctions,
+  defaultSupportFunctions,
+  getRelationColor,
+  heroNotes,
+  MAX_PEOPLE,
+  NodeIcon,
+  relationTypes,
+  steps,
+  supportLabels,
+  type GeneralInfo,
+  type Person,
+  type SupportFunctions,
+} from "./redes.data";
 
 export default function RedesPage() {
   const [step, setStep] = useState(1);
   const svgRef = useRef<SVGSVGElement>(null);
 
   /* General Info */
-  const [generalInfo, setGeneralInfo] = useState<GeneralInfo>({
-    sex: "",
-    age: "",
-    institution: "",
-    occupation: "",
-    academicProgram: "",
-  });
+  const [generalInfo, setGeneralInfo] = useState<GeneralInfo>(createInitialGeneralInfo);
 
   /* People */
   const [people, setPeople] = useState<Person[]>([]);
@@ -150,7 +36,7 @@ export default function RedesPage() {
   const [formRelationOther, setFormRelationOther] = useState("");
   const [formResidence, setFormResidence] = useState("Barranquilla");
   const [formUniversityContext, setFormUniversityContext] = useState(false);
-  const [formSupport, setFormSupport] = useState<SupportFunctions>({ ...defaultSupport });
+  const [formSupport, setFormSupport] = useState<SupportFunctions>(createInitialSupportFunctions);
 
   /* Adjacency matrix */
   const [adjacency, setAdjacency] = useState<boolean[][]>([]);
@@ -166,7 +52,7 @@ export default function RedesPage() {
     setFormRelationOther("");
     setFormResidence("Barranquilla");
     setFormUniversityContext(false);
-    setFormSupport({ ...defaultSupport });
+    setFormSupport(createInitialSupportFunctions());
     setEditingIdx(null);
   }, []);
 
@@ -180,7 +66,7 @@ export default function RedesPage() {
       relationOther: formRelationOther,
       residence: formResidence,
       universityContext: formUniversityContext,
-      supportFunctions: editingIdx !== null ? { ...formSupport } : { ...defaultSupport },
+      supportFunctions: editingIdx !== null ? { ...formSupport } : { ...defaultSupportFunctions },
     };
 
     if (editingIdx !== null) {
@@ -252,8 +138,6 @@ export default function RedesPage() {
       return updated;
     });
   };
-
-  const getColor = (rel: string) => colorMap[rel] || "#5a7d66";
 
   /* Compute number of inter-person edges from adjacency */
   const interEdges = useMemo(() => {
@@ -358,12 +242,7 @@ export default function RedesPage() {
   return (
     <div>
       {/* Hero */}
-      <section
-        style={{
-          background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)",
-          padding: "48px 48px",
-        }}
-      >
+      <section className={styles.heroSection}>
         <div className="container">
           <div className="redes-hero-shell">
             <h1 className="redes-hero-title">Visualiza tu red de apoyo</h1>
@@ -385,8 +264,8 @@ export default function RedesPage() {
       </section>
 
       {/* Main layout */}
-      <section style={{ background: "#f5f0e1" }}>
-        <div className="container" style={{ paddingTop: 52, paddingBottom: 56 }}>
+      <section className={styles.mainSection}>
+        <div className={`container ${styles.mainContainer}`}>
           <div className="redes-layout">
             <div className="redes-layout-steps">
               <div className="redes-steps">
@@ -552,7 +431,7 @@ export default function RedesPage() {
                     <div className="redes-chips">
                       {relationTypes.map((rt) => {
                         const isActive = formRelationType === rt.value;
-                        const color = getColor(rt.value);
+                        const color = getRelationColor(rt.value);
                         return (
                           <button
                             key={rt.value}
@@ -645,7 +524,7 @@ export default function RedesPage() {
                           <div key={i} className="redes-node-item">
                             <div
                               className="redes-node-dot"
-                              style={{ background: getColor(p.relationType) }}
+                              style={{ background: getRelationColor(p.relationType) }}
                             />
                             <div className="redes-node-info">
                               <span className="redes-node-name">{p.name}</span>
@@ -658,9 +537,9 @@ export default function RedesPage() {
                             <span
                               className="redes-node-badge"
                               style={{
-                                background: `${getColor(p.relationType)}14`,
-                                color: getColor(p.relationType),
-                                border: `1px solid ${getColor(p.relationType)}30`,
+                                background: `${getRelationColor(p.relationType)}14`,
+                                color: getRelationColor(p.relationType),
+                                border: `1px solid ${getRelationColor(p.relationType)}30`,
                               }}
                             >
                               {supportCount(p)} apoyo{supportCount(p) !== 1 ? "s" : ""}
@@ -736,7 +615,7 @@ export default function RedesPage() {
                             {people.map((p, i) => (
                               <tr key={i}>
                                 <td className="redes-matrix-name">
-                                  <span className="redes-node-dot" style={{ background: getColor(p.relationType), display: "inline-block", width: 8, height: 8, borderRadius: "50%", marginRight: 6, flexShrink: 0 }} />
+                                  <span className="redes-node-dot" style={{ background: getRelationColor(p.relationType), display: "inline-block", width: 8, height: 8, borderRadius: "50%", marginRight: 6, flexShrink: 0 }} />
                                   {p.name}
                                 </td>
                                 {supportLabels.map((sl) => (
@@ -867,7 +746,7 @@ export default function RedesPage() {
                     <div className="redes-legend-section-title">TIPO DE RELACIÓN</div>
                     {activeRelations.map((rel) => (
                       <div key={rel} className="redes-legend-item">
-                        <div className="redes-legend-dot" style={{ background: getColor(rel) }} />
+                        <div className="redes-legend-dot" style={{ background: getRelationColor(rel) }} />
                         <span>{rel}</span>
                       </div>
                     ))}
@@ -982,7 +861,7 @@ export default function RedesPage() {
                           y1="200"
                           x2={pos.x}
                           y2={pos.y}
-                          stroke={getColor(p.relationType)}
+                          stroke={getRelationColor(p.relationType)}
                           strokeWidth={sc >= 5 ? 4.5 : sc >= 3 ? 3 : 1.2}
                           opacity={sc >= 5 ? 0.5 : sc >= 3 ? 0.35 : 0.25}
                           strokeDasharray="none"
@@ -1000,7 +879,7 @@ export default function RedesPage() {
                     {/* Person nodes */}
                     {graphPeople.map((p, i) => {
                       const pos = graphNodePositions[i];
-                      const color = getColor(p.relationType);
+                      const color = getRelationColor(p.relationType);
                       const displayName = p.name.length > 10 ? p.name.slice(0, 9) + "…" : p.name;
                       const labelBelowY = pos.y + pos.r + 15;
                       const labelAboveY = pos.y - pos.r - 10;
@@ -1059,7 +938,7 @@ export default function RedesPage() {
                     onClick={() => {
                       setPeople([]);
                       setAdjacency([]);
-                      setGeneralInfo({ sex: "", age: "", institution: "", occupation: "", academicProgram: "" });
+                      setGeneralInfo(createInitialGeneralInfo());
                       setStep(1);
                     }}
                     style={{ fontSize: 13, padding: "10px 20px" }}
