@@ -3,6 +3,34 @@
 import { useState } from "react";
 import Link from "next/link";
 
+const subjectOptions = [
+  { value: "", label: "Selecciona un asunto" },
+  { value: "consulta", label: "Consulta general" },
+  { value: "sugerencia", label: "Sugerencia" },
+  { value: "colaboracion", label: "Propuesta de colaboración" },
+  { value: "recursos", label: "Solicitud de recursos" },
+  { value: "otro", label: "Otro" },
+];
+
+const contactCards = [
+  {
+    title: "Correo institucional",
+    value: "contacto@vivetured.edu.co",
+    href: "mailto:contacto@vivetured.edu.co",
+    hint: "Canal para consultas, sugerencias y articulaciones.",
+  },
+  {
+    title: "Ubicación",
+    value: "Universidad del Norte, Barranquilla",
+    hint: "Facultad de Ciencias Sociales y Humanas.",
+  },
+  {
+    title: "Horario de atención",
+    value: "Lunes a viernes, 8:00 a.m. - 5:00 p.m.",
+    hint: "Respuesta estimada en 3 a 5 días hábiles.",
+  },
+];
+
 export default function ContactoPage() {
   const [form, setForm] = useState({ nombre: "", email: "", asunto: "", mensaje: "" });
   const [sent, setSent] = useState(false);
@@ -22,52 +50,50 @@ export default function ContactoPage() {
       {/* Hero */}
       <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
         <div className="container">
-          <h1 style={{ fontSize: "clamp(2rem, 4vw, 2.6rem)", fontWeight: 800, color: "#1D3E2A", margin: "16px 0 12px", fontFamily: "Georgia, serif", lineHeight: 1.15 }}>
-            Contacto
-          </h1>
-          <p style={{ fontSize: "1.05rem", lineHeight: 1.75, color: "#5a7d66", maxWidth: 600, margin: 0 }}>
-            Canal de comunicación institucional del proyecto #ViveTuRed.
-            Escríbenos para consultas generales, sugerencias o colaboraciones.
-          </p>
+          <div className="contacto-hero-shell">
+            <h1 className="contacto-hero-title">Contáctanos</h1>
+            <p className="contacto-hero-desc">
+              Este es el canal institucional del proyecto #ViveTuRed para consultas generales,
+              sugerencias y propuestas de colaboración.
+            </p>
+            <div className="notice notice-warning contacto-hero-alert">
+              <span style={{ fontSize: 16 }}>⚠️</span>
+              <div>
+                <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Si necesitas ayuda inmediata</strong>
+                <p style={{ margin: "4px 0 0", fontSize: 13 }}>
+                  Usa primero las{" "}
+                  <Link href="/rutas" style={{ color: "#a8553a", fontWeight: 700, textDecoration: "underline" }}>
+                    Rutas de atención
+                  </Link>{" "}
+                  para recibir orientación prioritaria.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       <section style={{ background: "#f5f0e1" }}>
-      <div className="container" style={{ paddingTop: 48, paddingBottom: 56 }}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: 32,
-            alignItems: "start",
-          }}
-        >
+      <div className="container contacto-main">
+        <div className="contacto-grid">
           {/* Formulario */}
-          <div>
+          <article id="formulario" className="contacto-panel">
             <div className="accent-bar" />
-            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+            <h2 className="contacto-panel-title">
               Formulario de contacto
             </h2>
-            <p style={{ color: "#5a7d66", marginBottom: 24, lineHeight: 1.7, fontSize: 14 }}>
+            <p className="contacto-panel-desc">
               Este formulario es para consultas generales. No envíes información sensible o personal
               a través de este medio.
             </p>
 
             {sent ? (
-              <div
-                style={{
-                  background: "rgba(29, 62, 42, 0.06)",
-                  border: "1px solid rgba(29, 62, 42, 0.15)",
-                  borderRadius: 16,
-                  padding: 32,
-                  textAlign: "center",
-                }}
-              >
+              <div className="contacto-sent-box">
                 <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
-                <h3 style={{ fontWeight: 700, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+                <h3 className="contacto-sent-title">
                   Mensaje enviado
                 </h3>
-                <p style={{ color: "#5a7d66", lineHeight: 1.7, fontSize: 14 }}>
+                <p className="contacto-sent-desc">
                   Tu mensaje ha sido recibido. Te responderemos a la brevedad posible.
                 </p>
                 <button
@@ -82,8 +108,8 @@ export default function ContactoPage() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} style={{ display: "grid", gap: 20 }}>
-                <div>
+              <form onSubmit={handleSubmit} className="contacto-form">
+                <div className="contacto-field">
                   <label htmlFor="nombre">Nombre</label>
                   <input
                     id="nombre"
@@ -95,7 +121,7 @@ export default function ContactoPage() {
                     required
                   />
                 </div>
-                <div>
+                <div className="contacto-field">
                   <label htmlFor="email">Correo electrónico</label>
                   <input
                     id="email"
@@ -107,7 +133,7 @@ export default function ContactoPage() {
                     required
                   />
                 </div>
-                <div>
+                <div className="contacto-field">
                   <label htmlFor="asunto">Asunto</label>
                   <select
                     id="asunto"
@@ -116,15 +142,14 @@ export default function ContactoPage() {
                     onChange={handleChange}
                     required
                   >
-                    <option value="">Selecciona un asunto</option>
-                    <option value="consulta">Consulta general</option>
-                    <option value="sugerencia">Sugerencia</option>
-                    <option value="colaboracion">Propuesta de colaboración</option>
-                    <option value="recursos">Solicitud de recursos</option>
-                    <option value="otro">Otro</option>
+                    {subjectOptions.map((option) => (
+                      <option key={option.value || "default"} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
-                <div>
+                <div className="contacto-field">
                   <label htmlFor="mensaje">Mensaje</label>
                   <textarea
                     id="mensaje"
@@ -138,7 +163,7 @@ export default function ContactoPage() {
                   />
                 </div>
 
-                <div className="notice notice-warning" style={{ margin: 0 }}>
+                <div className="notice notice-warning contacto-warning">
                   <span style={{ fontSize: 16 }}>⚠️</span>
                   <p style={{ margin: 0, fontSize: 13 }}>
                     No envíes datos sensibles ni información personal a través de este formulario.
@@ -149,148 +174,51 @@ export default function ContactoPage() {
                   </p>
                 </div>
 
-                <button className="btn btn-primary" type="submit" style={{ justifySelf: "start" }}>
+                <button className="btn btn-primary contacto-form-submit" type="submit">
                   Enviar mensaje
                 </button>
               </form>
             )}
-          </div>
+          </article>
 
           {/* Info lateral */}
-          <div>
+          <aside id="canales" className="contacto-panel">
             <div className="accent-bar" />
-            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 24, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-              Información de contacto
+            <h2 className="contacto-panel-title">
+              Canales institucionales
             </h2>
+            <p className="contacto-panel-desc">
+              Escríbenos por correo o usa el formulario. Si se trata de una situación de riesgo,
+              prioriza las rutas de atención inmediata.
+            </p>
 
-            <div style={{ display: "grid", gap: 16 }}>
-              {/* Correo */}
-              <div
-                style={{
-                  padding: 20,
-                  background: "white",
-                  borderRadius: 16,
-                  border: "1px solid var(--border)",
-                  display: "flex",
-                  gap: 16,
-                  alignItems: "flex-start",
-                }}
-              >
-                <div
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 12,
-                    background: "rgba(201, 106, 74, 0.08)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 20,
-                    flexShrink: 0,
-                  }}
-                >
-                  📧
-                </div>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 15, color: "#1D3E2A", fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                    Correo institucional
+            <div className="contacto-meta-list">
+              {contactCards.map((item) => (
+                <article key={item.title} className="contacto-meta-card">
+                  <div className="contacto-meta-copy">
+                    <h3>{item.title}</h3>
+                    {item.href ? (
+                      <a href={item.href}>{item.value}</a>
+                    ) : (
+                      <p>{item.value}</p>
+                    )}
+                    <small>{item.hint}</small>
                   </div>
-                  <div style={{ fontSize: 14, color: "#5a7d66", marginTop: 4 }}>
-                    contacto@vivetured.edu.co
-                  </div>
-                </div>
-              </div>
-
-              {/* Ubicación */}
-              <div
-                style={{
-                  padding: 20,
-                  background: "white",
-                  borderRadius: 16,
-                  border: "1px solid var(--border)",
-                  display: "flex",
-                  gap: 16,
-                  alignItems: "flex-start",
-                }}
-              >
-                <div
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 12,
-                    background: "rgba(0, 85, 90, 0.06)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 20,
-                    flexShrink: 0,
-                  }}
-                >
-                  📍
-                </div>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 15, color: "#1D3E2A", fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                    Ubicación
-                  </div>
-                  <div style={{ fontSize: 14, color: "#5a7d66", marginTop: 4, lineHeight: 1.6 }}>
-                    Universidad — Facultad de Ciencias Sociales y Humanas
-                  </div>
-                </div>
-              </div>
-
-              {/* Horario */}
-              <div
-                style={{
-                  padding: 20,
-                  background: "white",
-                  borderRadius: 16,
-                  border: "1px solid var(--border)",
-                  display: "flex",
-                  gap: 16,
-                  alignItems: "flex-start",
-                }}
-              >
-                <div
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 12,
-                    background: "rgba(220, 161, 93, 0.1)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 20,
-                    flexShrink: 0,
-                  }}
-                >
-                  🕐
-                </div>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 15, color: "#1D3E2A", fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
-                    Horario de atención
-                  </div>
-                  <div style={{ fontSize: 14, color: "#5a7d66", marginTop: 4, lineHeight: 1.6 }}>
-                    Lunes a viernes: 8:00 a.m. – 5:00 p.m.
-                  </div>
-                </div>
-              </div>
+                </article>
+              ))}
             </div>
 
-            {/* Nota */}
-            <div
-              className="notice notice-info"
-              style={{ marginTop: 20 }}
-            >
+            <div className="notice notice-info contacto-note">
               <span style={{ fontSize: 16 }}>ℹ️</span>
-              <p style={{ margin: 0, fontSize: 13 }}>
-                Las respuestas se realizarán en un plazo de 3 a 5 días hábiles.
-                Para situaciones de emergencia, contacta directamente las{" "}
-                <Link href="/rutas" style={{ color: "#00555A", fontWeight: 700, textDecoration: "underline" }}>
-                  líneas de atención
-                </Link>.
-              </p>
+              <div>
+                <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Tiempo de respuesta</strong>
+                <p style={{ margin: "4px 0 0", fontSize: 13 }}>
+                  Te responderemos en un plazo aproximado de 3 a 5 días hábiles.
+                </p>
+              </div>
             </div>
-          </div>
+
+          </aside>
         </div>
       </div>
       </section>

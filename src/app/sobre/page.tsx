@@ -52,15 +52,14 @@ export default function SobrePage() {
       {/* Hero */}
       <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
         <div className="container">
-          <h1 style={{ fontSize: "clamp(2rem, 4vw, 2.7rem)", fontWeight: 800, color: "#1D3E2A", margin: "16px 0 12px", fontFamily: "Georgia, serif", lineHeight: 1.15 }}>
-            Conoce el proyecto
-          </h1>
-          <p style={{ fontSize: "1.05rem", lineHeight: 1.8, color: "#5a7d66", maxWidth: 760, margin: 0 }}>
-            #ViveTuRed es una propuesta de investigación-creación que busca fortalecer
-            redes de apoyo y prevenir la Violencia Basada en Género (VBG) en la
-            Educación Superior en Barranquilla, a través de una serie narrativa
-            multimedia y herramientas de apropiación social del conocimiento.
-          </p>
+          <div className="sobre-hero-shell">
+            <h1 className="sobre-hero-title">Conoce el proyecto</h1>
+            <p className="sobre-hero-desc">
+              #ViveTuRed es una propuesta de investigación-creación que busca fortalecer redes de apoyo
+              y prevenir la Violencia Basada en Género (VBG) en la Educación Superior en Barranquilla,
+              mediante una serie narrativa multimedia y herramientas de apropiación social del conocimiento.
+            </p>
+          </div>
         </div>
       </section>
 

@@ -102,10 +102,28 @@ function NodeIcon({ relation, x, y }: { relation: string; x: number; y: number }
 
 /* ── Step indicator ── */
 const steps = [
-  { id: 1, label: "Info general", icon: "📋" },
-  { id: 2, label: "Conexiones", icon: "👥" },
-  { id: 3, label: "Funciones de apoyo", icon: "🤲" },
-  { id: 4, label: "Matriz", icon: "🔗" },
+  { id: 1, label: "Paso 1: Info general", icon: "" },
+  { id: 2, label: "Paso 2: Conexiones", icon: "" },
+  { id: 3, label: "Paso 3: Funciones de apoyo", icon: "" },
+  { id: 4, label: "Paso 4: Matriz", icon: "" },
+];
+
+const heroNotes = [
+  {
+    tone: "edu",
+    title: "Propósito educativo",
+    desc: "Esta herramienta tiene fines pedagógicos y de sensibilización dentro del proyecto #ViveTuRed.",
+  },
+  {
+    tone: "care",
+    title: "No es un diagnóstico",
+    desc: "Los resultados no constituyen una evaluación clínica ni psicológica. Si necesitas apoyo profesional, consulta las rutas de atención.",
+  },
+  {
+    tone: "safe",
+    title: "Privacidad de datos",
+    desc: "Toda la información se procesa localmente en tu dispositivo. No se almacena ni se comparte con terceros.",
+  },
 ];
 
 export default function RedesPage() {
@@ -192,7 +210,11 @@ export default function RedesPage() {
       const newAdj = prev.filter((_, i) => i !== idx).map((row) => row.filter((_, j) => j !== idx));
       return newAdj;
     });
-    if (editingIdx === idx) resetForm();
+    if (editingIdx === idx) {
+      resetForm();
+    } else if (editingIdx !== null && editingIdx > idx) {
+      setEditingIdx(editingIdx - 1);
+    }
   };
 
   const startEdit = (idx: number) => {
@@ -264,8 +286,12 @@ export default function RedesPage() {
     return graphPeople.map((p, i) => {
       const angle = (2 * Math.PI * i) / graphPeople.length - Math.PI / 2;
       const sc = supportCount(p);
-      const dist = 100 + (7 - Math.min(sc, 7)) * 18;
       const r = 18 + Math.min(sc, 7) * 2;
+      const baseDist = 75 + (7 - Math.min(sc, 7)) * 18;
+      // Allow at most half-node overflow while keeping labels reasonably visible.
+      const maxDistTop = 200 - r / 2;
+      const maxDistBottom = 400 - (200 + r / 2 + 12);
+      const dist = Math.min(baseDist, maxDistTop, maxDistBottom);
       return {
         x: 300 + Math.cos(angle) * dist,
         y: 200 + Math.sin(angle) * dist,
@@ -283,12 +309,21 @@ export default function RedesPage() {
     const svg = svgRef.current;
     if (!svg) return;
     const serializer = new XMLSerializer();
+    const cssBg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || "#f5f0e1";
+    const viewBox = svg.viewBox.baseVal;
+    const exportWidth = viewBox?.width ? viewBox.width : 540;
+    const exportHeight = viewBox?.height ? viewBox.height : 400;
     const svgClone = svg.cloneNode(true) as SVGSVGElement;
+    svgClone.setAttribute("width", String(exportWidth));
+    svgClone.setAttribute("height", String(exportHeight));
+    if (!svgClone.getAttribute("viewBox")) {
+      svgClone.setAttribute("viewBox", `0 0 ${exportWidth} ${exportHeight}`);
+    }
     // Embed a white/beige background
     const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    bg.setAttribute("width", "100%");
-    bg.setAttribute("height", "100%");
-    bg.setAttribute("fill", "#f5f0e1");
+    bg.setAttribute("width", String(exportWidth));
+    bg.setAttribute("height", String(exportHeight));
+    bg.setAttribute("fill", cssBg);
     svgClone.insertBefore(bg, svgClone.firstChild);
     const svgStr = serializer.serializeToString(svgClone);
     const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
@@ -297,11 +332,11 @@ export default function RedesPage() {
     img.onload = () => {
       const scale = 2;
       const canvas = document.createElement("canvas");
-      canvas.width = 540 * scale;
-      canvas.height = 400 * scale;
+      canvas.width = Math.round(exportWidth * scale);
+      canvas.height = Math.round(exportHeight * scale);
       const ctx = canvas.getContext("2d")!;
       ctx.scale(scale, scale);
-      ctx.drawImage(img, 0, 0, 540, 400);
+      ctx.drawImage(img, 0, 0, exportWidth, exportHeight);
       URL.revokeObjectURL(url);
       const link = document.createElement("a");
       link.download = "mi-red-personal.png";
@@ -326,125 +361,51 @@ export default function RedesPage() {
       <section
         style={{
           background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)",
-          padding: "48px 0 16px",
+          padding: "48px 48px",
         }}
       >
         <div className="container">
-          <h1
-            style={{
-              fontSize: "clamp(2rem, 4vw, 2.6rem)",
-              fontWeight: 800,
-              color: "#1D3E2A",
-              margin: "16px 0 12px",
-              fontFamily: "Georgia, serif",
-              lineHeight: 1.15,
-            }}
-          >
-            Visualiza tu red de apoyo
-          </h1>
-          <p
-            style={{
-              fontSize: "1.05rem",
-              lineHeight: 1.75,
-              color: "#5a7d66",
-              maxWidth: 660,
-              margin: "0 0 28px",
-            }}
-          >
-            Identifica y mapea las personas con las que cuentas para tratar tus
-            asuntos personales. Completa cada paso para construir una
-            representación visual de tu red de apoyo.
-          </p>
+          <div className="redes-hero-shell">
+            <h1 className="redes-hero-title">Visualiza tu red de apoyo</h1>
+            <p className="redes-hero-desc">
+              Identifica y mapea las personas con las que cuentas para tratar tus asuntos personales.
+              Completa cada paso para construir una representación visual de tu red de apoyo.
+            </p>
 
-          {/* Info cards */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: 14,
-              maxWidth: 760,
-            }}
-          >
-            {[
-              {
-                icon: "🎓",
-                title: "Propósito educativo",
-                desc: "Esta herramienta tiene fines pedagógicos y de sensibilización dentro del proyecto #ViveTuRed. Su objetivo es ayudarte a reflexionar sobre tus redes de apoyo.",
-              },
-              {
-                icon: "🩺",
-                title: "No es un diagnóstico",
-                desc: "Los resultados no constituyen una evaluación clínica ni psicológica. Si necesitas apoyo profesional, consulta las rutas de atención disponibles.",
-              },
-              {
-                icon: "🔒",
-                title: "Datos anonimizados",
-                desc: "Toda la información se procesa localmente en tu dispositivo. No se almacena, no se transmite y no se comparte con terceros.",
-              },
-            ].map((card) => (
-              <div
-                key={card.title}
-                style={{
-                  background: "white",
-                  border: `1px`,
-                  borderLeft: `4px`,
-                  borderRadius: 12,
-                  padding: "16px 18px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 6,
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: 20, lineHeight: 1 }}>{card.icon}</span>
-                  <span
-                    style={{
-                      fontWeight: 700,
-                      fontSize: 14,
-                      fontFamily: "ui-sans-serif, system-ui, sans-serif",
-                    }}
-                  >
-                    {card.title}
-                  </span>
-                </div>
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: "#5a7d66",
-                    margin: 0,
-                    lineHeight: 1.65,
-                  }}
-                >
-                  {card.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Step indicator */}
-      <section style={{ background: "var(--bg)" }}>
-        <div className="container" style={{ paddingTop: 24, paddingBottom: 0 }}>
-          <div className="redes-steps">
-            {steps.map((s) => (
-              <button
-                key={s.id}
-                className={`redes-step ${step === s.id ? "redes-step-active" : ""} ${completedSteps.has(s.id) ? "redes-step-done" : ""}`}
-                onClick={() => setStep(s.id)}
-              >
-                <span className="redes-step-icon">{completedSteps.has(s.id) && step !== s.id ? "✓" : s.icon}</span>
-                <span className="redes-step-label">{s.label}</span>
-              </button>
-            ))}
+            <div className="redes-hero-notes" aria-label="Información importante de la herramienta">
+              {heroNotes.map((note) => (
+                <article key={note.title} className={`redes-hero-note redes-hero-note-${note.tone}`}>
+                  <h3>{note.title}</h3>
+                  <p>{note.desc}</p>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Main layout */}
-      <section style={{ background: "var(--bg)" }}>
-        <div className="container" style={{ paddingTop: 24, paddingBottom: 56 }}>
+      <section style={{ background: "#f5f0e1" }}>
+        <div className="container" style={{ paddingTop: 52, paddingBottom: 56 }}>
           <div className="redes-layout">
+            <div className="redes-layout-steps">
+              <div className="redes-steps">
+                {steps.map((s) => (
+                  <button
+                    type="button"
+                    key={s.id}
+                    className={`redes-step ${step === s.id ? "redes-step-active" : ""} ${completedSteps.has(s.id) ? "redes-step-done" : ""}`}
+                    onClick={() => setStep(s.id)}
+                    aria-label={s.label}
+                    aria-pressed={step === s.id}
+                  >
+                    <span className="redes-step-icon">{completedSteps.has(s.id) && step !== s.id ? "✓" : s.icon}</span>
+                    <span className="redes-step-label">{s.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* ── LEFT PANEL ── */}
             <div className="redes-panel-form">
               {/* Progress */}
@@ -961,10 +922,11 @@ export default function RedesPage() {
                   </div>
                 ) : (
                   <svg ref={svgRef} viewBox="30 0 540 400" style={{ width: "100%", height: "auto" }}>
+                    <rect x="30" y="0" width="540" height="400" fill="var(--bg)" />
                     {/* Background grid circles */}
-                    <circle cx="300" cy="200" r="180" fill="none" stroke="#d4cdaf" strokeWidth="0.7" strokeDasharray="5 4" opacity="0.5" />
-                    <circle cx="300" cy="200" r="130" fill="none" stroke="#d4cdaf" strokeWidth="0.7" strokeDasharray="5 4" opacity="0.5" />
-                    <circle cx="300" cy="200" r="75" fill="none" stroke="#d4cdaf" strokeWidth="0.7" strokeDasharray="5 4" opacity="0.5" />
+                    <circle cx="300" cy="200" r="180" fill="none" stroke="#d4cdaf" strokeWidth="0.7" strokeDasharray="5 4" opacity="0.68" />
+                    <circle cx="300" cy="200" r="130" fill="none" stroke="#d4cdaf" strokeWidth="0.7" strokeDasharray="5 4" opacity="0.68" />
+                    <circle cx="300" cy="200" r="75" fill="none" stroke="#d4cdaf" strokeWidth="0.7" strokeDasharray="5 4" opacity="0.68" />
 
                     {/* Inter-person edges (adjacency) */}
                     {graphPeople.map((_, i) =>
@@ -975,17 +937,35 @@ export default function RedesPage() {
                         if (!adjacency[oi]?.[oj]) return null;
                         const a = graphNodePositions[i];
                         const b = graphNodePositions[j];
+                        const midX = (a.x + b.x) / 2;
+                        const midY = (a.y + b.y) / 2;
+                        const vx = b.x - a.x;
+                        const vy = b.y - a.y;
+                        const len = Math.hypot(vx, vy) || 1;
+                        const nx = -vy / len;
+                        const ny = vx / len;
+                        const bend = Math.max(42, Math.min(124, len * 0.46));
+
+                        // Pick the control point farther from center so the curve bends outward.
+                        const c1x = midX + nx * bend;
+                        const c1y = midY + ny * bend;
+                        const c2x = midX - nx * bend;
+                        const c2y = midY - ny * bend;
+                        const d1 = (c1x - 300) ** 2 + (c1y - 200) ** 2;
+                        const d2 = (c2x - 300) ** 2 + (c2y - 200) ** 2;
+                        const cx = d1 >= d2 ? c1x : c2x;
+                        const cy = d1 >= d2 ? c1y : c2y;
+                        const path = `M ${a.x} ${a.y} Q ${cx} ${cy} ${b.x} ${b.y}`;
                         return (
-                          <line
+                          <path
                             key={`adj-${i}-${j}`}
-                            x1={a.x}
-                            y1={a.y}
-                            x2={b.x}
-                            y2={b.y}
+                            d={path}
+                            fill="none"
                             stroke="#5a7d66"
                             strokeWidth={1}
-                            opacity={0.25}
+                            opacity={0.42}
                             strokeDasharray="3 3"
+                            strokeLinecap="round"
                           />
                         );
                       }),
@@ -1005,7 +985,7 @@ export default function RedesPage() {
                           stroke={getColor(p.relationType)}
                           strokeWidth={sc >= 5 ? 4.5 : sc >= 3 ? 3 : 1.2}
                           opacity={sc >= 5 ? 0.5 : sc >= 3 ? 0.35 : 0.25}
-                          strokeDasharray={sc <= 1 ? "5 4" : "none"}
+                          strokeDasharray="none"
                         />
                       );
                     })}
@@ -1022,6 +1002,13 @@ export default function RedesPage() {
                       const pos = graphNodePositions[i];
                       const color = getColor(p.relationType);
                       const displayName = p.name.length > 10 ? p.name.slice(0, 9) + "…" : p.name;
+                      const labelBelowY = pos.y + pos.r + 15;
+                      const labelAboveY = pos.y - pos.r - 10;
+                      const isUpperHalf = pos.y < 200;
+                      const clipsTop = labelAboveY < 12;
+                      const clipsBottom = labelBelowY > 390;
+                      const placeLabelAbove = isUpperHalf ? !clipsTop : clipsBottom;
+                      const labelY = placeLabelAbove ? labelAboveY : labelBelowY;
                       return (
                         <g key={`node-${i}`}>
                           <circle cx={pos.x} cy={pos.y} r={pos.r + 4} fill={color} opacity={0.1} />
@@ -1029,7 +1016,7 @@ export default function RedesPage() {
                           <NodeIcon relation={p.relationType} x={pos.x} y={pos.y} />
                           <text
                             x={pos.x}
-                            y={pos.y + pos.r + 15}
+                            y={labelY}
                             textAnchor="middle"
                             fill="#1D3E2A"
                             fontSize="11"
