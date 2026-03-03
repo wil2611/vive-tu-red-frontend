@@ -78,10 +78,10 @@ export const createInitialGeneralInfo = (): GeneralInfo => ({
 });
 
 export const steps = [
-  { id: 1, label: "Paso 1: Info general", icon: "" },
-  { id: 2, label: "Paso 2: Conexiones", icon: "" },
-  { id: 3, label: "Paso 3: Funciones de apoyo", icon: "" },
-  { id: 4, label: "Paso 4: Matriz", icon: "" },
+  { id: 1, label: "Paso 1: Info general", icon: "1" },
+  { id: 2, label: "Paso 2: Conexiones", icon: "2" },
+  { id: 3, label: "Paso 3: Funciones de apoyo", icon: "3" },
+  { id: 4, label: "Paso 4: Matriz", icon: "4" },
 ];
 
 export const heroNotes = [
