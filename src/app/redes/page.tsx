@@ -278,7 +278,7 @@ export default function RedesPage() {
                     aria-label={s.label}
                     aria-pressed={step === s.id}
                   >
-                    <span className="redes-step-icon">{completedSteps.has(s.id) && step !== s.id ? "✓" : s.icon}</span>
+                    <span className="redes-step-icon">{completedSteps.has(s.id) && step !== s.id ? "✓" : s.icon || String(s.id)}</span>
                     <span className="redes-step-label">{s.label}</span>
                   </button>
                 ))}
