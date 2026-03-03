@@ -1,157 +1,90 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import Image from "next/image";
+
+const exploreLinks = [
+  { label: "Inicio", href: "/" },
+  { label: "Sobre el proyecto", href: "/sobre" },
+  { label: "Libro digital", href: "/libro" },
+  { label: "Rutas de atención", href: "/rutas" },
+];
+
+const resourceLinks = [
+  { label: "Recursos educativos", href: "/recursos" },
+  { label: "Visualizador de redes", href: "/redes" },
+  { label: "Contacto", href: "/contacto" },
+];
 
 export default function Footer() {
   return (
     <footer className="footer">
-      <div className="container" style={{ paddingTop: 48, paddingBottom: 40 }}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-            gap: 40,
-            marginBottom: 40,
-          }}
-        >
+      <div className="container footer-inner">
+        <div className="footer-grid">
           {/* Branding */}
-          <div>
-            <div
-              style={{
-                fontWeight: 800,
-                fontSize: 22,
-                fontFamily: "ui-sans-serif, system-ui, sans-serif",
-                marginBottom: 12,
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
+          <section className="footer-brand" aria-label="Información del proyecto">
+            <div className="footer-logo-wrap">
               <Image
                 src="/logo_footer.png"
                 alt="Vive Tu Red"
                 width={160}
                 height={50}
-                style={{ height: 36, width: "auto" }}
+                className="footer-logo"
               />
             </div>
-            <p style={{ fontSize: 13, lineHeight: 1.7, color: "rgb(255, 255, 255)", maxWidth: 260 }}>
-              Proyecto de investigación–creación para la sensibilización y
-              prevención de Violencia Basada en Género (VBG). Creando redes que protegen en entornos universitarios.
+            <p className="footer-brand-desc">
+              Proyecto de investigación-creación para la sensibilización y prevención de Violencia Basada en Género (VBG). Creando redes que protegen en entornos universitarios.
             </p>
-          </div>
+            {/* <div className="footer-partner">
+              <span className="footer-partner-label">Aliado académico</span>
+              <div className="footer-partner-logo-wrap">
+                <Image
+                  src="/logo_uninorte.png"
+                  alt="Universidad del Norte de Barranquilla"
+                  width={180}
+                  height={59}
+                  className="footer-partner-logo"
+                />
+              </div>
+            </div> */}
+          </section>
 
           {/* Explorar */}
-          <div>
-            <h4
-              style={{
-                fontFamily: "ui-sans-serif, system-ui, sans-serif",
-                fontWeight: 700,
-                fontSize: 14,
-                marginBottom: 16,
-                color: "#DCA15D",
-                textTransform: "uppercase",
-                letterSpacing: 1,
-              }}
-            >
-              Explorar
-            </h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[
-                { label: "Inicio", href: "/" },
-                { label: "Sobre el proyecto", href: "/sobre" },
-                { label: "Libro digital", href: "/libro" },
-                { label: "Rutas de atención", href: "/rutas" },
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  style={{ fontSize: 13, color: "rgb(255, 255, 255)" }}
-                >
-                  {item.label}
-                </Link>
+          <nav className="footer-col" aria-label="Navegación principal">
+            <h4 className="footer-title">Explorar</h4>
+            <ul className="footer-list">
+              {exploreLinks.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href}>{item.label}</Link>
+                </li>
               ))}
-            </div>
-          </div>
+            </ul>
+          </nav>
 
           {/* Recursos */}
-          <div>
-            <h4
-              style={{
-                fontFamily: "ui-sans-serif, system-ui, sans-serif",
-                fontWeight: 700,
-                fontSize: 14,
-                marginBottom: 16,
-                color: "#DCA15D",
-                textTransform: "uppercase",
-                letterSpacing: 1,
-              }}
-            >
-              Recursos
-            </h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {[
-                { label: "Recursos educativos", href: "/recursos" },
-                { label: "Visualizador de redes", href: "/redes" },
-                { label: "Contacto", href: "/contacto" },
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  style={{ fontSize: 13, color: "rgb(255, 255, 255)" }}
-                >
-                  {item.label}
-                </Link>
+          <nav className="footer-col" aria-label="Recursos del sitio">
+            <h4 className="footer-title">Recursos</h4>
+            <ul className="footer-list">
+              {resourceLinks.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href}>{item.label}</Link>
+                </li>
               ))}
-            </div>
-          </div>
+            </ul>
+          </nav>
 
           {/* Contacto */}
-          <div>
-            <h4
-              style={{
-                fontFamily: "ui-sans-serif, system-ui, sans-serif",
-                fontWeight: 700,
-                fontSize: 14,
-                marginBottom: 16,
-                color: "#DCA15D",
-                textTransform: "uppercase",
-                letterSpacing: 1,
-              }}
-            >
-              Contacto
-            </h4>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-                fontSize: 13,
-                color: "rgb(255, 255, 255)",
-              }}
-            >
-              <span>contacto@vivetured.edu.co</span>
-              <Link href="/contacto" style={{ color: "#DCA15D" }}>
+          <section className="footer-col" aria-label="Canales de contacto">
+            <h4 className="footer-title">Contacto</h4>
+            <div className="footer-contact">
+              <a href="mailto:contacto@vivetured.edu.co">contacto@vivetured.edu.co</a>
+              <Link href="/contacto" className="footer-cta-link">
                 Formulario de contacto →
               </Link>
             </div>
-          </div>
+          </section>
         </div>
 
         {/* Línea de copyright */}
-        <div
-          style={{
-            borderTop: "1px solid rgba(226,220,194,0.12)",
-            paddingTop: 20,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: 12,
-            fontSize: 12,
-            color: "rgba(226,220,194,0.4)",
-            fontFamily: "ui-sans-serif, system-ui, sans-serif",
-          }}
-        >
+        <div className="footer-bottom">
           <span>© {new Date().getFullYear()} #ViveTuRed. Todos los derechos reservados.</span>
           <span>Creado con empatía para el bienestar social</span>
         </div>
