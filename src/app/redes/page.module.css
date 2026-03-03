@@ -1,6 +1,6 @@
 .heroSection {
   background: linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%);
-  padding: 48px 48px;
+  padding: 48px 0 56px;
 }
 
 .mainSection {
@@ -660,7 +660,8 @@
     gap: 6px;
   }
   :global(.redes-step) {
-    padding: 8px 12px;
+    min-height: 44px;
+    padding: 10px 12px;
     font-size: 12px;
   }
   :global(.redes-step-label) {
