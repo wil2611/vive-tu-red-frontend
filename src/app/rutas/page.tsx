@@ -1,141 +1,17 @@
-﻿import type React from "react";
-
-const emergencyContacts = [
-  { name: "Línea 155", desc: "Orientación a mujeres víctimas de violencia", phone: "155" },
-  { name: "Línea 141", desc: "Protección de niños, niñas y adolescentes (ICBF)", phone: "141" },
-  { name: "Linea 123", desc: "Emergencias generales", phone: "123" },
-  { name: "Línea 122", desc: "Fiscalía General de la Nación", phone: "122" },
-];
-
-const institutions = [
-  {
-    name: "Comisaría de Familia",
-    type: "Atención y protección",
-    desc: "Recepción de denuncias, medidas de protección y orientación jurídica para víctimas de violencia intrafamiliar y VBG.",
-    badge: "Presencial",
-    badgeColor: "#00555A",
-    icon: "CF",
-  },
-  {
-    name: "Fiscalía General de la Nación",
-    type: "Justicia y denuncia",
-    desc: "Recepción de denuncias penales por delitos de violencia basada en género y acompañamiento en el proceso judicial.",
-    badge: "Denuncia",
-    badgeColor: "#C96A4A",
-    icon: "FG",
-  },
-  {
-    name: "Secretaría de la Mujer",
-    type: "Orientación y acompañamiento",
-    desc: "Asesoría jurídica, psicológica y social para mujeres en situación de violencia.",
-    badge: "Orientación",
-    badgeColor: "#DCA15D",
-    icon: "SM",
-  },
-  {
-    name: "Bienestar Universitario",
-    type: "Apoyo institucional",
-    desc: "Acompañamiento psicológico y orientación para estudiantes que enfrentan situaciones de violencia en el entorno universitario.",
-    badge: "Universidad",
-    badgeColor: "#1D3E2A",
-    icon: "BU",
-  },
-  {
-    name: "Defensoría del Pueblo",
-    type: "Derechos humanos",
-    desc: "Protección y promoción de derechos humanos, orientación gratuita y acompañamiento a víctimas.",
-    badge: "Derechos",
-    badgeColor: "#00555A",
-    icon: "DP",
-  },
-  {
-    name: "Centros de atención a víctimas",
-    type: "Atención integral",
-    desc: "Servicios de salud, asesoría legal y apoyo psicosocial para víctimas de violencia basada en género.",
-    badge: "Integral",
-    badgeColor: "#DCA15D",
-    icon: "CA",
-  },
-];
-
-type SignalTone = "danger" | "caution" | "emotional" | "support" | "witness" | "report";
-
-const whenToSeekHelp: Array<{ tone: SignalTone; cue: string; label: string; desc: string }> = [
-  { tone: "danger", cue: "Urgente", label: "Peligro inmediato", desc: "Sientes que tu integridad física o la de alguien cercano está en riesgo." },
-  { tone: "caution", cue: "Alerta", label: "Miedo constante", desc: "Vives con temor a las reacciones de una persona o evitas situaciones por miedo." },
-  { tone: "emotional", cue: "Cuidado", label: "Violencia emocional", desc: "Experimentas humillaciones, control excesivo, aislamiento o manipulación." },
-  { tone: "support", cue: "Acompañamiento", label: "No sabes a quién acudir", desc: "No tienes con quién hablar o sientes que nadie te creerá." },
-  { tone: "witness", cue: "Observación", label: "Eres testigo", desc: "Conoces a alguien que puede estar viviendo una situación de violencia." },
-  { tone: "report", cue: "Acción legal", label: "Quieres denunciar", desc: "Deseas iniciar un proceso legal o simplemente necesitas orientación." },
-];
-
-const processSteps = [
-  {
-    num: "01",
-    title: "Primera escucha y orientación",
-    desc: "Al contactar una institución, te recibirán sin juzgarte. Te explicarán tus derechos y las opciones disponibles. No necesitas pruebas para pedir ayuda.",
-    color: "#00555A",
-  },
-  {
-    num: "02",
-    title: "Valoración y plan de seguridad",
-    desc: "Se evaluará tu situación para determinar el nivel de riesgo y se construirá un plan de seguridad personalizado junto contigo.",
-    color: "#1D3E2A",
-  },
-  {
-    num: "03",
-    title: "Atención integral",
-    desc: "Accederás a acompañamiento psicológico, asesoría jurídica y, si es necesario, atención médica o medidas de protección.",
-    color: "#C96A4A",
-  },
-  {
-    num: "04",
-    title: "Seguimiento y redes de apoyo",
-    desc: "El proceso no termina con el primer contacto. Las instituciones hacen seguimiento y te conectan con redes de apoyo comunitario.",
-    color: "#DCA15D",
-  },
-];
-
-const quickSteps = [
-  {
-    num: "1",
-    title: "Cuándo acudir",
-    hint: "Señales de alerta y momentos clave para pedir apoyo.",
-    href: "#paso-1",
-  },
-  {
-    num: "2",
-    title: "A quién contactar",
-    hint: "Líneas e instituciones para orientación inmediata.",
-    href: "#paso-2",
-  },
-  {
-    num: "3",
-    title: "Qué esperar",
-    hint: "Cómo suele avanzar el proceso de atención.",
-    href: "#paso-3",
-  },
-];
-
-const stepLabelStyle: React.CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 8,
-  background: "rgba(220,161,93,0.15)",
-  color: "#a8553a",
-  borderRadius: 20,
-  padding: "5px 14px",
-  fontSize: 13,
-  fontWeight: 700,
-  fontFamily: "ui-sans-serif, system-ui, sans-serif",
-  marginBottom: 16,
-};
+import styles from "./page.module.css";
+import {
+  emergencyContacts,
+  institutions,
+  processSteps,
+  quickSteps,
+  whenToSeekHelp,
+} from "./rutas.data";
 
 export default function RutasPage() {
   return (
     <div>
       {/* Hero */}
-      <section style={{ background: "linear-gradient(180deg, #f5f0e1 0%, var(--bg) 100%)", padding: "48px 0 56px" }}>
+      <section className={styles.heroSection}>
         <div className="container">
           <div className="rutas-hero-shell">
             <h1 className="rutas-hero-title">Rutas de atención</h1>
@@ -162,17 +38,17 @@ export default function RutasPage() {
       </section>
 
       {/* PASO 1 */}
-      <section id="paso-1" style={{ background: "#f5f0e1" }}>
-        <div className="container" style={{ paddingTop: 52, paddingBottom: 52 }}>
-          <div style={stepLabelStyle}>
-            <span style={{ width: 22, height: 22, borderRadius: "50%", background: "#1D3E2A", color: "white", display: "inline-flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 12 }}>1</span>
+      <section id="paso-1" className={styles.sectionWarm}>
+        <div className={`container ${styles.sectionContainer}`}>
+          <div className={styles.stepLabel}>
+            <span className={styles.stepNumber}>1</span>
             Paso 1
           </div>
           <div className="accent-bar" />
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+          <h2 className={styles.sectionTitle}>
             ¿Cuándo acudir?
           </h2>
-          <p style={{ color: "#5a7d66", marginBottom: 32, lineHeight: 1.7, maxWidth: 640 }}>
+          <p className={styles.sectionLead}>
             No esperes a estar en una crisis severa. Pedir ayuda es un acto de valentía.
             Estas son algunas situaciones en las que es importante buscar apoyo:
           </p>
@@ -194,10 +70,10 @@ export default function RutasPage() {
             ))}
           </div>
 
-          <div className="notice notice-warning rutas-danger-box" style={{ maxWidth: 900, marginTop: 28 }}>
+          <div className={`notice notice-warning rutas-danger-box ${styles.dangerNotice}`}>
             <div>
               <strong className="rutas-danger-title">Si estás en peligro ahora mismo</strong>
-              <p className="rutas-danger-text" style={{ margin: "4px 0 0" }}>
+              <p className={`rutas-danger-text ${styles.dangerText}`}>
                 Llama al <strong>155</strong> o al <strong>123</strong>. No necesitas estar segura/o para pedir ayuda. No estás sola/solo.
               </p>
             </div>
@@ -206,17 +82,17 @@ export default function RutasPage() {
       </section>
 
       {/* PASO 2 */}
-      <section id="paso-2" style={{ background: "var(--bg)" }}>
-        <div className="container" style={{ paddingTop: 52, paddingBottom: 52 }}>
-          <div style={stepLabelStyle}>
-            <span style={{ width: 22, height: 22, borderRadius: "50%", background: "#1D3E2A", color: "white", display: "inline-flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 12 }}>2</span>
+      <section id="paso-2" className={styles.sectionNeutral}>
+        <div className={`container ${styles.sectionContainer}`}>
+          <div className={styles.stepLabel}>
+            <span className={styles.stepNumber}>2</span>
             Paso 2
           </div>
           <div className="accent-bar" />
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+          <h2 className={styles.sectionTitle}>
             ¿A quién contactar?
           </h2>
-          <p style={{ color: "#5a7d66", marginBottom: 32, lineHeight: 1.7, maxWidth: 640 }}>
+          <p className={styles.sectionLead}>
             Dependiendo de tu situación, puedes acudir a una línea de emergencia o a una institución especializada.
           </p>
 
@@ -281,17 +157,17 @@ export default function RutasPage() {
       </section>
 
       {/* PASO 3 */}
-      <section id="paso-3" style={{ background: "#f5f0e1" }}>
-        <div className="container" style={{ paddingTop: 52, paddingBottom: 56 }}>
-          <div style={stepLabelStyle}>
-            <span style={{ width: 22, height: 22, borderRadius: "50%", background: "#1D3E2A", color: "white", display: "inline-flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 12 }}>3</span>
+      <section id="paso-3" className={styles.sectionWarm}>
+        <div className={`container ${styles.sectionContainer} ${styles.sectionContainerLast}`}>
+          <div className={styles.stepLabel}>
+            <span className={styles.stepNumber}>3</span>
             Paso 3
           </div>
           <div className="accent-bar" />
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+          <h2 className={styles.sectionTitle}>
             ¿Qué esperar del proceso?
           </h2>
-          <p style={{ color: "#5a7d66", marginBottom: 32, lineHeight: 1.7, maxWidth: 640 }}>
+          <p className={styles.sectionLead}>
             Conocer el camino reduce la incertidumbre. Así funciona generalmente la atención:
           </p>
 
@@ -318,20 +194,20 @@ export default function RutasPage() {
       </section>
 
       {/* FAQ */}
-      <section style={{ background: "var(--bg)" }}>
-        <div className="container" style={{ paddingTop: 52, paddingBottom: 56 }}>
+      <section className={styles.sectionNeutral}>
+        <div className={`container ${styles.sectionContainer} ${styles.sectionContainerLast}`}>
           <div className="accent-bar" />
-          <h2 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#1D3E2A", marginBottom: 8, fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>
+          <h2 className={styles.sectionTitle}>
             Preguntas frecuentes
           </h2>
-          <p style={{ color: "#5a7d66", marginBottom: 28, lineHeight: 1.7, maxWidth: 640 }}>
+          <p className={styles.sectionLead}>
             Resolvemos las dudas más comunes sobre cómo funciona el proceso de atención.
           </p>
-          <div style={{ display: "grid", gap: 10, maxWidth: 760 }}>
+          <div className={styles.faqGrid}>
             <details>
               <summary>¿Necesito pruebas para pedir ayuda?</summary>
               <div>
-                <p style={{ margin: 0 }}>
+                <p className={styles.faqAnswer}>
                   No. No es necesario tener pruebas para solicitar orientación o iniciar un proceso.
                   Tienes derecho a recibir atención, escucha y acompañamiento desde el primer contacto.
                 </p>
@@ -340,7 +216,7 @@ export default function RutasPage() {
             <details>
               <summary>¿Es confidencial el proceso?</summary>
               <div>
-                <p style={{ margin: 0 }}>
+                <p className={styles.faqAnswer}>
                   Sí. Las instituciones están obligadas a respetar la confidencialidad. Tu información
                   solo se compartirá con tu consentimiento o ante riesgo inminente para tu vida.
                 </p>
@@ -349,7 +225,7 @@ export default function RutasPage() {
             <details>
               <summary>¿Cómo acompañar a alguien que vive violencia?</summary>
               <div>
-                <p style={{ margin: 0 }}>
+                <p className={styles.faqAnswer}>
                   Escucha sin juzgar, valida sus emociones y ofrece información sobre las rutas disponibles.
                   No presiones para que tome decisiones inmediatas. Tu rol como red de apoyo es fundamental.
                   Puedes orientarla/o al 155 o a Bienestar Universitario.
@@ -359,7 +235,7 @@ export default function RutasPage() {
             <details>
               <summary>¿Qué pasa si quiero detener el proceso?</summary>
               <div>
-                <p style={{ margin: 0 }}>
+                <p className={styles.faqAnswer}>
                   Tienes autonomía sobre tu proceso. Puedes decidir pausar o detener la atención en
                   cualquier momento. Las instituciones deben respetar tus decisiones y seguir
                   brindándote información sin presionarte.
