@@ -1464,11 +1464,36 @@ a { color: inherit; text-decoration: none; }
 .footer-brand {
   max-width: 520px;
 }
-.footer-logo-wrap {
+.footer-cobranding {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 16px;
+  width: fit-content;
+  max-width: 100%;
+  white-space: nowrap;
   margin-bottom: 14px;
+}
+.footer-cobranding > * {
+  flex-shrink: 0;
+}
+.footer-uninorte-icon {
+  display: block;
+  width: auto;
+  height: 56px;
+}
+.footer-cobranding-divider {
+  width: 1px;
+  height: 52px;
+  background: #000;
 }
 .footer-logo {
   height: auto;
+}
+.footer-logo-cobrand {
+  display: block;
+  height: 50px;
+  width: auto;
 }
 .footer-brand-desc {
   margin: 0;
@@ -1551,6 +1576,18 @@ a { color: inherit; text-decoration: none; }
   }
   .footer-title {
     margin-bottom: 10px;
+  }
+  .footer-cobranding {
+    gap: 12px;
+  }
+  .footer-uninorte-icon {
+    height: 48px;
+  }
+  .footer-cobranding-divider {
+    height: 44px;
+  }
+  .footer-logo-cobrand {
+    height: 42px;
   }
   .footer-bottom {
     margin-top: 20px;

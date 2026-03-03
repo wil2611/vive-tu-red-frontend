@@ -21,30 +21,26 @@ export default function Footer() {
         <div className="footer-grid">
           {/* Branding */}
           <section className="footer-brand" aria-label="Información del proyecto">
-            <div className="footer-logo-wrap">
+            <div className="footer-cobranding" aria-label="Cobranding institucional">
+              <Image
+                src="/icono_uninorte.png"
+                alt="Universidad del Norte"
+                width={64}
+                height={74}
+                className="footer-uninorte-icon"
+              />
+              <span className="footer-cobranding-divider" aria-hidden="true" />
               <Image
                 src="/logo_footer.png"
                 alt="Vive Tu Red"
                 width={160}
                 height={50}
-                className="footer-logo"
+                className="footer-logo footer-logo-cobrand"
               />
             </div>
             <p className="footer-brand-desc">
               Proyecto de investigación-creación para la sensibilización y prevención de Violencia Basada en Género (VBG). Creando redes que protegen en entornos universitarios.
             </p>
-            {/* <div className="footer-partner">
-              <span className="footer-partner-label">Aliado académico</span>
-              <div className="footer-partner-logo-wrap">
-                <Image
-                  src="/logo_uninorte.png"
-                  alt="Universidad del Norte de Barranquilla"
-                  width={180}
-                  height={59}
-                  className="footer-partner-logo"
-                />
-              </div>
-            </div> */}
           </section>
 
           {/* Explorar */}
