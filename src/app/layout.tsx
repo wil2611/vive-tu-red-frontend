@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
 
 export const metadata: Metadata = {
   title: "#ViveTuRed — Sensibilización y prevención de VBG",
@@ -17,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>
+        <AnalyticsTracker />
         <Header />
         <main>{children}</main>
         <Footer />

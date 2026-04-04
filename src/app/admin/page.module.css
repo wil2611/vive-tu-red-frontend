@@ -1,0 +1,639 @@
+.page {
+  background:
+    radial-gradient(circle at 90% -10%, rgba(0, 85, 90, 0.08), transparent 35%),
+    radial-gradient(circle at 0% 10%, rgba(201, 106, 74, 0.08), transparent 28%),
+    linear-gradient(180deg, #faf9f5 0%, #f3efdf 100%);
+  min-height: calc(100vh - 160px);
+  padding: 28px 0 40px;
+}
+
+.shell {
+  display: grid;
+  gap: 16px;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.8rem, 2.8vw, 2.35rem);
+  color: #1d3e2a;
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  max-width: 760px;
+  color: #5a7d66;
+  line-height: 1.7;
+}
+
+.configCard {
+  background: #fff;
+  border: 1px solid #d4cdaf;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.inlineForm {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr auto;
+  margin-top: 8px;
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid #d4cdaf;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 12px 28px rgba(17, 47, 31, 0.06);
+}
+
+.loginCard {
+  max-width: 560px;
+}
+
+.panelHeader {
+  margin-bottom: 14px;
+}
+
+.panelTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #1d3e2a;
+}
+
+.panelHint {
+  margin: 6px 0 0;
+  color: #5a7d66;
+  line-height: 1.6;
+}
+
+.rangeSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0 12px;
+}
+
+.rangeBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.84rem;
+  border: 1px solid rgba(0, 85, 90, 0.2);
+  background: rgba(0, 85, 90, 0.07);
+  color: #1f4f53;
+}
+
+.rangeBadgeCurrent {
+  border-color: rgba(29, 62, 42, 0.25);
+  background: rgba(29, 62, 42, 0.09);
+  color: #1d3e2a;
+}
+
+.rangeHelpWrap {
+  margin-left: auto;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.rangeHelpButton {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid #c4bc9f;
+  background: #fff;
+  color: #00555a;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: help;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.rangeHelpButton:hover,
+.rangeHelpButton:focus-visible {
+  border-color: #00555a;
+  outline: none;
+}
+
+.rangeHelpTooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: min(280px, 72vw);
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 85, 90, 0.2);
+  background: #fefdf9;
+  color: #275449;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  box-shadow: 0 8px 20px rgba(16, 46, 31, 0.14);
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+  z-index: 25;
+}
+
+.rangeHelpWrap:hover .rangeHelpTooltip,
+.rangeHelpWrap:focus-within .rangeHelpTooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.loginGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.dashboardGrid {
+  display: grid;
+  gap: 16px;
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.metricCard {
+  background: linear-gradient(180deg, #fffdf6 0%, #f3efe2 100%);
+  border: 1px solid #d9d1b5;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.metricLabel {
+  margin: 0;
+  font-size: 0.83rem;
+  color: #5a7d66;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metricLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.metricInfoWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.metricInfo {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #c9c0a2;
+  background: #fff;
+  color: #1d3e2a;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+  padding: 0;
+}
+
+.metricInfo:hover,
+.metricInfo:focus-visible {
+  border-color: #00555a;
+  outline: none;
+}
+
+.metricTooltip {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: min(260px, 62vw);
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 85, 90, 0.22);
+  background: #fefdf9;
+  color: #244738;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  box-shadow: 0 8px 20px rgba(16, 46, 31, 0.14);
+  z-index: 20;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+.metricInfoWrap:hover .metricTooltip,
+.metricInfoWrap:focus-within .metricTooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.metricValue {
+  margin: 4px 0;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #1d3e2a;
+}
+
+.metricSub {
+  margin: 0;
+  color: #5a7d66;
+  font-size: 0.9rem;
+}
+
+.metricFooter {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.emptyStatsHint {
+  margin: 8px 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(220, 161, 93, 0.14);
+  border: 1px solid rgba(220, 161, 93, 0.3);
+  color: #7b4a1d;
+}
+
+.metricDelta {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+}
+
+.metricDelta[data-tone="up"] {
+  color: #1f7a3f;
+  background: rgba(31, 122, 63, 0.12);
+  border-color: rgba(31, 122, 63, 0.22);
+}
+
+.metricDelta[data-tone="down"] {
+  color: #a6402a;
+  background: rgba(166, 64, 42, 0.12);
+  border-color: rgba(166, 64, 42, 0.22);
+}
+
+.metricDelta[data-tone="neutral"] {
+  color: #5a7d66;
+  background: rgba(90, 125, 102, 0.12);
+  border-color: rgba(90, 125, 102, 0.22);
+}
+
+.kpiToolbar {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.kpiTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.kpiPresets {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.presetButton {
+  border: 1px solid #d9d1b5;
+  background: #f7f4ea;
+  color: #1d3e2a;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.presetButton[data-active="true"] {
+  background: #1d3e2a;
+  color: #fff;
+  border-color: #1d3e2a;
+}
+
+.applyButton {
+  min-width: 120px;
+}
+
+.customRangeRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.customRangeRow input {
+  min-width: 150px;
+  max-width: 220px;
+}
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.chartCard {
+  background: #fbfaf5;
+  border: 1px solid #ece5cf;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.chartTitle {
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+  color: #1d3e2a;
+}
+
+.chartCanvas {
+  height: 220px;
+  border: 1px solid #ece5cf;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fff, #f8f5ea);
+  overflow: hidden;
+}
+
+.chartSvg {
+  width: 100%;
+  height: 100%;
+  --chart-line: #1d3e2a;
+  --chart-area: rgba(29, 62, 42, 0.16);
+  --chart-point: #1d3e2a;
+}
+
+.chartPrimary {
+  --chart-line: #1d3e2a;
+  --chart-area: rgba(29, 62, 42, 0.16);
+  --chart-point: #1d3e2a;
+}
+
+.chartSecondary {
+  --chart-line: #00555a;
+  --chart-area: rgba(0, 85, 90, 0.16);
+  --chart-point: #00555a;
+}
+
+.gridLine {
+  stroke: #e8e1c8;
+  stroke-width: 1;
+}
+
+.axisLabel {
+  fill: #6b7f6e;
+  font-size: 11px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.areaPath {
+  fill: var(--chart-area);
+}
+
+.linePath {
+  fill: none;
+  stroke: var(--chart-line);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pointDot {
+  fill: var(--chart-point);
+  stroke: white;
+  stroke-width: 1.3;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid #ece5cf;
+  vertical-align: top;
+}
+
+.table tbody tr:hover {
+  background: rgba(0, 85, 90, 0.05);
+}
+
+.table th {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5a7d66;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.createForm {
+  display: grid;
+  gap: 12px;
+}
+
+.formGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fullWidth {
+  max-width: 240px;
+}
+
+.messagesList {
+  display: grid;
+  gap: 10px;
+}
+
+.messageItem {
+  border: 1px solid #ece5cf;
+  border-radius: 12px;
+  padding: 12px;
+  background: linear-gradient(180deg, #fff 0%, #f8f5ea 100%);
+}
+
+.messageMeta {
+  margin: 0;
+  color: #1d3e2a;
+}
+
+.messageBody {
+  margin: 8px 0;
+  color: #365a45;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.messageDate {
+  margin: 6px 0 0;
+  font-size: 0.86rem;
+  color: #2f5f48;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.emailBadge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(0, 85, 90, 0.09);
+  border: 1px solid rgba(0, 85, 90, 0.16);
+  color: #00555a;
+  font-size: 0.84rem;
+}
+
+.rowActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.smallButton,
+.secondaryButton,
+.dangerButton {
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  padding: 8px 11px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.secondaryButton {
+  background: #1d3e2a;
+  color: #fff;
+}
+
+.secondaryButton:hover:not(:disabled) {
+  background: #2a5a3d;
+}
+
+.dangerButton {
+  background: #c96a4a;
+  color: #fff;
+}
+
+.dangerButton:hover:not(:disabled) {
+  background: #a8553a;
+}
+
+.smallButton:disabled,
+.secondaryButton:disabled,
+.dangerButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.statusError,
+.statusSuccess,
+.statusMuted {
+  margin: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  line-height: 1.6;
+}
+
+.statusError {
+  background: rgba(201, 106, 74, 0.12);
+  border: 1px solid rgba(201, 106, 74, 0.2);
+  color: #9f4830;
+}
+
+.statusSuccess {
+  background: rgba(29, 62, 42, 0.1);
+  border: 1px solid rgba(29, 62, 42, 0.2);
+  color: #1d3e2a;
+}
+
+.statusMuted {
+  background: rgba(0, 85, 90, 0.07);
+  border: 1px solid rgba(0, 85, 90, 0.12);
+  color: #00555a;
+}
+
+@media (max-width: 900px) {
+  .metricGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth {
+    max-width: none;
+  }
+
+  .inlineForm {
+    grid-template-columns: 1fr;
+  }
+
+  .kpiToolbar {
+    gap: 8px;
+  }
+
+  .kpiTopRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .applyButton {
+    width: auto;
+  }
+
+  .rangeHelpWrap {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .chartGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .metricGrid {
+    grid-template-columns: 1fr;
+  }
+}

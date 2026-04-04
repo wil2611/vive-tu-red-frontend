@@ -1,6 +1,14 @@
+"use client";
+
 import type { CSSProperties } from "react";
 import styles from "./page.module.css";
-import { categories, getResourcesByCategory, type ResourceCategoryId, type ResourceItem } from "./recursos.data";
+import {
+  categories,
+  getResourcesByCategory,
+  type ResourceCategoryId,
+  type ResourceItem,
+} from "./recursos.data";
+import { recordInteraction } from "@/lib/analytics/tracker";
 
 export default function RecursosPage() {
   const prevencionDocs = getResourcesByCategory("prevencion");
@@ -9,30 +17,26 @@ export default function RecursosPage() {
 
   return (
     <div>
-      {/* Hero */}
       <section className={styles.heroSection}>
         <div className="container">
           <div className={styles.heroShell}>
-            <h1 className={styles.heroTitle}>
-              Recursos y materiales de apoyo
-            </h1>
+            <h1 className={styles.heroTitle}>Recursos y materiales de apoyo</h1>
             <p className={styles.heroDesc}>
-              Herramientas para la prevención, orientación y formación en Violencia Basada en Género (VBG).
-              Todos los materiales son de acceso libre y descarga gratuita.
+              Herramientas para la prevencion, orientacion y formacion en
+              Violencia Basada en Genero (VBG). Todos los materiales son de
+              acceso libre y descarga gratuita.
             </p>
 
-            <div className={styles.quickNav} aria-label="Accesos rápidos por categoría">
+            <div className={styles.quickNav} aria-label="Accesos rapidos por categoria">
               {categories.map((cat) => (
-                <a
-                  key={cat.id}
-                  href={`#${cat.id}`}
-                  className={styles.quickLink}
-                >
+                <a key={cat.id} href={`#${cat.id}`} className={styles.quickLink}>
                   <span className={styles.quickCopy}>
                     <strong>{cat.label}</strong>
                     <small>{cat.hint}</small>
                   </span>
-                  <span className={styles.quickArrow} aria-hidden="true">&gt;</span>
+                  <span className={styles.quickArrow} aria-hidden="true">
+                    &gt;
+                  </span>
                 </a>
               ))}
             </div>
@@ -45,9 +49,9 @@ export default function RecursosPage() {
         sectionClassName={styles.sectionWarm}
         containerClassName={styles.sectionContainer}
         pillClassName={`${styles.pill} ${styles.pillPrevencion}`}
-        pillLabel="Prevención"
-        title="Herramientas para la prevención"
-        description="Materiales para reconocer la VBG, identificar señales de alerta y fortalecer la cultura de prevención."
+        pillLabel="Prevencion"
+        title="Herramientas para la prevencion"
+        description="Materiales para reconocer la VBG, identificar senales de alerta y fortalecer la cultura de prevencion."
         docs={prevencionDocs}
       />
 
@@ -56,9 +60,9 @@ export default function RecursosPage() {
         sectionClassName={styles.sectionNeutral}
         containerClassName={styles.sectionContainer}
         pillClassName={`${styles.pill} ${styles.pillOrientacion}`}
-        pillLabel="Orientación"
-        title="Materiales de apoyo y orientación"
-        description="Guías e infografías para saber a dónde acudir y cómo navegar las rutas de atención disponibles."
+        pillLabel="Orientacion"
+        title="Materiales de apoyo y orientacion"
+        description="Guias e infografias para saber a donde acudir y como navegar las rutas de atencion disponibles."
         docs={orientacionDocs}
       />
 
@@ -67,9 +71,9 @@ export default function RecursosPage() {
         sectionClassName={styles.sectionWarm}
         containerClassName={`${styles.sectionContainer} ${styles.sectionContainerLast}`}
         pillClassName={`${styles.pill} ${styles.pillFormacion}`}
-        pillLabel="Formación"
-        title="Recursos para la formación"
-        description="Manuales, guías metodológicas e instrumentos para docentes, facilitadores/as e investigadores/as."
+        pillLabel="Formacion"
+        title="Recursos para la formacion"
+        description="Manuales, guias metodologicas e instrumentos para docentes, facilitadores/as e investigadores/as."
         docs={formacionDocs}
       />
     </div>
@@ -115,15 +119,16 @@ function ResourceSection({
 }
 
 function ResourceCard({ doc }: { doc: ResourceItem }) {
-  const typeBadgeStyle = { background: `${doc.color}14`, color: doc.color } as CSSProperties;
+  const typeBadgeStyle = {
+    background: `${doc.color}14`,
+    color: doc.color,
+  } as CSSProperties;
 
   return (
     <article className={`card ${styles.resourceCard}`}>
       <div className={styles.resourceCardMain}>
         <div className={styles.resourceCardHead}>
-          <h3 className={styles.resourceCardTitle}>
-            {doc.title}
-          </h3>
+          <h3 className={styles.resourceCardTitle}>{doc.title}</h3>
           <div className={styles.resourceCardChips}>
             <span className={`badge ${styles.typeBadge}`} style={typeBadgeStyle}>
               {doc.type}
@@ -133,14 +138,28 @@ function ResourceCard({ doc }: { doc: ResourceItem }) {
         </div>
 
         <dl className={styles.resourceCardMeta}>
-          <dt>¿Para quién?</dt>
+          <dt>Para quien?</dt>
           <dd>{doc.forWho}</dd>
-          <dt>¿Para qué sirve?</dt>
+          <dt>Para que sirve?</dt>
           <dd>{doc.forWhat}</dd>
         </dl>
       </div>
 
-      <button className={`btn btn-outline ${styles.resourceCardBtn}`}>
+      <button
+        className={`btn btn-outline ${styles.resourceCardBtn}`}
+        onClick={() =>
+          void recordInteraction({
+            type: "resource_download",
+            targetType: "resource",
+            targetId: doc.title,
+            metadata: {
+              category: doc.category,
+              resourceType: doc.type,
+              size: doc.size,
+            },
+          })
+        }
+      >
         <span className={styles.downloadIcon}>⬇</span>
         Descargar
       </button>
