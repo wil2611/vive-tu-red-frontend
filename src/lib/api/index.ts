@@ -22,6 +22,7 @@ export {
 export {
   createContactMessage,
   deleteContactMessage,
+  listAllContactMessages,
   listUnreadContactMessages,
   markContactMessageAsRead,
 } from "./modules/contact.api";

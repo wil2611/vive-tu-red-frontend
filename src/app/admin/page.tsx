@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./page.module.css";
 import {
   ApiClientError,
@@ -11,7 +11,7 @@ import {
   getCurrentAuthSession,
   getCurrentUser,
   getStatsDashboard,
-  listUnreadContactMessages,
+  listAllContactMessages,
   listUsers,
   loginWithPassword,
   logoutAuthSession,
@@ -33,6 +33,27 @@ type UserDraft = {
 
 type StatsRangePreset = "7d" | "30d" | "90d" | "custom";
 type SeriesPoint = { date: string; value: number };
+type AdminSectionTab = "summary" | "create-user" | "users" | "messages";
+type MessageFilter = "all" | "unread" | "read";
+
+const ADMIN_SECTION_TABS: Array<{ id: AdminSectionTab; label: string }> = [
+  { id: "summary", label: "Resumen" },
+  { id: "create-user", label: "Crear usuario" },
+  { id: "users", label: "Usuarios" },
+  { id: "messages", label: "Mensajes" },
+];
+
+function getAllowedTabsByRole(role: UserRole | null): AdminSectionTab[] {
+  if (role === "admin") {
+    return ["summary", "create-user", "users", "messages"];
+  }
+
+  if (role === "editor" || role === "investigador") {
+    return ["summary", "messages"];
+  }
+
+  return [];
+}
 
 function formatDate(value: string | null): string {
   if (!value) return "N/A";
@@ -222,10 +243,12 @@ export default function AdminPage() {
   const [users, setUsers] = useState<UserRecord[]>([]);
   const [userDrafts, setUserDrafts] = useState<Record<string, UserDraft>>({});
   const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [messagesFilter, setMessagesFilter] = useState<MessageFilter>("all");
   const [stats, setStats] = useState<StatsDashboard | null>(null);
   const [statsRangePreset, setStatsRangePreset] = useState<StatsRangePreset>("30d");
   const [statsCustomFrom, setStatsCustomFrom] = useState("");
   const [statsCustomTo, setStatsCustomTo] = useState("");
+  const [activeTab, setActiveTab] = useState<AdminSectionTab>("summary");
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -293,7 +316,12 @@ export default function AdminPage() {
         const me = await getCurrentUser();
         setCurrentUser(me);
 
-        if (me.role !== "admin") {
+        const allowedTabs = getAllowedTabsByRole(me.role);
+        const canReadSummary = allowedTabs.includes("summary");
+        const canReadMessages = allowedTabs.includes("messages");
+        const canManageUsers = allowedTabs.includes("users");
+
+        if (!allowedTabs.length) {
           setIsForbidden(true);
           setUsers([]);
           setUserDrafts({});
@@ -303,23 +331,36 @@ export default function AdminPage() {
         }
 
         setIsForbidden(false);
-        const [usersData, unreadMessages, statsData] = await Promise.all([
-          listUsers(),
-          listUnreadContactMessages(),
-          getStatsDashboard(buildStatsQuery()),
+        const usersPromise: Promise<UserRecord[] | null> = canManageUsers
+          ? listUsers()
+          : Promise.resolve(null);
+        const allMessagesPromise: Promise<ContactMessage[] | null> = canReadMessages
+          ? listAllContactMessages()
+          : Promise.resolve(null);
+        const statsPromise: Promise<StatsDashboard | null> = canReadSummary
+          ? getStatsDashboard(buildStatsQuery())
+          : Promise.resolve(null);
+
+        const [usersData, allMessages, statsData] = await Promise.all([
+          usersPromise,
+          allMessagesPromise,
+          statsPromise,
         ]);
 
-        setUsers(usersData);
-        syncUserDrafts(usersData);
-        setMessages(unreadMessages);
+        if (usersData) {
+          setUsers(usersData);
+          syncUserDrafts(usersData);
+        } else {
+          setUsers([]);
+          setUserDrafts({});
+        }
+
+        setMessages(allMessages ?? []);
         setStats(statsData);
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudieron cargar los datos del panel"));
 
-        if (
-          errorValue instanceof ApiClientError &&
-          (errorValue.status === 401 || errorValue.status === 403)
-        ) {
+        if (errorValue instanceof ApiClientError && errorValue.status === 401) {
           clearSessionState();
         }
       } finally {
@@ -565,6 +606,35 @@ export default function AdminPage() {
     },
   ];
 
+  const currentRole = currentUser?.role ?? null;
+  const allowedTabs = useMemo(() => getAllowedTabsByRole(currentRole), [currentRole]);
+  const visibleTabs = useMemo(
+    () => ADMIN_SECTION_TABS.filter((tab) => allowedTabs.includes(tab.id)),
+    [allowedTabs],
+  );
+  const canAccessSummary = allowedTabs.includes("summary");
+  const canAccessCreateUser = allowedTabs.includes("create-user");
+  const canAccessUsers = allowedTabs.includes("users");
+  const canAccessMessages = allowedTabs.includes("messages");
+  const canMarkMessages = canAccessMessages;
+  const canDeleteMessages = currentRole === "admin";
+  const unreadMessagesCount = messages.filter((item) => item.status === "new").length;
+  const readMessagesCount = messages.filter((item) => item.status === "read").length;
+  const filteredMessages = useMemo(() => {
+    if (messagesFilter === "unread") return messages.filter((item) => item.status === "new");
+    if (messagesFilter === "read") return messages.filter((item) => item.status === "read");
+    return messages;
+  }, [messages, messagesFilter]);
+
+  useEffect(() => {
+    if (!visibleTabs.length) return;
+
+    const currentTabIsVisible = visibleTabs.some((tab) => tab.id === activeTab);
+    if (!currentTabIsVisible) {
+      setActiveTab(visibleTabs[0].id);
+    }
+  }, [activeTab, visibleTabs]);
+
   return (
     <section className={styles.page}>
       <div className={`container ${styles.shell}`}>
@@ -599,7 +669,7 @@ export default function AdminPage() {
             <div className={styles.panelHeader}>
               <h2 className={styles.panelTitle}>Acceso administrador</h2>
               <p className={styles.panelHint}>
-                Inicia sesion con un usuario que tenga rol `admin`.
+                Inicia sesion con rol `admin`, `editor` o `investigador`.
               </p>
             </div>
 
@@ -642,20 +712,34 @@ export default function AdminPage() {
           <article className={styles.panel}>
             <h2 className={styles.panelTitle}>Acceso restringido</h2>
             <p className={styles.panelHint}>
-              El usuario autenticado no tiene rol `admin`. Rol actual:{" "}
+              El usuario autenticado no tiene permisos para este panel. Rol actual:{" "}
               <strong>{currentUser ? roleLabel(currentUser.role) : "desconocido"}</strong>.
             </p>
           </article>
         ) : (
           <div className={styles.dashboardGrid}>
-            <article className={styles.panel}>
+            <div className={styles.tabsSection}>
+              <p className={styles.tabsCaption}>Navegacion del panel</p>
+              <nav className={styles.tabsBar} aria-label="Secciones del panel de administracion">
+                {visibleTabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    className={styles.tabButton}
+                    data-active={activeTab === tab.id}
+                    aria-current={activeTab === tab.id ? "page" : undefined}
+                    onClick={() => setActiveTab(tab.id)}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            {canAccessSummary && activeTab === "summary" ? (
+              <article className={styles.panel}>
               <div className={styles.panelHeader}>
                 <h2 className={styles.panelTitle}>Resumen</h2>
-                <p className={styles.panelHint}>
-                  {currentUser
-                    ? `${currentUser.firstName} ${currentUser.lastName} (${currentUser.email})`
-                    : "Sin informacion de usuario"}
-                </p>
               </div>
 
               {isLoadingData ? (
@@ -865,11 +949,12 @@ export default function AdminPage() {
                 </>
               )}
             </article>
+            ) : null}
 
-            <article className={styles.panel}>
+            {canAccessCreateUser && activeTab === "create-user" ? (
+              <article className={styles.panel}>
               <div className={styles.panelHeader}>
                 <h2 className={styles.panelTitle}>Crear usuario</h2>
-                <p className={styles.panelHint}>Endpoint: `POST /users`</p>
               </div>
 
               <form className={styles.createForm} onSubmit={handleCreateUser}>
@@ -947,8 +1032,10 @@ export default function AdminPage() {
                 </button>
               </form>
             </article>
+            ) : null}
 
-            <article className={styles.panel}>
+            {canAccessUsers && activeTab === "users" ? (
+              <article className={styles.panel}>
               <div className={styles.panelHeader}>
                 <h2 className={styles.panelTitle}>Usuarios</h2>
                 <p className={styles.panelHint}>
@@ -1051,18 +1138,44 @@ export default function AdminPage() {
                 </table>
               </div>
             </article>
+            ) : null}
 
-            <article className={styles.panel}>
+            {canAccessMessages && activeTab === "messages" ? (
+              <article className={styles.panel}>
               <div className={styles.panelHeader}>
-                <h2 className={styles.panelTitle}>Mensajes sin leer</h2>
-                <p className={styles.panelHint}>
-                  Endpoint: `GET /contact/admin/unread`
-                </p>
+                <h2 className={styles.panelTitle}>Historial de mensajes</h2>
+              </div>
+
+              <div className={styles.messageFilters}>
+                <button
+                  type="button"
+                  className={styles.messageFilterButton}
+                  data-active={messagesFilter === "all"}
+                  onClick={() => setMessagesFilter("all")}
+                >
+                  Todos ({messages.length})
+                </button>
+                <button
+                  type="button"
+                  className={styles.messageFilterButton}
+                  data-active={messagesFilter === "unread"}
+                  onClick={() => setMessagesFilter("unread")}
+                >
+                  No leidos ({unreadMessagesCount})
+                </button>
+                <button
+                  type="button"
+                  className={styles.messageFilterButton}
+                  data-active={messagesFilter === "read"}
+                  onClick={() => setMessagesFilter("read")}
+                >
+                  Leidos ({readMessagesCount})
+                </button>
               </div>
 
               <div className={styles.messagesList}>
-                {messages.length ? (
-                  messages.map((msg) => {
+                {filteredMessages.length ? (
+                  filteredMessages.map((msg) => {
                     const reading = busyAction === `read-${msg.id}`;
                     const deleting = busyAction === `delete-msg-${msg.id}`;
                     return (
@@ -1070,34 +1183,54 @@ export default function AdminPage() {
                         <p className={styles.messageMeta}>
                           <strong>{msg.subject}</strong> - {msg.name} ({msg.email})
                         </p>
-                        <p className={styles.messageDate}>{formatDate(msg.createdAt)}</p>
+                        <p className={styles.messageDate}>
+                          {formatDate(msg.createdAt)}
+                          <span
+                            className={styles.messageStatus}
+                            data-status={msg.status}
+                          >
+                            {msg.status === "new" ? "No leido" : "Leido"}
+                          </span>
+                        </p>
+                        {msg.status === "read" && msg.readAt ? (
+                          <p className={styles.messageReadAt}>
+                            Leido: {formatDate(msg.readAt)}
+                          </p>
+                        ) : null}
                         <p className={styles.messageBody}>{msg.message}</p>
                         <div className={styles.rowActions}>
-                          <button
-                            type="button"
-                            className={styles.secondaryButton}
-                            onClick={() => void handleMarkMessageRead(msg.id)}
-                            disabled={reading || deleting}
-                          >
-                            {reading ? "Actualizando..." : "Marcar leido"}
-                          </button>
-                          <button
-                            type="button"
-                            className={styles.dangerButton}
-                            onClick={() => void handleDeleteMessage(msg.id)}
-                            disabled={reading || deleting}
-                          >
-                            {deleting ? "Eliminando..." : "Eliminar"}
-                          </button>
+                          {canMarkMessages && msg.status === "new" ? (
+                            <button
+                              type="button"
+                              className={styles.secondaryButton}
+                              onClick={() => void handleMarkMessageRead(msg.id)}
+                              disabled={reading || deleting}
+                            >
+                              {reading ? "Actualizando..." : "Marcar leido"}
+                            </button>
+                          ) : null}
+                          {canDeleteMessages ? (
+                            <button
+                              type="button"
+                              className={styles.dangerButton}
+                              onClick={() => void handleDeleteMessage(msg.id)}
+                              disabled={reading || deleting}
+                            >
+                              {deleting ? "Eliminando..." : "Eliminar"}
+                            </button>
+                          ) : null}
                         </div>
                       </article>
                     );
                   })
                 ) : (
-                  <p className={styles.statusMuted}>No hay mensajes sin leer.</p>
+                  <p className={styles.statusMuted}>
+                    No hay mensajes para el filtro seleccionado.
+                  </p>
                 )}
               </div>
             </article>
+            ) : null}
           </div>
         )}
       </div>
