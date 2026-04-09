@@ -1,6 +1,8 @@
 import { apiClient } from "../client";
 import type {
+  ChangeMyPasswordPayload,
   CreateUserPayload,
+  UpdateMyProfilePayload,
   UpdateUserPayload,
   UserRecord,
 } from "../types";
@@ -26,6 +28,22 @@ export function updateUserById(
 ): Promise<UserRecord> {
   return apiClient.request<UserRecord>(`/users/${userId}`, {
     method: "PUT",
+    body: payload,
+  });
+}
+
+export function updateMyProfile(payload: UpdateMyProfilePayload): Promise<UserRecord> {
+  return apiClient.request<UserRecord>("/users/me", {
+    method: "PUT",
+    body: payload,
+  });
+}
+
+export function changeMyPassword(
+  payload: ChangeMyPasswordPayload,
+): Promise<{ message: string }> {
+  return apiClient.request<{ message: string }>("/users/me/change-password", {
+    method: "PATCH",
     body: payload,
   });
 }

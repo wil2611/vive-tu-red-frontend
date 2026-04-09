@@ -406,6 +406,26 @@
   min-width: 120px;
 }
 
+.filtersApplyWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.pendingFiltersBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid rgba(220, 161, 93, 0.3);
+  background: rgba(220, 161, 93, 0.14);
+  color: #7b4a1d;
+}
+
 .customRangeRow {
   display: flex;
   gap: 8px;
@@ -769,6 +789,93 @@
   gap: 12px;
 }
 
+.profileGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.profileCard {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.profileCard + .profileCard {
+  border-top: 1px solid #ece5cf;
+  padding-top: 10px;
+}
+
+.profileCardTitle {
+  margin: 0 0 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1d3e2a;
+}
+
+.profileInfoGrid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.profileInfoItem {
+  margin: 0;
+  border: 1px solid #ece5cf;
+  border-radius: 10px;
+  background: #fffef9;
+  padding: 10px 12px;
+}
+
+.profileInfoLabel {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #5a7d66;
+}
+
+.profileInfoValue {
+  margin: 4px 0 0;
+  color: #1d3e2a;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.profileActionsGrid {
+  display: grid;
+  gap: 10px;
+}
+
+.profileActionsRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.profileActionsRow .supportCreateToggle {
+  width: 100%;
+  min-width: 0;
+}
+
+.profileTitle {
+  display: inline-flex;
+  align-items: center;
+  font-size: clamp(1.45rem, 2.2vw, 1.9rem);
+  letter-spacing: 0.01em;
+  color: #153a3f;
+  margin-bottom: 6px;
+}
+
+.profileWideField {
+  grid-column: span 2;
+}
+
 .supportCreateToolbar {
   margin-bottom: 8px;
 }
@@ -926,6 +1033,14 @@
   margin: -2px 0 12px;
 }
 
+.messageSearchBar {
+  margin-bottom: 10px;
+}
+
+.messageSearchBar input {
+  width: min(760px, 100%);
+}
+
 .messageFilterButton {
   border: 1px solid #d9d1b5;
   background: #f7f4ea;
@@ -943,9 +1058,15 @@
   color: #fff;
 }
 
+.messageFilterButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .messagesList {
   display: grid;
   gap: 10px;
+  align-items: start;
 }
 
 .messageItem {
@@ -953,6 +1074,8 @@
   border-radius: 12px;
   padding: 12px;
   background: linear-gradient(180deg, #fff 0%, #f8f5ea 100%);
+  display: grid;
+  gap: 4px;
 }
 
 .messageMeta {
@@ -961,7 +1084,7 @@
 }
 
 .messageBody {
-  margin: 8px 0;
+  margin: 6px 0 2px;
   color: #365a45;
   line-height: 1.6;
   white-space: pre-wrap;
@@ -999,10 +1122,61 @@
   border-color: rgba(31, 122, 63, 0.25);
 }
 
+.messageStatus[data-status="in_progress"] {
+  color: #7a4b1b;
+  background: rgba(220, 161, 93, 0.18);
+  border-color: rgba(220, 161, 93, 0.34);
+}
+
+.messageStatus[data-status="responded"] {
+  color: #1f4f53;
+  background: rgba(0, 85, 90, 0.12);
+  border-color: rgba(0, 85, 90, 0.26);
+}
+
 .messageReadAt {
   margin: 6px 0 0;
   font-size: 0.82rem;
   color: #5a7d66;
+}
+
+.messageStatusEditor {
+  display: grid;
+  gap: 4px;
+  max-width: 220px;
+  margin: 0;
+}
+
+.messageStatusEditor label {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #5a7d66;
+}
+
+.messagesPagination {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.messagesPageInfo {
+  margin: 0;
+  color: #365a45;
+  font-size: 0.9rem;
+}
+
+.messageActionsGrid {
+  margin-top: 6px;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
 }
 
 .emailBadge {
@@ -1086,7 +1260,87 @@
   color: #00555a;
 }
 
+.toastViewport {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 1200;
+  pointer-events: none;
+}
+
+.toastCard {
+  width: min(420px, calc(100vw - 28px));
+  border-radius: 12px;
+  border: 1px solid transparent;
+  box-shadow: 0 12px 28px rgba(20, 42, 31, 0.18);
+  padding: 10px 42px 10px 12px;
+  position: relative;
+  pointer-events: auto;
+  animation: toast-slide-in 0.2s ease-out;
+}
+
+.toastCard[data-tone="success"] {
+  background: #f3faf4;
+  border-color: rgba(31, 122, 63, 0.26);
+  color: #1f7a3f;
+}
+
+.toastCard[data-tone="error"] {
+  background: #fff5f1;
+  border-color: rgba(201, 106, 74, 0.28);
+  color: #9f4830;
+}
+
+.toastText {
+  margin: 0;
+  line-height: 1.45;
+  font-size: 0.93rem;
+}
+
+.toastClose {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.7);
+  color: currentColor;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+}
+
+.toastClose:hover {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 900px) {
+  .profileInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .profileActionsRow {
+    grid-template-columns: 1fr;
+  }
+
+  .profileWideField {
+    grid-column: span 1;
+  }
+
   .metricGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1134,6 +1388,10 @@
     width: auto;
   }
 
+  .filtersApplyWrap {
+    justify-content: flex-start;
+  }
+
   .rangeHelpWrap {
     width: 100%;
     margin-left: 0;
@@ -1141,6 +1399,11 @@
 
   .chartGrid {
     grid-template-columns: 1fr;
+  }
+
+  .toastViewport {
+    right: 12px;
+    bottom: 12px;
   }
 }
 

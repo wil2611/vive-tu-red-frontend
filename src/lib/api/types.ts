@@ -53,15 +53,48 @@ export type UpdateUserPayload = {
   isActive?: boolean;
 };
 
+export type UpdateMyProfilePayload = {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+};
+
+export type ChangeMyPasswordPayload = {
+  currentPassword: string;
+  newPassword: string;
+};
+
 export type ContactMessage = {
   id: string;
   name: string;
   email: string;
   subject: string;
   message: string;
-  status: "new" | "read";
+  status: "new" | "read" | "in_progress" | "responded";
   createdAt: string;
+  updatedAt: string;
   readAt: string | null;
+  ip?: string | null;
+  userAgent?: string | null;
+};
+
+export type ListAdminContactMessagesQuery = {
+  page?: number;
+  limit?: number;
+  status?: ContactMessage["status"];
+  q?: string;
+};
+
+export type ContactMessagesPage = {
+  items: ContactMessage[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};
+
+export type UpdateContactMessageStatusPayload = {
+  status: ContactMessage["status"];
 };
 
 export type SupportPath = {

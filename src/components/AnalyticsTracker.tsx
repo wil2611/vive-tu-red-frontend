@@ -10,6 +10,7 @@ export default function AnalyticsTracker() {
 
   useEffect(() => {
     if (!pathname) return;
+    if (pathname.startsWith("/admin")) return;
     if (lastTrackedPathRef.current === pathname) return;
 
     const referrer =

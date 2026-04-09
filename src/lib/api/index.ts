@@ -13,18 +13,22 @@ export {
   logoutAuthSession,
 } from "./modules/auth.api";
 export {
+  changeMyPassword,
   createUser,
   deleteUserById,
   getCurrentUser,
   listUsers,
+  updateMyProfile,
   updateUserById,
 } from "./modules/users.api";
 export {
   createContactMessage,
   deleteContactMessage,
+  listAdminContactMessages,
   listAllContactMessages,
   listUnreadContactMessages,
   markContactMessageAsRead,
+  updateContactMessageStatus,
 } from "./modules/contact.api";
 export {
   createSupportPath,
@@ -42,17 +46,23 @@ export {
   type CreateInteractionPayload,
   type CreatePageViewPayload,
   type GetStatsDashboardQuery,
+  type InteractionType,
 } from "./modules/stats.api";
 export type {
   AuthSession,
+  ChangeMyPasswordPayload,
   ContactMessage,
+  ContactMessagesPage,
   CreateSupportPathPayload,
   CreateUserPayload,
   KpiMetric,
+  ListAdminContactMessagesQuery,
   LoginPayload,
   SupportPath,
   StatsDashboard,
   StatsOverview,
+  UpdateMyProfilePayload,
+  UpdateContactMessageStatusPayload,
   UpdateSupportPathPayload,
   UserRecord,
   UserRole,

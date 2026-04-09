@@ -7,8 +7,14 @@ export type CreatePageViewPayload = {
   sessionId?: string;
 };
 
+export type InteractionType =
+  | "book_read"
+  | "resource_download"
+  | "network_created"
+  | "contact_submitted";
+
 export type CreateInteractionPayload = {
-  type: string;
+  type: InteractionType;
   targetId?: string;
   targetType?: string;
   metadata?: Record<string, unknown>;
