@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import type { KpiMetric, StatsDashboard } from "@/lib/api";
 import type { StatsRangePreset } from "../admin.shared";
 import styles from "../page.module.css";
@@ -55,6 +55,37 @@ function formatInteractionTypeLabel(type: string): string {
   return labels[type] ?? type.replace(/_/g, " ");
 }
 
+function toTitleCase(value: string): string {
+  return value
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
+function formatPageDisplayName(path: string): string {
+  const normalizedPath = path.split("?")[0]?.split("#")[0] ?? path;
+
+  const knownLabels: Record<string, string> = {
+    "/": "Inicio",
+    "/rutas": "Rutas de apoyo",
+    "/redes": "Construye tu red",
+    "/sobre": "Sobre el proyecto",
+    "/equipo": "Equipo",
+    "/contacto": "Contacto",
+    "/recursos": "Recursos",
+    "/libro": "Libro",
+  };
+
+  if (knownLabels[normalizedPath]) return knownLabels[normalizedPath];
+
+  const segments = normalizedPath.split("/").filter(Boolean);
+  if (!segments.length) return "Inicio";
+
+  const firstSegment = segments[0].replace(/[-_]/g, " ");
+  return toTitleCase(firstSegment);
+}
+
 function getDeltaTone(changePct: number): "up" | "down" | "neutral" {
   if (changePct > 0) return "up";
   if (changePct < 0) return "down";
@@ -71,6 +102,15 @@ function formatShortDateLabel(value: string): string {
   })
     .format(date)
     .replace(".", "");
+}
+
+function formatDateFromSeriesKey(value: string): string {
+  const [year, month, day] = value.split("-").map((part) => Number.parseInt(part, 10));
+  if (!year || !month || !day) return value;
+  const date = new Date(year, month - 1, day, 12);
+  return new Intl.DateTimeFormat("es-CO", {
+    dateStyle: "medium",
+  }).format(date);
 }
 
 function getSeriesChartGeometry(points: SeriesPoint[]) {
@@ -135,11 +175,26 @@ function StatsLineChart({
   colorClassName: string;
 }) {
   const geometry = getSeriesChartGeometry(points);
+  const [activePointIndex, setActivePointIndex] = useState<number | null>(null);
+  const activePoint =
+    activePointIndex !== null ? (geometry.coords[activePointIndex] ?? null) : null;
+  const shouldRenderPoint = (value: number, index: number) => {
+    if (value > 0) return true;
+    if (index === 0 || index === geometry.coords.length - 1) return true;
+    return false;
+  };
+  const safeTooltipY = activePoint ? Math.max(activePoint.y, 64) : 0;
+  const tooltipPlacement =
+    activePoint && activePoint.x <= geometry.width - 210 ? "right" : "left";
+  const valueLabel =
+    title === "Visitas por dia"
+      ? `${formatNumber(activePoint?.value ?? 0)} visitas`
+      : `${formatNumber(activePoint?.value ?? 0)} interacciones`;
 
   return (
-    <div className={styles.chartCard}>
+    <div className={`${styles.chartCard} ${styles.summarySoftCard}`}>
       <h3 className={styles.chartTitle}>{title}</h3>
-      <div className={styles.chartCanvas}>
+      <div className={styles.chartCanvas} onMouseLeave={() => setActivePointIndex(null)}>
         <svg
           viewBox={`0 0 ${geometry.width} ${geometry.height}`}
           className={`${styles.chartSvg} ${colorClassName}`}
@@ -163,13 +218,43 @@ function StatsLineChart({
 
           <path d={geometry.areaPath} className={styles.areaPath} />
           <path d={geometry.linePath} className={styles.linePath} />
+          {activePoint ? (
+            <line
+              x1={activePoint.x}
+              y1={18}
+              x2={activePoint.x}
+              y2={geometry.height - 30}
+              className={styles.activeGuideLine}
+            />
+          ) : null}
 
-          {geometry.coords.map((point) => (
-            <g key={`point-${point.date}`}>
-              <circle cx={point.x} cy={point.y} r={3.5} className={styles.pointDot} />
-              <title>{`${point.date}: ${formatNumber(point.value)}`}</title>
-            </g>
-          ))}
+          {geometry.coords.map((point, index) => (
+              <g
+                key={`point-${point.date}-${index}`}
+                onMouseEnter={() => setActivePointIndex(index)}
+                onFocus={() => setActivePointIndex(index)}
+                onBlur={() => setActivePointIndex((current) => (current === index ? null : current))}
+              >
+                {shouldRenderPoint(point.value, index) ? (
+                  <circle
+                    cx={point.x}
+                    cy={point.y}
+                    r={activePointIndex === index ? 4.4 : 3.5}
+                    className={styles.pointDot}
+                    data-active={activePointIndex === index}
+                  />
+                ) : null}
+                <circle
+                  cx={point.x}
+                  cy={point.y}
+                  r={9}
+                  className={styles.pointHitArea}
+                  tabIndex={0}
+                  aria-label={`${formatDateFromSeriesKey(point.date)}: ${formatNumber(point.value)}`}
+                />
+                <title>{`${point.date}: ${formatNumber(point.value)}`}</title>
+              </g>
+            ))}
 
           {geometry.xLabelIndexes.map((index) => {
             const point = geometry.coords[index];
@@ -186,6 +271,22 @@ function StatsLineChart({
             );
           })}
         </svg>
+
+        {activePoint ? (
+          <div
+            className={styles.chartTooltip}
+            data-placement={tooltipPlacement}
+            style={{
+              left: `${(activePoint.x / geometry.width) * 100}%`,
+              top: `${(safeTooltipY / geometry.height) * 100}%`,
+            }}
+          >
+            <strong className={styles.chartTooltipDate}>
+              {formatDateFromSeriesKey(activePoint.date)}
+            </strong>
+            <span className={styles.chartTooltipValue}>{valueLabel}</span>
+          </div>
+        ) : null}
       </div>
     </div>
   );
@@ -288,39 +389,56 @@ export function SummaryTab({
         <>
           <div className={styles.kpiToolbar}>
             <div className={styles.kpiTopRow}>
-              <div className={styles.kpiPresets}>
-                <button
-                  type="button"
-                  className={styles.presetButton}
-                  data-active={statsRangePreset === "7d"}
-                  onClick={() => setStatsRangePreset("7d")}
-                >
-                  7 dias
-                </button>
-                <button
-                  type="button"
-                  className={styles.presetButton}
-                  data-active={statsRangePreset === "30d"}
-                  onClick={() => setStatsRangePreset("30d")}
-                >
-                  30 dias
-                </button>
-                <button
-                  type="button"
-                  className={styles.presetButton}
-                  data-active={statsRangePreset === "90d"}
-                  onClick={() => setStatsRangePreset("90d")}
-                >
-                  90 dias
-                </button>
-                <button
-                  type="button"
-                  className={styles.presetButton}
-                  data-active={statsRangePreset === "custom"}
-                  onClick={() => setStatsRangePreset("custom")}
-                >
-                  Personalizado
-                </button>
+              <div className={styles.kpiFiltersInline}>
+                <div className={styles.kpiPresets}>
+                  <button
+                    type="button"
+                    className={styles.presetButton}
+                    data-active={statsRangePreset === "7d"}
+                    onClick={() => setStatsRangePreset("7d")}
+                  >
+                    7 dias
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.presetButton}
+                    data-active={statsRangePreset === "30d"}
+                    onClick={() => setStatsRangePreset("30d")}
+                  >
+                    30 dias
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.presetButton}
+                    data-active={statsRangePreset === "90d"}
+                    onClick={() => setStatsRangePreset("90d")}
+                  >
+                    90 dias
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.presetButton}
+                    data-active={statsRangePreset === "custom"}
+                    onClick={() => setStatsRangePreset("custom")}
+                  >
+                    Personalizado
+                  </button>
+                </div>
+
+                {statsRangePreset === "custom" ? (
+                  <div className={styles.customRangeRow}>
+                    <input
+                      type="date"
+                      value={statsCustomFrom}
+                      onChange={(event) => setStatsCustomFrom(event.target.value)}
+                    />
+                    <input
+                      type="date"
+                      value={statsCustomTo}
+                      onChange={(event) => setStatsCustomTo(event.target.value)}
+                    />
+                  </div>
+                ) : null}
               </div>
 
               <div className={styles.filtersApplyWrap}>
@@ -337,21 +455,6 @@ export function SummaryTab({
                 </button>
               </div>
             </div>
-
-            {statsRangePreset === "custom" ? (
-              <div className={styles.customRangeRow}>
-                <input
-                  type="date"
-                  value={statsCustomFrom}
-                  onChange={(event) => setStatsCustomFrom(event.target.value)}
-                />
-                <input
-                  type="date"
-                  value={statsCustomTo}
-                  onChange={(event) => setStatsCustomTo(event.target.value)}
-                />
-              </div>
-            ) : null}
           </div>
 
           {stats ? (
@@ -395,7 +498,7 @@ export function SummaryTab({
                 deltaTone === "up" ? "\u2191 " : deltaTone === "down" ? "\u2193 " : "\u2192 ";
 
               return (
-                <div key={card.id} className={styles.metricCard}>
+                <div key={card.id} className={`${styles.metricCard} ${styles.summarySoftCard}`}>
                   <div className={styles.metricLabelRow}>
                     <p className={styles.metricLabel}>{card.title}</p>
                     <span className={styles.metricInfoWrap}>
@@ -438,20 +541,31 @@ export function SummaryTab({
             />
           </div>
 
-          <div className={styles.tableWrap}>
-            <table className={styles.table}>
+          <div className={`${styles.tableWrap} ${styles.summaryTableWrap}`}>
+            <table
+              className={`${styles.table} ${styles.summaryMetricsTable} ${styles.topPagesTable}`}
+            >
+              <colgroup>
+                <col />
+                <col />
+              </colgroup>
               <thead>
                 <tr>
-                  <th>Top paginas</th>
-                  <th>Vistas</th>
+                  <th>Seccion visitada</th>
+                  <th>Visitas totales</th>
                 </tr>
               </thead>
               <tbody>
                 {stats?.topPages?.length ? (
-                  stats.topPages.map((item) => (
+                  stats.topPages.map((item, index) => (
                     <tr key={item.path}>
-                      <td>{item.path || "N/A"}</td>
-                      <td>{formatNumber(item.views)}</td>
+                      <td className={styles.pageCell}>
+                        <span className={styles.pageName}>
+                          {index + 1}. {formatPageDisplayName(item.path || "")}
+                        </span>
+                        <span className={styles.pagePath}>{item.path || "N/A"}</span>
+                      </td>
+                      <td className={styles.numericCell}>{formatNumber(item.views)}</td>
                     </tr>
                   ))
                 ) : (
@@ -463,11 +577,19 @@ export function SummaryTab({
             </table>
           </div>
 
-          <div className={styles.tableWrap}>
-            <table className={styles.table}>
+          <div
+            className={`${styles.tableWrap} ${styles.summaryTableWrap} ${styles.summarySecondaryTableWrap}`}
+          >
+            <table
+              className={`${styles.table} ${styles.summaryMetricsTable} ${styles.interactionsTable}`}
+            >
+              <colgroup>
+                <col />
+                <col />
+              </colgroup>
               <thead>
                 <tr>
-                  <th>Interaccion</th>
+                  <th>Tipo de interaccion</th>
                   <th>Total</th>
                 </tr>
               </thead>
@@ -475,8 +597,10 @@ export function SummaryTab({
                 {stats?.interactionsByType?.length ? (
                   stats.interactionsByType.map((item) => (
                     <tr key={item.type}>
-                      <td>{item.type ? formatInteractionTypeLabel(item.type) : "N/A"}</td>
-                      <td>{formatNumber(item.count)}</td>
+                      <td className={styles.interactionTypeCell}>
+                        {item.type ? formatInteractionTypeLabel(item.type) : "N/A"}
+                      </td>
+                      <td className={styles.numericCell}>{formatNumber(item.count)}</td>
                     </tr>
                   ))
                 ) : (

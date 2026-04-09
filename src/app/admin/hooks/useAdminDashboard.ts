@@ -384,6 +384,7 @@ export function useAdminDashboard() {
     setError,
     setSuccess,
     loadDashboardData,
+    clearSessionState,
   });
 
   const {

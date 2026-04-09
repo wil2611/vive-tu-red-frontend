@@ -1,5 +1,10 @@
 import { FormEvent, useCallback, type Dispatch, type SetStateAction } from "react";
-import { changeMyPassword, updateMyProfile, type UserRecord } from "@/lib/api";
+import {
+  changeMyPassword,
+  syncCurrentAuthUser,
+  updateMyProfile,
+  type UserRecord,
+} from "@/lib/api";
 import { getErrorText } from "./shared";
 
 type ProfileForm = {
@@ -23,6 +28,7 @@ type UseAdminProfileHandlersParams = {
   setError: Dispatch<SetStateAction<string | null>>;
   setSuccess: Dispatch<SetStateAction<string | null>>;
   loadDashboardData: (showLoader?: boolean) => Promise<void>;
+  clearSessionState: () => void;
 };
 
 export function useAdminProfileHandlers({
@@ -34,6 +40,7 @@ export function useAdminProfileHandlers({
   setError,
   setSuccess,
   loadDashboardData,
+  clearSessionState,
 }: UseAdminProfileHandlersParams) {
   const handleUpdateProfile = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
@@ -66,9 +73,17 @@ export function useAdminProfileHandlers({
       setBusyAction("update-profile");
 
       try {
-        await updateMyProfile(payload);
-        await loadDashboardData(false);
+        const updatedUser = await updateMyProfile(payload);
+        syncCurrentAuthUser(updatedUser);
         setSuccess("Perfil actualizado correctamente.");
+
+        try {
+          await loadDashboardData(false);
+        } catch {
+          setSuccess(
+            "Perfil actualizado correctamente. No se pudo refrescar el panel automaticamente.",
+          );
+        }
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo actualizar tu perfil"));
       } finally {
@@ -111,14 +126,15 @@ export function useAdminProfileHandlers({
           newPassword: "",
           confirmPassword: "",
         });
-        setSuccess("Contrasena actualizada correctamente.");
+        clearSessionState();
+        setSuccess("Contrasena actualizada. Inicia sesion nuevamente.");
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo cambiar la contrasena"));
       } finally {
         setBusyAction(null);
       }
     },
-    [passwordForm.confirmPassword, passwordForm.currentPassword, passwordForm.newPassword, setBusyAction, setError, setPasswordForm, setSuccess],
+    [clearSessionState, passwordForm.confirmPassword, passwordForm.currentPassword, passwordForm.newPassword, setBusyAction, setError, setPasswordForm, setSuccess],
   );
 
   return {

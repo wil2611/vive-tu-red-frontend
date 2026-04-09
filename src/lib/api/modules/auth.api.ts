@@ -4,7 +4,7 @@ import {
   getStoredAuthSession,
   setStoredAuthSession,
 } from "../session";
-import type { AuthSession, LoginPayload, LoginResponse } from "../types";
+import type { AuthSession, AuthUser, LoginPayload, LoginResponse } from "../types";
 
 function toAuthSession(payload: LoginResponse): AuthSession {
   return {
@@ -44,4 +44,13 @@ export function getCurrentAuthSession(): AuthSession | null {
 
 export function clearAuthSession(): void {
   clearStoredAuthSession();
+}
+
+export function syncCurrentAuthUser(user: AuthUser): void {
+  const session = getStoredAuthSession();
+  if (!session) return;
+  setStoredAuthSession({
+    ...session,
+    user,
+  });
 }

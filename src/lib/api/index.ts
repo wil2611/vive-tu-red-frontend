@@ -11,6 +11,7 @@ export {
   getCurrentAuthSession,
   loginWithPassword,
   logoutAuthSession,
+  syncCurrentAuthUser,
 } from "./modules/auth.api";
 export {
   changeMyPassword,
