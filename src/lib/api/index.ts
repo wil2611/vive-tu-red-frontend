@@ -34,7 +34,6 @@ export {
 export {
   createSupportPath,
   deleteSupportPathById,
-  listEmergencySupportPaths,
   listPublicSupportPaths,
   listSupportPathsAdmin,
   updateSupportPathById,

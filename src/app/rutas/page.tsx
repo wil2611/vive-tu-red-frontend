@@ -43,7 +43,6 @@ function toInstitutionCard(path: SupportPath): Institution {
 async function getInstitutionCards(): Promise<Institution[]> {
   try {
     const supportPaths = await listPublicSupportPaths();
-    if (!supportPaths.length) return institutions;
     return supportPaths.map(toInstitutionCard);
   } catch {
     return institutions;

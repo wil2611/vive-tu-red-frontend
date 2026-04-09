@@ -375,6 +375,16 @@
   gap: 14px;
 }
 
+:global(.rutas-inst-empty) {
+  margin: 0;
+  border: 1px dashed #cdbf95;
+  border-radius: 14px;
+  background: #fff;
+  color: #5a7d66;
+  padding: 14px 16px;
+  font-size: 0.95rem;
+}
+
 :global(.rutas-inst-card) {
   background: white;
   border: 1px solid var(--border);

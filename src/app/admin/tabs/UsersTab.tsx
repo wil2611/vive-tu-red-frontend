@@ -209,7 +209,7 @@ export function UsersTab({
                         type="button"
                         className={`${styles.supportActionBtn} ${styles.supportActionEdit}`}
                         onClick={() => onToggleUserEditor(user.id)}
-                        disabled={isUpdating || isDeleting}
+                        disabled={isUpdating || isDeleting || user.id === currentUserId}
                       >
                         {isEditorOpen ? "Cerrar" : "Editar"}
                       </button>
@@ -277,7 +277,7 @@ export function UsersTab({
                           type="button"
                           className={`${styles.supportActionBtn} ${styles.supportEditorSave}`}
                           onClick={() => void onUpdateUser(user)}
-                          disabled={isUpdating || isDeleting}
+                          disabled={isUpdating || isDeleting || user.id === currentUserId}
                         >
                           {isUpdating ? "Guardando..." : "Guardar"}
                         </button>

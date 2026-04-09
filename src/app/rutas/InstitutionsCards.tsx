@@ -33,38 +33,44 @@ export default function InstitutionsCards({ institutions }: InstitutionsCardsPro
 
   return (
     <>
-      <div className="rutas-institutions-grid">
-        {institutions.map((inst) => (
-          <button
-            key={`${inst.name}-${inst.type}`}
-            type="button"
-            className="rutas-inst-card rutas-inst-card-button"
-            onClick={() => setSelectedInstitution(inst)}
-            aria-label={`Ver detalles de ${inst.name}`}
-          >
-            <div
-              className="rutas-inst-icon"
-              style={{ background: `${inst.badgeColor}14`, color: inst.badgeColor }}
+      {institutions.length ? (
+        <div className="rutas-institutions-grid">
+          {institutions.map((inst) => (
+            <button
+              key={`${inst.name}-${inst.type}`}
+              type="button"
+              className="rutas-inst-card rutas-inst-card-button"
+              onClick={() => setSelectedInstitution(inst)}
+              aria-label={`Ver detalles de ${inst.name}`}
             >
-              {inst.icon}
-            </div>
-            <div className="rutas-inst-content">
-              <div className="rutas-inst-head">
-                <h4 className="rutas-inst-title">{inst.name}</h4>
-                <span
-                  className="badge rutas-inst-badge"
-                  style={{ background: `${inst.badgeColor}14`, color: inst.badgeColor }}
-                >
-                  {inst.badge}
-                </span>
+              <div
+                className="rutas-inst-icon"
+                style={{ background: `${inst.badgeColor}14`, color: inst.badgeColor }}
+              >
+                {inst.icon}
               </div>
-              <div className="rutas-inst-type">{inst.type}</div>
-              <p className="rutas-inst-desc">{inst.desc}</p>
-              <span className="rutas-inst-more">Ver informacion completa</span>
-            </div>
-          </button>
-        ))}
-      </div>
+              <div className="rutas-inst-content">
+                <div className="rutas-inst-head">
+                  <h4 className="rutas-inst-title">{inst.name}</h4>
+                  <span
+                    className="badge rutas-inst-badge"
+                    style={{ background: `${inst.badgeColor}14`, color: inst.badgeColor }}
+                  >
+                    {inst.badge}
+                  </span>
+                </div>
+                <div className="rutas-inst-type">{inst.type}</div>
+                <p className="rutas-inst-desc">{inst.desc}</p>
+                <span className="rutas-inst-more">Ver informacion completa</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <p className="rutas-inst-empty">
+          No hay instituciones activas disponibles por ahora.
+        </p>
+      )}
 
       {selectedInstitution ? (
         <div

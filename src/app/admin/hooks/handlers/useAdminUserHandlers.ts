@@ -20,7 +20,10 @@ type UseAdminUserHandlersParams = {
   setBusyAction: Dispatch<SetStateAction<string | null>>;
   setError: Dispatch<SetStateAction<string | null>>;
   setSuccess: Dispatch<SetStateAction<string | null>>;
-  loadDashboardData: (showLoader?: boolean) => Promise<void>;
+  loadDashboardData: (
+    showLoader?: boolean,
+    options?: { suppressGlobalError?: boolean },
+  ) => Promise<boolean>;
 };
 
 export function useAdminUserHandlers({
@@ -54,8 +57,16 @@ export function useAdminUserHandlers({
         });
         setIsCreateUserFormOpen(false);
         setOpenUserEditorId(null);
-        await loadDashboardData(false);
         setSuccess("Usuario creado correctamente");
+
+        const refreshed = await loadDashboardData(false, {
+          suppressGlobalError: true,
+        });
+        if (!refreshed) {
+          setSuccess(
+            "Usuario creado correctamente. No se pudo refrescar la lista automaticamente.",
+          );
+        }
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo crear el usuario"));
       } finally {
@@ -67,6 +78,11 @@ export function useAdminUserHandlers({
 
   const handleUpdateUser = useCallback(
     async (user: UserRecord) => {
+      if (user.id === currentUserId) {
+        setError("No puedes cambiar rol o estado de tu propio usuario");
+        return;
+      }
+
       const draft = userDrafts[user.id];
       if (!draft) return;
 
@@ -79,15 +95,23 @@ export function useAdminUserHandlers({
           role: draft.role,
           isActive: draft.isActive,
         });
-        await loadDashboardData(false);
         setSuccess(`Usuario ${user.email} actualizado`);
+
+        const refreshed = await loadDashboardData(false, {
+          suppressGlobalError: true,
+        });
+        if (!refreshed) {
+          setSuccess(
+            `Usuario ${user.email} actualizado. No se pudo refrescar la lista automaticamente.`,
+          );
+        }
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo actualizar el usuario"));
       } finally {
         setBusyAction(null);
       }
     },
-    [loadDashboardData, setBusyAction, setError, setSuccess, userDrafts],
+    [currentUserId, loadDashboardData, setBusyAction, setError, setSuccess, userDrafts],
   );
 
   const handleDeleteUser = useCallback(
@@ -111,8 +135,16 @@ export function useAdminUserHandlers({
         if (openUserEditorId === user.id) {
           setOpenUserEditorId(null);
         }
-        await loadDashboardData(false);
         setSuccess(`Usuario ${user.email} eliminado`);
+
+        const refreshed = await loadDashboardData(false, {
+          suppressGlobalError: true,
+        });
+        if (!refreshed) {
+          setSuccess(
+            `Usuario ${user.email} eliminado. No se pudo refrescar la lista automaticamente.`,
+          );
+        }
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo eliminar el usuario"));
       } finally {

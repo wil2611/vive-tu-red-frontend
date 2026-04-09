@@ -27,7 +27,10 @@ type UseAdminProfileHandlersParams = {
   setBusyAction: Dispatch<SetStateAction<string | null>>;
   setError: Dispatch<SetStateAction<string | null>>;
   setSuccess: Dispatch<SetStateAction<string | null>>;
-  loadDashboardData: (showLoader?: boolean) => Promise<void>;
+  loadDashboardData: (
+    showLoader?: boolean,
+    options?: { suppressGlobalError?: boolean },
+  ) => Promise<boolean>;
   clearSessionState: () => void;
 };
 
@@ -77,9 +80,10 @@ export function useAdminProfileHandlers({
         syncCurrentAuthUser(updatedUser);
         setSuccess("Perfil actualizado correctamente.");
 
-        try {
-          await loadDashboardData(false);
-        } catch {
+        const refreshed = await loadDashboardData(false, {
+          suppressGlobalError: true,
+        });
+        if (!refreshed) {
           setSuccess(
             "Perfil actualizado correctamente. No se pudo refrescar el panel automaticamente.",
           );

@@ -26,7 +26,10 @@ type UseAdminSupportPathHandlersParams = {
   setBusyAction: Dispatch<SetStateAction<string | null>>;
   setError: Dispatch<SetStateAction<string | null>>;
   setSuccess: Dispatch<SetStateAction<string | null>>;
-  loadDashboardData: (showLoader?: boolean) => Promise<void>;
+  loadDashboardData: (
+    showLoader?: boolean,
+    options?: { suppressGlobalError?: boolean },
+  ) => Promise<boolean>;
 };
 
 export function useAdminSupportPathHandlers({
@@ -77,8 +80,16 @@ export function useAdminSupportPathHandlers({
         setCreateSupportFormErrors({});
         setIsCreateSupportFormOpen(false);
         setOpenSupportEditorId(null);
-        await loadDashboardData(false);
         setSuccess("Institucion creada correctamente");
+
+        const refreshed = await loadDashboardData(false, {
+          suppressGlobalError: true,
+        });
+        if (!refreshed) {
+          setSuccess(
+            "Institucion creada correctamente. No se pudo refrescar la lista automaticamente.",
+          );
+        }
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo crear la institucion"));
       } finally {
@@ -107,9 +118,17 @@ export function useAdminSupportPathHandlers({
           description: draft.description.trim(),
           isActive: draft.isActive,
         });
-        await loadDashboardData(false);
         setOpenSupportEditorId(null);
         setSuccess(`Institucion ${draft.institutionName} actualizada`);
+
+        const refreshed = await loadDashboardData(false, {
+          suppressGlobalError: true,
+        });
+        if (!refreshed) {
+          setSuccess(
+            `Institucion ${draft.institutionName} actualizada. No se pudo refrescar la lista automaticamente.`,
+          );
+        }
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo actualizar la institucion"));
       } finally {
@@ -135,8 +154,16 @@ export function useAdminSupportPathHandlers({
         if (openSupportEditorId === supportPath.id) {
           setOpenSupportEditorId(null);
         }
-        await loadDashboardData(false);
         setSuccess(`Institucion ${supportPath.institutionName} eliminada`);
+
+        const refreshed = await loadDashboardData(false, {
+          suppressGlobalError: true,
+        });
+        if (!refreshed) {
+          setSuccess(
+            `Institucion ${supportPath.institutionName} eliminada. No se pudo refrescar la lista automaticamente.`,
+          );
+        }
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo eliminar la institucion"));
       } finally {

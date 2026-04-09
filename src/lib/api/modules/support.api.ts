@@ -12,13 +12,6 @@ export function listPublicSupportPaths(): Promise<SupportPath[]> {
   });
 }
 
-export function listEmergencySupportPaths(): Promise<SupportPath[]> {
-  return apiClient.request<SupportPath[]>("/support/emergency", {
-    auth: false,
-    retryOnUnauthorized: false,
-  });
-}
-
 export function listSupportPathsAdmin(): Promise<SupportPath[]> {
   return apiClient.request<SupportPath[]>("/support/admin/all");
 }

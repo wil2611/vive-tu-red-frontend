@@ -19,7 +19,10 @@ type UseAdminAuthHandlersParams = {
   setBusyAction: Dispatch<SetStateAction<string | null>>;
   setError: Dispatch<SetStateAction<string | null>>;
   setSuccess: Dispatch<SetStateAction<string | null>>;
-  loadDashboardData: (showLoader?: boolean) => Promise<void>;
+  loadDashboardData: (
+    showLoader?: boolean,
+    options?: { suppressGlobalError?: boolean },
+  ) => Promise<boolean>;
   clearDashboardState: () => void;
 };
 
@@ -46,8 +49,12 @@ export function useAdminAuthHandlers({
         const nextSession = await loginWithPassword(loginForm);
         setSession(nextSession);
         setLoginForm((prev) => ({ ...prev, password: "" }));
-        await loadDashboardData();
-        setSuccess("Sesion iniciada");
+        const loaded = await loadDashboardData();
+        setSuccess(
+          loaded
+            ? "Sesion iniciada"
+            : "Sesion iniciada. No se pudieron cargar todos los datos del panel.",
+        );
       } catch (errorValue) {
         setLoginError(getErrorText(errorValue, "Error al iniciar sesion"));
       } finally {

@@ -56,7 +56,11 @@ export function getAllowedTabsByRole(role: UserRole | null): AdminSectionTab[] {
     return ["summary", "profile", "users", "support-paths", "messages"];
   }
 
-  if (role === "editor" || role === "investigador") {
+  if (role === "editor") {
+    return ["summary", "profile", "support-paths", "messages"];
+  }
+
+  if (role === "investigador") {
     return ["summary", "profile", "messages"];
   }
 

@@ -38,6 +38,10 @@ import { useAdminStatsHandlers } from "./handlers/useAdminStatsHandlers";
 import { useAdminSupportPathHandlers } from "./handlers/useAdminSupportPathHandlers";
 import { useAdminUserHandlers } from "./handlers/useAdminUserHandlers";
 
+type LoadDashboardOptions = {
+  suppressGlobalError?: boolean;
+};
+
 export function useAdminDashboard() {
   const [session, setSession] = useState<AuthSession | null>(null);
 
@@ -206,7 +210,7 @@ export function useAdminDashboard() {
   }, [buildMessagesQuery, clearSessionState, currentUser?.role, messagesPage]);
 
   const loadDashboardData = useCallback(
-    async (showLoader = true) => {
+    async (showLoader = true, options?: LoadDashboardOptions): Promise<boolean> => {
       if (showLoader) setIsLoadingData(true);
       setError(null);
 
@@ -229,7 +233,7 @@ export function useAdminDashboard() {
           setSupportPathDrafts({});
           setMessages([]);
           setStats(null);
-          return;
+          return true;
         }
 
         setIsForbidden(false);
@@ -287,12 +291,16 @@ export function useAdminDashboard() {
         }
         setStats(statsData);
         setAppliedStatsQueryKey(serializeStatsQuery(statsQuery));
+        return true;
       } catch (errorValue) {
-        setError(getErrorText(errorValue, "No se pudieron cargar los datos del panel"));
+        if (!options?.suppressGlobalError) {
+          setError(getErrorText(errorValue, "No se pudieron cargar los datos del panel"));
+        }
 
         if (errorValue instanceof ApiClientError && errorValue.status === 401) {
           clearSessionState();
         }
+        return false;
       } finally {
         if (showLoader) setIsLoadingData(false);
       }
