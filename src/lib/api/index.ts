@@ -27,6 +27,14 @@ export {
   markContactMessageAsRead,
 } from "./modules/contact.api";
 export {
+  createSupportPath,
+  deleteSupportPathById,
+  listEmergencySupportPaths,
+  listPublicSupportPaths,
+  listSupportPathsAdmin,
+  updateSupportPathById,
+} from "./modules/support.api";
+export {
   getStatsDashboard,
   getStatsOverview,
   trackInteraction,
@@ -38,11 +46,14 @@ export {
 export type {
   AuthSession,
   ContactMessage,
+  CreateSupportPathPayload,
   CreateUserPayload,
   KpiMetric,
   LoginPayload,
+  SupportPath,
   StatsDashboard,
   StatsOverview,
+  UpdateSupportPathPayload,
   UserRecord,
   UserRole,
 } from "./types";

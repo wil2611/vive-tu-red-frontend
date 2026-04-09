@@ -11,6 +11,10 @@ export interface Institution {
   badge: string;
   badgeColor: string;
   icon: string;
+  phone?: string;
+  email?: string;
+  ubicacion?: string;
+  schedule?: string;
 }
 
 export type SignalTone = "danger" | "caution" | "emotional" | "support" | "witness" | "report";

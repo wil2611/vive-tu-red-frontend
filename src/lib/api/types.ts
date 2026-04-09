@@ -64,6 +64,31 @@ export type ContactMessage = {
   readAt: string | null;
 };
 
+export type SupportPath = {
+  id: string;
+  institutionName: string;
+  description: string | null;
+  phone: string | null;
+  email: string | null;
+  ubicacion: string | null;
+  schedule: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateSupportPathPayload = {
+  institutionName: string;
+  description?: string;
+  phone?: string;
+  email?: string;
+  ubicacion?: string;
+  schedule?: string;
+  isActive?: boolean;
+};
+
+export type UpdateSupportPathPayload = Partial<CreateSupportPathPayload>;
+
 export type StatsRow = {
   path?: string;
   type?: string;

@@ -5,22 +5,28 @@ import styles from "./page.module.css";
 import {
   ApiClientError,
   clearAuthSession,
+  createSupportPath,
   createUser,
   deleteContactMessage,
+  deleteSupportPathById,
   deleteUserById,
   getCurrentAuthSession,
   getCurrentUser,
   getStatsDashboard,
   listAllContactMessages,
+  listSupportPathsAdmin,
   listUsers,
   loginWithPassword,
   logoutAuthSession,
   markContactMessageAsRead,
+  updateSupportPathById,
   updateUserById,
   type AuthSession,
   type ContactMessage,
+  type CreateSupportPathPayload,
   type CreateUserPayload,
   type KpiMetric,
+  type SupportPath,
   type StatsDashboard,
   type UserRecord,
   type UserRole,
@@ -31,21 +37,53 @@ type UserDraft = {
   isActive: boolean;
 };
 
+type SupportPathDraft = {
+  institutionName: string;
+  ubicacion: string;
+  phone: string;
+  email: string;
+  schedule: string;
+  isActive: boolean;
+  description: string;
+};
+
+type SupportCreateFormErrors = {
+  institutionName?: string;
+  ubicacion?: string;
+  email?: string;
+  phone?: string;
+  schedule?: string;
+};
+
 type StatsRangePreset = "7d" | "30d" | "90d" | "custom";
 type SeriesPoint = { date: string; value: number };
-type AdminSectionTab = "summary" | "create-user" | "users" | "messages";
+type AdminSectionTab =
+  | "summary"
+  | "users"
+  | "support-paths"
+  | "messages";
 type MessageFilter = "all" | "unread" | "read";
 
 const ADMIN_SECTION_TABS: Array<{ id: AdminSectionTab; label: string }> = [
   { id: "summary", label: "Resumen" },
-  { id: "create-user", label: "Crear usuario" },
   { id: "users", label: "Usuarios" },
+  { id: "support-paths", label: "Instituciones" },
   { id: "messages", label: "Mensajes" },
 ];
 
+const INITIAL_SUPPORT_FORM: CreateSupportPathPayload = {
+  institutionName: "",
+  ubicacion: "",
+  phone: "",
+  email: "",
+  schedule: "",
+  description: "",
+  isActive: true,
+};
+
 function getAllowedTabsByRole(role: UserRole | null): AdminSectionTab[] {
   if (role === "admin") {
-    return ["summary", "create-user", "users", "messages"];
+    return ["summary", "users", "support-paths", "messages"];
   }
 
   if (role === "editor" || role === "investigador") {
@@ -83,6 +121,70 @@ function roleLabel(role: UserRole): string {
 function getErrorText(error: unknown, fallback: string): string {
   if (error instanceof Error) return error.message;
   return fallback;
+}
+
+function textOrEmpty(value: string | null): string {
+  return value ?? "";
+}
+
+function buildSupportDraft(path: SupportPath): SupportPathDraft {
+  return {
+    institutionName: path.institutionName,
+    ubicacion: textOrEmpty(path.ubicacion),
+    phone: textOrEmpty(path.phone),
+    email: textOrEmpty(path.email),
+    schedule: textOrEmpty(path.schedule),
+    isActive: path.isActive,
+    description: textOrEmpty(path.description),
+  };
+}
+
+function normalizeSupportCreateForm(
+  form: CreateSupportPathPayload,
+): CreateSupportPathPayload {
+  return {
+    ...form,
+    institutionName: (form.institutionName ?? "").trim(),
+    description: (form.description ?? "").trim(),
+    ubicacion: (form.ubicacion ?? "").trim(),
+    phone: (form.phone ?? "").trim(),
+    email: (form.email ?? "").trim(),
+    schedule: (form.schedule ?? "").trim(),
+    isActive: form.isActive !== false,
+  };
+}
+
+function validateSupportCreateForm(
+  form: CreateSupportPathPayload,
+): SupportCreateFormErrors {
+  const errors: SupportCreateFormErrors = {};
+  const institutionName = (form.institutionName ?? "").trim();
+  const ubicacion = (form.ubicacion ?? "").trim();
+  const email = (form.email ?? "").trim();
+  const phone = (form.phone ?? "").trim();
+  const schedule = (form.schedule ?? "").trim();
+
+  if (institutionName.length < 3) {
+    errors.institutionName = "El nombre debe tener al menos 3 caracteres.";
+  }
+
+  if (ubicacion.length < 2) {
+    errors.ubicacion = "La ubicacion es obligatoria.";
+  }
+
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errors.email = "Ingresa un email valido.";
+  }
+
+  if (phone && !/^[\d+\s()\-]{3,25}$/.test(phone)) {
+    errors.phone = "Telefono invalido. Usa solo numeros y simbolos basicos.";
+  }
+
+  if (schedule && schedule.length < 4) {
+    errors.schedule = "El horario debe ser mas descriptivo.";
+  }
+
+  return errors;
 }
 
 function formatNumber(value: number): string {
@@ -242,6 +344,10 @@ export default function AdminPage() {
   const [isForbidden, setIsForbidden] = useState(false);
   const [users, setUsers] = useState<UserRecord[]>([]);
   const [userDrafts, setUserDrafts] = useState<Record<string, UserDraft>>({});
+  const [supportPaths, setSupportPaths] = useState<SupportPath[]>([]);
+  const [supportPathDrafts, setSupportPathDrafts] = useState<
+    Record<string, SupportPathDraft>
+  >({});
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [messagesFilter, setMessagesFilter] = useState<MessageFilter>("all");
   const [stats, setStats] = useState<StatsDashboard | null>(null);
@@ -266,12 +372,22 @@ export default function AdminPage() {
     lastName: "",
     role: "editor",
   });
+  const [isCreateUserFormOpen, setIsCreateUserFormOpen] = useState(false);
+  const [openUserEditorId, setOpenUserEditorId] = useState<string | null>(null);
+  const [createSupportForm, setCreateSupportForm] = useState<CreateSupportPathPayload>(
+    INITIAL_SUPPORT_FORM,
+  );
+  const [isCreateSupportFormOpen, setIsCreateSupportFormOpen] = useState(false);
+  const [createSupportFormErrors, setCreateSupportFormErrors] = useState<SupportCreateFormErrors>({});
+  const [openSupportEditorId, setOpenSupportEditorId] = useState<string | null>(null);
 
   const clearDashboardState = useCallback(() => {
     setCurrentUser(null);
     setIsForbidden(false);
     setUsers([]);
     setUserDrafts({});
+    setSupportPaths([]);
+    setSupportPathDrafts({});
     setMessages([]);
     setStats(null);
   }, []);
@@ -288,6 +404,14 @@ export default function AdminPage() {
       drafts[user.id] = { role: user.role, isActive: user.isActive };
     }
     setUserDrafts(drafts);
+  }, []);
+
+  const syncSupportPathDrafts = useCallback((nextSupportPaths: SupportPath[]) => {
+    const drafts: Record<string, SupportPathDraft> = {};
+    for (const supportPath of nextSupportPaths) {
+      drafts[supportPath.id] = buildSupportDraft(supportPath);
+    }
+    setSupportPathDrafts(drafts);
   }, []);
 
   const buildStatsQuery = useCallback(() => {
@@ -320,11 +444,14 @@ export default function AdminPage() {
         const canReadSummary = allowedTabs.includes("summary");
         const canReadMessages = allowedTabs.includes("messages");
         const canManageUsers = allowedTabs.includes("users");
+        const canManageSupportPaths = allowedTabs.includes("support-paths");
 
         if (!allowedTabs.length) {
           setIsForbidden(true);
           setUsers([]);
           setUserDrafts({});
+          setSupportPaths([]);
+          setSupportPathDrafts({});
           setMessages([]);
           setStats(null);
           return;
@@ -337,13 +464,17 @@ export default function AdminPage() {
         const allMessagesPromise: Promise<ContactMessage[] | null> = canReadMessages
           ? listAllContactMessages()
           : Promise.resolve(null);
+        const supportPathsPromise: Promise<SupportPath[] | null> = canManageSupportPaths
+          ? listSupportPathsAdmin()
+          : Promise.resolve(null);
         const statsPromise: Promise<StatsDashboard | null> = canReadSummary
           ? getStatsDashboard(buildStatsQuery())
           : Promise.resolve(null);
 
-        const [usersData, allMessages, statsData] = await Promise.all([
+        const [usersData, allMessages, supportPathsData, statsData] = await Promise.all([
           usersPromise,
           allMessagesPromise,
+          supportPathsPromise,
           statsPromise,
         ]);
 
@@ -353,6 +484,14 @@ export default function AdminPage() {
         } else {
           setUsers([]);
           setUserDrafts({});
+        }
+
+        if (supportPathsData) {
+          setSupportPaths(supportPathsData);
+          syncSupportPathDrafts(supportPathsData);
+        } else {
+          setSupportPaths([]);
+          setSupportPathDrafts({});
         }
 
         setMessages(allMessages ?? []);
@@ -367,7 +506,7 @@ export default function AdminPage() {
         if (showLoader) setIsLoadingData(false);
       }
     },
-    [buildStatsQuery, clearSessionState, syncUserDrafts],
+    [buildStatsQuery, clearSessionState, syncSupportPathDrafts, syncUserDrafts],
   );
 
   useEffect(() => {
@@ -445,6 +584,8 @@ export default function AdminPage() {
         lastName: "",
         role: "editor",
       });
+      setIsCreateUserFormOpen(false);
+      setOpenUserEditorId(null);
       await loadDashboardData(false);
       setSuccess("Usuario creado correctamente");
     } catch (errorValue) {
@@ -493,10 +634,113 @@ export default function AdminPage() {
 
     try {
       await deleteUserById(user.id);
+      if (openUserEditorId === user.id) {
+        setOpenUserEditorId(null);
+      }
       await loadDashboardData(false);
       setSuccess(`Usuario ${user.email} eliminado`);
     } catch (errorValue) {
       setError(getErrorText(errorValue, "No se pudo eliminar el usuario"));
+    } finally {
+      setBusyAction(null);
+    }
+  };
+
+  const handleToggleCreateUserForm = () => {
+    setIsCreateUserFormOpen((prev) => !prev);
+  };
+
+  const handleToggleUserEditor = (userId: string) => {
+    setOpenUserEditorId((prev) => (prev === userId ? null : userId));
+  };
+
+  const handleToggleCreateSupportForm = () => {
+    setIsCreateSupportFormOpen((prev) => !prev);
+    setCreateSupportFormErrors({});
+  };
+
+  const handleToggleSupportEditor = (supportPathId: string) => {
+    setOpenSupportEditorId((prev) => (prev === supportPathId ? null : supportPathId));
+  };
+
+  const handleCreateSupportPath = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    const normalizedPayload = normalizeSupportCreateForm(createSupportForm);
+    const formErrors = validateSupportCreateForm(normalizedPayload);
+    if (Object.keys(formErrors).length > 0) {
+      setCreateSupportFormErrors(formErrors);
+      setError("Revisa los campos de la nueva institucion antes de guardar.");
+      return;
+    }
+
+    setCreateSupportFormErrors({});
+    setBusyAction("create-support-path");
+
+    try {
+      await createSupportPath(normalizedPayload);
+      setCreateSupportForm({ ...INITIAL_SUPPORT_FORM });
+      setCreateSupportFormErrors({});
+      setIsCreateSupportFormOpen(false);
+      setOpenSupportEditorId(null);
+      await loadDashboardData(false);
+      setSuccess("Institucion creada correctamente");
+    } catch (errorValue) {
+      setError(getErrorText(errorValue, "No se pudo crear la institucion"));
+    } finally {
+      setBusyAction(null);
+    }
+  };
+
+  const handleUpdateSupportPath = async (supportPath: SupportPath) => {
+    const draft = supportPathDrafts[supportPath.id];
+    if (!draft) return;
+
+    setBusyAction(`update-support-${supportPath.id}`);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      await updateSupportPathById(supportPath.id, {
+        institutionName: draft.institutionName.trim(),
+        ubicacion: draft.ubicacion.trim(),
+        phone: draft.phone.trim(),
+        email: draft.email.trim(),
+        schedule: draft.schedule.trim(),
+        description: draft.description.trim(),
+        isActive: draft.isActive,
+      });
+      await loadDashboardData(false);
+      setOpenSupportEditorId(null);
+      setSuccess(`Institucion ${draft.institutionName} actualizada`);
+    } catch (errorValue) {
+      setError(getErrorText(errorValue, "No se pudo actualizar la institucion"));
+    } finally {
+      setBusyAction(null);
+    }
+  };
+
+  const handleDeleteSupportPath = async (supportPath: SupportPath) => {
+    const confirmed = window.confirm(
+      `Vas a eliminar la institucion ${supportPath.institutionName}. Esta accion no se puede deshacer.`,
+    );
+    if (!confirmed) return;
+
+    setBusyAction(`delete-support-${supportPath.id}`);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      await deleteSupportPathById(supportPath.id);
+      if (openSupportEditorId === supportPath.id) {
+        setOpenSupportEditorId(null);
+      }
+      await loadDashboardData(false);
+      setSuccess(`Institucion ${supportPath.institutionName} eliminada`);
+    } catch (errorValue) {
+      setError(getErrorText(errorValue, "No se pudo eliminar la institucion"));
     } finally {
       setBusyAction(null);
     }
@@ -613,11 +857,15 @@ export default function AdminPage() {
     [allowedTabs],
   );
   const canAccessSummary = allowedTabs.includes("summary");
-  const canAccessCreateUser = allowedTabs.includes("create-user");
   const canAccessUsers = allowedTabs.includes("users");
+  const canAccessSupportPaths = allowedTabs.includes("support-paths");
   const canAccessMessages = allowedTabs.includes("messages");
   const canMarkMessages = canAccessMessages;
   const canDeleteMessages = currentRole === "admin";
+  const activeUsersCount = users.filter((item) => item.isActive).length;
+  const inactiveUsersCount = users.length - activeUsersCount;
+  const activeSupportCount = supportPaths.filter((item) => item.isActive).length;
+  const inactiveSupportCount = supportPaths.length - activeSupportCount;
   const unreadMessagesCount = messages.filter((item) => item.status === "new").length;
   const readMessagesCount = messages.filter((item) => item.status === "read").length;
   const filteredMessages = useMemo(() => {
@@ -634,6 +882,19 @@ export default function AdminPage() {
       setActiveTab(visibleTabs[0].id);
     }
   }, [activeTab, visibleTabs]);
+
+  useEffect(() => {
+    if (activeTab === "users") return;
+    setIsCreateUserFormOpen(false);
+    setOpenUserEditorId(null);
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (activeTab === "support-paths") return;
+    setIsCreateSupportFormOpen(false);
+    setCreateSupportFormErrors({});
+    setOpenSupportEditorId(null);
+  }, [activeTab]);
 
   return (
     <section className={styles.page}>
@@ -951,193 +1212,671 @@ export default function AdminPage() {
             </article>
             ) : null}
 
-            {canAccessCreateUser && activeTab === "create-user" ? (
-              <article className={styles.panel}>
-              <div className={styles.panelHeader}>
-                <h2 className={styles.panelTitle}>Crear usuario</h2>
-              </div>
-
-              <form className={styles.createForm} onSubmit={handleCreateUser}>
-                <div className={styles.formGrid}>
-                  <div>
-                    <label htmlFor="create-firstName">Nombre</label>
-                    <input
-                      id="create-firstName"
-                      value={createForm.firstName}
-                      onChange={(event) =>
-                        setCreateForm((prev) => ({ ...prev, firstName: event.target.value }))
-                      }
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="create-lastName">Apellido</label>
-                    <input
-                      id="create-lastName"
-                      value={createForm.lastName}
-                      onChange={(event) =>
-                        setCreateForm((prev) => ({ ...prev, lastName: event.target.value }))
-                      }
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="create-email">Email</label>
-                    <input
-                      id="create-email"
-                      type="email"
-                      value={createForm.email}
-                      onChange={(event) =>
-                        setCreateForm((prev) => ({ ...prev, email: event.target.value }))
-                      }
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="create-password">Contrasena</label>
-                    <input
-                      id="create-password"
-                      type="password"
-                      minLength={6}
-                      value={createForm.password}
-                      onChange={(event) =>
-                        setCreateForm((prev) => ({ ...prev, password: event.target.value }))
-                      }
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className={styles.fullWidth}>
-                  <label htmlFor="create-role">Rol</label>
-                  <select
-                    id="create-role"
-                    value={createForm.role}
-                    onChange={(event) =>
-                      setCreateForm((prev) => ({ ...prev, role: event.target.value as UserRole }))
-                    }
-                  >
-                    <option value="admin">Admin</option>
-                    <option value="editor">Editor</option>
-                    <option value="investigador">Investigador</option>
-                  </select>
-                </div>
-
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={busyAction === "create-user"}
-                >
-                  {busyAction === "create-user" ? "Creando..." : "Crear usuario"}
-                </button>
-              </form>
-            </article>
-            ) : null}
-
             {canAccessUsers && activeTab === "users" ? (
               <article className={styles.panel}>
-              <div className={styles.panelHeader}>
-                <h2 className={styles.panelTitle}>Usuarios</h2>
-                <p className={styles.panelHint}>
-                  Gestion de estado y rol para cuentas registradas.
-                </p>
-              </div>
+                <div className={styles.panelHeader}>
+                  <h2 className={styles.panelTitle}>Usuarios</h2>
+                  <p className={styles.panelHint}>
+                    Gestion de estado y rol para cuentas registradas.
+                  </p>
+                  <div className={styles.supportMetaRow}>
+                    <span className={`${styles.supportMetaBadge} ${styles.supportMetaBadgeTotal}`}>
+                      Total: {users.length}
+                    </span>
+                    <span className={`${styles.supportMetaBadge} ${styles.supportMetaBadgeActive}`}>
+                      Activos: {activeUsersCount}
+                    </span>
+                    <span className={`${styles.supportMetaBadge} ${styles.supportMetaBadgeInactive}`}>
+                      Inactivos: {inactiveUsersCount}
+                    </span>
+                  </div>
+                </div>
 
-              <div className={styles.tableWrap}>
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>Usuario</th>
-                      <th>Rol</th>
-                      <th>Estado</th>
-                      <th>Creado</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.length ? (
-                      users.map((user) => {
+                <div className={styles.supportCreateToolbar}>
+                  <button
+                    type="button"
+                    className={`btn btn-primary ${styles.supportCreateToggle}`}
+                    onClick={handleToggleCreateUserForm}
+                    aria-expanded={isCreateUserFormOpen}
+                    aria-controls="user-create-panel"
+                    disabled={busyAction === "create-user"}
+                  >
+                    <span>{isCreateUserFormOpen ? "Ocultar formulario" : "Agregar usuario"}</span>
+                    <span
+                      className={styles.supportCreateToggleIcon}
+                      data-open={isCreateUserFormOpen}
+                      aria-hidden="true"
+                    >
+                      &#9662;
+                    </span>
+                  </button>
+                </div>
+
+                <div
+                  id="user-create-panel"
+                  className={styles.supportCreateCollapse}
+                  data-open={isCreateUserFormOpen}
+                >
+                  <div className={styles.supportCreateCollapseInner}>
+                    <form className={styles.createForm} onSubmit={handleCreateUser}>
+                      <div className={styles.formGrid}>
+                        <div>
+                          <label htmlFor="create-firstName">Nombre</label>
+                          <input
+                            id="create-firstName"
+                            value={createForm.firstName}
+                            onChange={(event) =>
+                              setCreateForm((prev) => ({ ...prev, firstName: event.target.value }))
+                            }
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="create-lastName">Apellido</label>
+                          <input
+                            id="create-lastName"
+                            value={createForm.lastName}
+                            onChange={(event) =>
+                              setCreateForm((prev) => ({ ...prev, lastName: event.target.value }))
+                            }
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="create-email">Email</label>
+                          <input
+                            id="create-email"
+                            type="email"
+                            value={createForm.email}
+                            onChange={(event) =>
+                              setCreateForm((prev) => ({ ...prev, email: event.target.value }))
+                            }
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="create-password">Contrasena</label>
+                          <input
+                            id="create-password"
+                            type="password"
+                            minLength={6}
+                            value={createForm.password}
+                            onChange={(event) =>
+                              setCreateForm((prev) => ({ ...prev, password: event.target.value }))
+                            }
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className={styles.fullWidth}>
+                        <label htmlFor="create-role">Rol</label>
+                        <select
+                          id="create-role"
+                          value={createForm.role}
+                          onChange={(event) =>
+                            setCreateForm((prev) => ({ ...prev, role: event.target.value as UserRole }))
+                          }
+                        >
+                          <option value="admin">Admin</option>
+                          <option value="editor">Editor</option>
+                          <option value="investigador">Investigador</option>
+                        </select>
+                      </div>
+
+                      <div className={styles.supportCreateActions}>
+                        <button
+                          type="button"
+                          className={styles.secondaryButton}
+                          onClick={() => setIsCreateUserFormOpen(false)}
+                          disabled={busyAction === "create-user"}
+                        >
+                          Cancelar
+                        </button>
+                        <button
+                          type="submit"
+                          className="btn btn-primary"
+                          disabled={busyAction === "create-user"}
+                        >
+                          {busyAction === "create-user" ? "Creando..." : "Guardar usuario"}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                <div className={styles.supportRegistryWrap}>
+                  <div className={styles.supportTableHeader}>
+                    <h3 className={styles.supportTableTitle}>Usuarios registrados</h3>
+                  </div>
+                  {users.length ? (
+                    <div className={styles.supportRegistryList}>
+                      {users.map((user) => {
                         const draft = userDrafts[user.id] ?? {
                           role: user.role,
                           isActive: user.isActive,
                         };
                         const isUpdating = busyAction === `update-${user.id}`;
                         const isDeleting = busyAction === `delete-${user.id}`;
+                        const isEditorOpen = openUserEditorId === user.id;
+                        const displayName = `${user.firstName} ${user.lastName}`.trim() || user.email;
+
                         return (
-                          <tr key={user.id}>
-                            <td>
-                              <strong>{user.firstName} {user.lastName}</strong>
-                              <br />
-                              <span className={styles.emailBadge}>{user.email}</span>
-                            </td>
-                            <td>
-                              <select
-                                value={draft.role}
-                                onChange={(event) =>
-                                  setUserDrafts((prev) => ({
-                                    ...prev,
-                                    [user.id]: {
-                                      ...draft,
-                                      role: event.target.value as UserRole,
-                                    },
-                                  }))
-                                }
-                              >
-                                <option value="admin">Admin</option>
-                                <option value="editor">Editor</option>
-                                <option value="investigador">Investigador</option>
-                              </select>
-                            </td>
-                            <td>
-                              <select
-                                value={draft.isActive ? "active" : "inactive"}
-                                onChange={(event) =>
-                                  setUserDrafts((prev) => ({
-                                    ...prev,
-                                    [user.id]: {
-                                      ...draft,
-                                      isActive: event.target.value === "active",
-                                    },
-                                  }))
-                                }
-                              >
-                                <option value="active">Activo</option>
-                                <option value="inactive">Inactivo</option>
-                              </select>
-                            </td>
-                            <td>{formatDate(user.createdAt)}</td>
-                            <td>
-                              <div className={styles.rowActions}>
+                          <article key={user.id} className={styles.supportListItem}>
+                            <div className={styles.supportListSummary}>
+                              <div className={styles.supportListIdentity}>
+                                <div className={styles.supportListNameRow}>
+                                  <h4 className={styles.supportListName}>{displayName}</h4>
+                                  <span className={`${styles.supportMetaBadge} ${styles.userRoleBadge}`}>
+                                    {roleLabel(draft.role)}
+                                  </span>
+                                  <span
+                                    className={styles.supportListStatus}
+                                    data-active={draft.isActive ? "true" : "false"}
+                                  >
+                                    {draft.isActive ? "Activo" : "Inactivo"}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className={styles.supportListActions}>
                                 <button
                                   type="button"
-                                  className={styles.secondaryButton}
-                                  onClick={() => void handleUpdateUser(user)}
+                                  className={`${styles.supportActionBtn} ${styles.supportActionEdit}`}
+                                  onClick={() => handleToggleUserEditor(user.id)}
                                   disabled={isUpdating || isDeleting}
                                 >
-                                  {isUpdating ? "Guardando..." : "Guardar"}
+                                  {isEditorOpen ? "Cerrar" : "Editar"}
                                 </button>
                                 <button
                                   type="button"
-                                  className={styles.dangerButton}
+                                  className={`${styles.supportActionBtn} ${styles.supportActionDelete}`}
                                   onClick={() => void handleDeleteUser(user)}
                                   disabled={isUpdating || isDeleting || user.id === currentUser?.id}
                                 >
                                   {isDeleting ? "Eliminando..." : "Eliminar"}
                                 </button>
                               </div>
-                            </td>
-                          </tr>
+                            </div>
+
+                            <div className={styles.supportEditorCollapse} data-open={isEditorOpen}>
+                              <div className={styles.supportEditorInner}>
+                                <div className={styles.supportRegistryFields}>
+                                  <div className={styles.supportField}>
+                                    <label>Rol</label>
+                                    <select
+                                      value={draft.role}
+                                      onChange={(event) =>
+                                        setUserDrafts((prev) => ({
+                                          ...prev,
+                                          [user.id]: {
+                                            ...draft,
+                                            role: event.target.value as UserRole,
+                                          },
+                                        }))
+                                      }
+                                    >
+                                      <option value="admin">Admin</option>
+                                      <option value="editor">Editor</option>
+                                      <option value="investigador">Investigador</option>
+                                    </select>
+                                  </div>
+
+                                  <div className={styles.supportField}>
+                                    <label>Estado</label>
+                                    <select
+                                      value={draft.isActive ? "active" : "inactive"}
+                                      onChange={(event) =>
+                                        setUserDrafts((prev) => ({
+                                          ...prev,
+                                          [user.id]: {
+                                            ...draft,
+                                            isActive: event.target.value === "active",
+                                          },
+                                        }))
+                                      }
+                                    >
+                                      <option value="active">Activo</option>
+                                      <option value="inactive">Inactivo</option>
+                                    </select>
+                                  </div>
+
+                                  <div className={styles.supportField}>
+                                    <label>Email</label>
+                                    <input value={user.email} readOnly />
+                                  </div>
+                                </div>
+
+                                <div className={styles.supportRegistryActions}>
+                                  <button
+                                    type="button"
+                                    className={`${styles.supportActionBtn} ${styles.supportEditorSave}`}
+                                    onClick={() => void handleUpdateUser(user)}
+                                    disabled={isUpdating || isDeleting}
+                                  >
+                                    {isUpdating ? "Guardando..." : "Guardar"}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className={`${styles.supportActionBtn} ${styles.supportEditorCancel}`}
+                                    onClick={() => setOpenUserEditorId(null)}
+                                    disabled={isUpdating || isDeleting}
+                                  >
+                                    Cancelar
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </article>
                         );
-                      })
-                    ) : (
-                      <tr>
-                        <td colSpan={5}>No hay usuarios para mostrar.</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </article>
+                      })}
+                    </div>
+                  ) : (
+                    <p className={styles.statusMuted}>No hay usuarios para mostrar.</p>
+                  )}
+                </div>
+              </article>
+            ) : null}
+
+            {canAccessSupportPaths && activeTab === "support-paths" ? (
+              <article className={styles.panel}>
+                <div className={styles.panelHeader}>
+                  <h2 className={styles.panelTitle}>Instituciones de atencion</h2>
+                  <p className={styles.panelHint}>
+                    Administra las instituciones que aparecen en la pagina de rutas.
+                  </p>
+                  <div className={styles.supportMetaRow}>
+                    <span className={`${styles.supportMetaBadge} ${styles.supportMetaBadgeTotal}`}>
+                      Total: {supportPaths.length}
+                    </span>
+                    <span className={`${styles.supportMetaBadge} ${styles.supportMetaBadgeActive}`}>
+                      Activas: {activeSupportCount}
+                    </span>
+                    <span className={`${styles.supportMetaBadge} ${styles.supportMetaBadgeInactive}`}>
+                      Inactivas: {inactiveSupportCount}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={styles.supportCreateToolbar}>
+                  <button
+                    type="button"
+                    className={`btn btn-primary ${styles.supportCreateToggle}`}
+                    onClick={handleToggleCreateSupportForm}
+                    aria-expanded={isCreateSupportFormOpen}
+                    aria-controls="support-create-panel"
+                    disabled={busyAction === "create-support-path"}
+                  >
+                    <span>{isCreateSupportFormOpen ? "Ocultar formulario" : "Agregar institucion"}</span>
+                    <span
+                      className={styles.supportCreateToggleIcon}
+                      data-open={isCreateSupportFormOpen}
+                      aria-hidden="true"
+                    >
+                      &#9662;
+                    </span>
+                  </button>
+                </div>
+
+                <div
+                  id="support-create-panel"
+                  className={styles.supportCreateCollapse}
+                  data-open={isCreateSupportFormOpen}
+                >
+                  <div className={styles.supportCreateCollapseInner}>
+                    <form className={styles.createForm} onSubmit={handleCreateSupportPath}>
+                      <div className={styles.formGrid}>
+                        <div>
+                          <label htmlFor="support-institutionName">Nombre de institucion</label>
+                          <input
+                            id="support-institutionName"
+                            className={createSupportFormErrors.institutionName ? styles.fieldError : ""}
+                            value={createSupportForm.institutionName ?? ""}
+                            onChange={(event) => {
+                              setCreateSupportForm((prev) => ({
+                                ...prev,
+                                institutionName: event.target.value,
+                              }));
+                              setCreateSupportFormErrors((prev) => ({
+                                ...prev,
+                                institutionName: undefined,
+                              }));
+                            }}
+                            required
+                          />
+                          {createSupportFormErrors.institutionName ? (
+                            <p className={styles.fieldErrorText}>{createSupportFormErrors.institutionName}</p>
+                          ) : null}
+                        </div>
+                        <div>
+                          <label htmlFor="support-ubicacion">Ubicacion</label>
+                          <input
+                            id="support-ubicacion"
+                            className={createSupportFormErrors.ubicacion ? styles.fieldError : ""}
+                            value={createSupportForm.ubicacion ?? ""}
+                            onChange={(event) => {
+                              setCreateSupportForm((prev) => ({
+                                ...prev,
+                                ubicacion: event.target.value,
+                              }));
+                              setCreateSupportFormErrors((prev) => ({
+                                ...prev,
+                                ubicacion: undefined,
+                              }));
+                            }}
+                            required
+                          />
+                          {createSupportFormErrors.ubicacion ? (
+                            <p className={styles.fieldErrorText}>{createSupportFormErrors.ubicacion}</p>
+                          ) : null}
+                        </div>
+                        <div>
+                          <label htmlFor="support-phone">Telefono</label>
+                          <input
+                            id="support-phone"
+                            className={createSupportFormErrors.phone ? styles.fieldError : ""}
+                            value={createSupportForm.phone ?? ""}
+                            onChange={(event) => {
+                              setCreateSupportForm((prev) => ({ ...prev, phone: event.target.value }));
+                              setCreateSupportFormErrors((prev) => ({ ...prev, phone: undefined }));
+                            }}
+                          />
+                          {createSupportFormErrors.phone ? (
+                            <p className={styles.fieldErrorText}>{createSupportFormErrors.phone}</p>
+                          ) : null}
+                        </div>
+                        <div>
+                          <label htmlFor="support-email">Email</label>
+                          <input
+                            id="support-email"
+                            type="email"
+                            className={createSupportFormErrors.email ? styles.fieldError : ""}
+                            value={createSupportForm.email ?? ""}
+                            onChange={(event) => {
+                              setCreateSupportForm((prev) => ({ ...prev, email: event.target.value }));
+                              setCreateSupportFormErrors((prev) => ({ ...prev, email: undefined }));
+                            }}
+                          />
+                          {createSupportFormErrors.email ? (
+                            <p className={styles.fieldErrorText}>{createSupportFormErrors.email}</p>
+                          ) : null}
+                        </div>
+                        <div>
+                          <label htmlFor="support-schedule">Horario</label>
+                          <input
+                            id="support-schedule"
+                            className={createSupportFormErrors.schedule ? styles.fieldError : ""}
+                            value={createSupportForm.schedule ?? ""}
+                            onChange={(event) => {
+                              setCreateSupportForm((prev) => ({
+                                ...prev,
+                                schedule: event.target.value,
+                              }));
+                              setCreateSupportFormErrors((prev) => ({
+                                ...prev,
+                                schedule: undefined,
+                              }));
+                            }}
+                          />
+                          {createSupportFormErrors.schedule ? (
+                            <p className={styles.fieldErrorText}>{createSupportFormErrors.schedule}</p>
+                          ) : null}
+                        </div>
+                        <div>
+                          <label htmlFor="support-isActive">Estado</label>
+                          <select
+                            id="support-isActive"
+                            value={createSupportForm.isActive ? "active" : "inactive"}
+                            onChange={(event) =>
+                              setCreateSupportForm((prev) => ({
+                                ...prev,
+                                isActive: event.target.value === "active",
+                              }))
+                            }
+                          >
+                            <option value="active">Activo</option>
+                            <option value="inactive">Inactivo</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label htmlFor="support-description">Descripcion</label>
+                        <textarea
+                          id="support-description"
+                          value={createSupportForm.description ?? ""}
+                          onChange={(event) =>
+                            setCreateSupportForm((prev) => ({
+                              ...prev,
+                              description: event.target.value,
+                            }))
+                          }
+                          rows={3}
+                        />
+                      </div>
+
+                      <div className={styles.supportCreateActions}>
+                        <button
+                          type="button"
+                          className={styles.secondaryButton}
+                          onClick={() => {
+                            setIsCreateSupportFormOpen(false);
+                            setCreateSupportFormErrors({});
+                          }}
+                          disabled={busyAction === "create-support-path"}
+                        >
+                          Cancelar
+                        </button>
+                        <button
+                          type="submit"
+                          className="btn btn-primary"
+                          disabled={busyAction === "create-support-path"}
+                        >
+                          {busyAction === "create-support-path" ? "Creando..." : "Guardar institucion"}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                <div className={styles.supportRegistryWrap}>
+                  <div className={styles.supportTableHeader}>
+                    <h3 className={styles.supportTableTitle}>Instituciones registradas</h3>
+                  </div>
+                  {supportPaths.length ? (
+                    <div className={styles.supportRegistryList}>
+                      {supportPaths.map((supportPath) => {
+                        const draft = supportPathDrafts[supportPath.id] ?? buildSupportDraft(supportPath);
+                        const isUpdating = busyAction === `update-support-${supportPath.id}`;
+                        const isDeleting = busyAction === `delete-support-${supportPath.id}`;
+                        const isEditorOpen = openSupportEditorId === supportPath.id;
+
+                        return (
+                          <article key={supportPath.id} className={styles.supportListItem}>
+                            <div className={styles.supportListSummary}>
+                              <div className={styles.supportListIdentity}>
+                                <div className={styles.supportListNameRow}>
+                                  <h4 className={styles.supportListName}>
+                                    {draft.institutionName.trim() || "Institucion sin nombre"}
+                                  </h4>
+                                  <span
+                                    className={styles.supportListStatus}
+                                    data-active={draft.isActive ? "true" : "false"}
+                                  >
+                                    {draft.isActive ? "Activa" : "Inactiva"}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className={styles.supportListActions}>
+                                <button
+                                  type="button"
+                                  className={`${styles.supportActionBtn} ${styles.supportActionEdit}`}
+                                  onClick={() => handleToggleSupportEditor(supportPath.id)}
+                                  disabled={isUpdating || isDeleting}
+                                >
+                                  {isEditorOpen ? "Cerrar" : "Editar"}
+                                </button>
+                                <button
+                                  type="button"
+                                  className={`${styles.supportActionBtn} ${styles.supportActionDelete}`}
+                                  onClick={() => void handleDeleteSupportPath(supportPath)}
+                                  disabled={isUpdating || isDeleting}
+                                >
+                                  {isDeleting ? "Eliminando..." : "Eliminar"}
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className={styles.supportEditorCollapse} data-open={isEditorOpen}>
+                              <div className={styles.supportEditorInner}>
+                                <div className={styles.supportRegistryFields}>
+                                  <div className={`${styles.supportField} ${styles.supportFieldWide}`}>
+                                    <label>Institucion</label>
+                                    <input
+                                      value={draft.institutionName}
+                                      onChange={(event) =>
+                                        setSupportPathDrafts((prev) => ({
+                                          ...prev,
+                                          [supportPath.id]: {
+                                            ...draft,
+                                            institutionName: event.target.value,
+                                          },
+                                        }))
+                                      }
+                                    />
+                                  </div>
+
+                                  <div className={`${styles.supportField} ${styles.supportFieldWide}`}>
+                                    <label>Descripcion</label>
+                                    <textarea
+                                      value={draft.description}
+                                      onChange={(event) =>
+                                        setSupportPathDrafts((prev) => ({
+                                          ...prev,
+                                          [supportPath.id]: {
+                                            ...draft,
+                                            description: event.target.value,
+                                          },
+                                        }))
+                                      }
+                                      rows={3}
+                                    />
+                                  </div>
+
+                                  <div className={styles.supportField}>
+                                    <label>Ubicacion</label>
+                                    <input
+                                      value={draft.ubicacion}
+                                      onChange={(event) =>
+                                        setSupportPathDrafts((prev) => ({
+                                          ...prev,
+                                          [supportPath.id]: {
+                                            ...draft,
+                                            ubicacion: event.target.value,
+                                          },
+                                        }))
+                                      }
+                                    />
+                                  </div>
+
+                                  <div className={styles.supportField}>
+                                    <label>Estado</label>
+                                    <select
+                                      value={draft.isActive ? "active" : "inactive"}
+                                      onChange={(event) =>
+                                        setSupportPathDrafts((prev) => ({
+                                          ...prev,
+                                          [supportPath.id]: {
+                                            ...draft,
+                                            isActive: event.target.value === "active",
+                                          },
+                                        }))
+                                      }
+                                    >
+                                      <option value="active">Activo</option>
+                                      <option value="inactive">Inactivo</option>
+                                    </select>
+                                  </div>
+
+                                  <div className={styles.supportField}>
+                                    <label>Telefono</label>
+                                    <input
+                                      value={draft.phone}
+                                      onChange={(event) =>
+                                        setSupportPathDrafts((prev) => ({
+                                          ...prev,
+                                          [supportPath.id]: {
+                                            ...draft,
+                                            phone: event.target.value,
+                                          },
+                                        }))
+                                      }
+                                    />
+                                  </div>
+
+                                  <div className={styles.supportField}>
+                                    <label>Email</label>
+                                    <input
+                                      type="email"
+                                      value={draft.email}
+                                      onChange={(event) =>
+                                        setSupportPathDrafts((prev) => ({
+                                          ...prev,
+                                          [supportPath.id]: {
+                                            ...draft,
+                                            email: event.target.value,
+                                          },
+                                        }))
+                                      }
+                                    />
+                                  </div>
+
+                                  <div className={styles.supportField}>
+                                    <label>Horario</label>
+                                    <input
+                                      value={draft.schedule}
+                                      onChange={(event) =>
+                                        setSupportPathDrafts((prev) => ({
+                                          ...prev,
+                                          [supportPath.id]: {
+                                            ...draft,
+                                            schedule: event.target.value,
+                                          },
+                                        }))
+                                      }
+                                    />
+                                  </div>
+
+                                </div>
+
+                                <div className={styles.supportRegistryActions}>
+                                  <button
+                                    type="button"
+                                    className={`${styles.supportActionBtn} ${styles.supportEditorSave}`}
+                                    onClick={() => void handleUpdateSupportPath(supportPath)}
+                                    disabled={isUpdating || isDeleting}
+                                  >
+                                    {isUpdating ? "Guardando..." : "Guardar"}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className={`${styles.supportActionBtn} ${styles.supportEditorCancel}`}
+                                    onClick={() => setOpenSupportEditorId(null)}
+                                    disabled={isUpdating || isDeleting}
+                                  >
+                                    Cancelar
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </article>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <p className={styles.statusMuted}>No hay instituciones registradas.</p>
+                  )}
+                </div>
+              </article>
             ) : null}
 
             {canAccessMessages && activeTab === "messages" ? (

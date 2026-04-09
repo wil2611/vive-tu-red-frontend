@@ -496,6 +496,233 @@
 
 .tableWrap {
   overflow-x: auto;
+  border: 1px solid #ece5cf;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fff 0%, #f8f5ea 100%);
+  padding: 10px 10px 2px;
+}
+
+.supportTableHeader {
+  margin: 0 0 10px;
+  padding: 0 2px;
+}
+
+.supportTableTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1d3e2a;
+}
+
+.supportRegistryWrap {
+  margin-top: 6px;
+  padding: 0;
+}
+
+.supportRegistryList {
+  display: grid;
+  gap: 12px;
+}
+
+.supportListItem {
+  border: 1px solid #e7dfc6;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fff 0%, #fdfbf4 100%);
+  box-shadow: 0 5px 14px rgba(29, 62, 42, 0.06);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.supportListItem:hover {
+  border-color: #cdbc94;
+  box-shadow: 0 9px 20px rgba(29, 62, 42, 0.1);
+}
+
+.supportListSummary {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.supportListIdentity {
+  min-width: 0;
+}
+
+.supportListNameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.supportListName {
+  margin: 0;
+  color: #1d3e2a;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.supportListStatus {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.supportListStatus[data-active="true"] {
+  color: #1f7a3f;
+  background: rgba(31, 122, 63, 0.12);
+  border-color: rgba(31, 122, 63, 0.24);
+}
+
+.supportListStatus[data-active="false"] {
+  color: #9f4830;
+  background: rgba(201, 106, 74, 0.12);
+  border-color: rgba(201, 106, 74, 0.24);
+}
+
+.supportListActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.supportActionBtn {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  padding: 8px 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  transition: all 0.18s ease;
+}
+
+.supportActionBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.supportActionEdit {
+  color: #1d3e2a;
+  background: rgba(29, 62, 42, 0.09);
+  border-color: rgba(29, 62, 42, 0.2);
+}
+
+.supportActionEdit:hover:not(:disabled) {
+  background: rgba(29, 62, 42, 0.14);
+  border-color: rgba(29, 62, 42, 0.3);
+}
+
+.supportActionDelete {
+  color: #fff;
+  background: #c96a4a;
+}
+
+.supportActionDelete:hover:not(:disabled) {
+  background: #a8553a;
+}
+
+.supportEditorSave {
+  color: #fff;
+  background: #1d3e2a;
+}
+
+.supportEditorSave:hover:not(:disabled) {
+  background: #2a5a3d;
+}
+
+.supportEditorCancel {
+  color: #365a45;
+  background: #f1eee1;
+  border-color: #d9d1b5;
+}
+
+.supportEditorCancel:hover:not(:disabled) {
+  background: #e8e1c9;
+}
+
+.supportRegistryFields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.supportField {
+  display: grid;
+  gap: 5px;
+}
+
+.supportFieldWide {
+  grid-column: span 2;
+}
+
+.supportField label {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5a7d66;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.supportField input,
+.supportField select,
+.supportField textarea {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.supportField textarea {
+  min-height: 84px;
+  resize: vertical;
+}
+
+.supportRegistryActions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.supportEditorCollapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    grid-template-rows 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.supportEditorCollapse[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.supportEditorInner {
+  min-height: 0;
+  overflow: hidden;
+  border-top: 1px solid #ece5cf;
+  background: linear-gradient(180deg, #fffdf8 0%, #faf6eb 100%);
+  padding: 12px;
+}
+
+.supportEditorCollapse[data-open="false"] .supportEditorInner {
+  border-top: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .table {
@@ -510,6 +737,19 @@
   padding: 10px 12px;
   border-bottom: 1px solid #ece5cf;
   vertical-align: top;
+}
+
+.table td input,
+.table td select,
+.table td textarea {
+  width: 100%;
+  min-width: 140px;
+  margin-bottom: 6px;
+}
+
+.table td textarea {
+  min-height: 66px;
+  resize: vertical;
 }
 
 .table tbody tr:hover {
@@ -527,6 +767,146 @@
 .createForm {
   display: grid;
   gap: 12px;
+}
+
+.supportCreateToolbar {
+  margin-bottom: 8px;
+}
+
+.supportMetaRow {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.supportMetaBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  border: 1px solid transparent;
+}
+
+.supportMetaBadgeTotal {
+  color: #244738;
+  background: rgba(0, 85, 90, 0.1);
+  border-color: rgba(0, 85, 90, 0.24);
+}
+
+.supportMetaBadgeActive {
+  color: #1f7a3f;
+  background: rgba(31, 122, 63, 0.12);
+  border-color: rgba(31, 122, 63, 0.24);
+}
+
+.supportMetaBadgeInactive {
+  color: #9f4830;
+  background: rgba(201, 106, 74, 0.12);
+  border-color: rgba(201, 106, 74, 0.24);
+}
+
+.userRoleBadge {
+  color: #244738;
+  background: rgba(0, 85, 90, 0.1);
+  border-color: rgba(0, 85, 90, 0.24);
+}
+
+.supportCreateToggle {
+  min-width: 200px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(320px, 100%);
+  background: linear-gradient(135deg, #1d3e2a 0%, #24533a 100%);
+}
+
+.supportCreateToggle:hover:not(:disabled) {
+  background: linear-gradient(135deg, #214933 0%, #2a5a3d 100%);
+}
+
+.supportCreateToggleIcon {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.supportCreateToggleIcon[data-open="true"] {
+  transform: rotate(180deg);
+}
+
+.supportCreateCollapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transform: translateY(-6px);
+  margin-bottom: 0;
+  transition:
+    grid-template-rows 0.24s ease,
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    margin-bottom 0.22s ease;
+}
+
+.supportCreateCollapse[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transform: translateY(0);
+  margin-bottom: 12px;
+}
+
+.supportCreateCollapseInner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.supportCreateCollapseInner .createForm {
+  border: 1px solid #ece5cf;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fff 0%, #fbf8ef 100%);
+  padding: 14px;
+}
+
+.supportCreateHeader {
+  margin-bottom: 8px;
+}
+
+.supportCreateHeader h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #1d3e2a;
+}
+
+.supportCreateHeader p {
+  margin: 4px 0 0;
+  font-size: 0.86rem;
+  color: #5a7d66;
+}
+
+.supportCreateActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.fieldError {
+  border-color: #c96a4a !important;
+  box-shadow: 0 0 0 2px rgba(201, 106, 74, 0.18);
+}
+
+.fieldErrorText {
+  margin: 4px 0 0;
+  font-size: 0.78rem;
+  color: #9f4830;
+}
+
+.createForm textarea {
+  width: 100%;
+  min-height: 92px;
+  resize: vertical;
 }
 
 .formGrid {
@@ -715,6 +1095,14 @@
     grid-template-columns: 1fr;
   }
 
+  .supportCreateToggle {
+    width: 100%;
+  }
+
+  .supportRegistryFields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .fullWidth {
     max-width: none;
   }
@@ -774,5 +1162,22 @@
 
   .metricGrid {
     grid-template-columns: 1fr;
+  }
+
+  .supportRegistryFields {
+    grid-template-columns: 1fr;
+  }
+
+  .supportFieldWide {
+    grid-column: span 1;
+  }
+
+  .supportListSummary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .supportListActions {
+    width: 100%;
   }
 }
