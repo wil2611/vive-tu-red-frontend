@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { roleLabel } from "./admin.shared";
@@ -10,6 +11,7 @@ import { ResourcesTab } from "./tabs/ResourcesTab";
 import { SummaryTab } from "./tabs/SummaryTab";
 import { SupportPathsTab } from "./tabs/SupportPathsTab";
 import { TeamTab } from "./tabs/TeamTab";
+import { AlliesTab } from "./tabs/AlliesTab";
 import { UsersTab } from "./tabs/UsersTab";
 
 export default function AdminPage() {
@@ -26,6 +28,9 @@ export default function AdminPage() {
     supportPaths,
     supportPathDrafts,
     setSupportPathDrafts,
+    projectAllies,
+    projectAllyDrafts,
+    setProjectAllyDrafts,
     resources,
     resourceDrafts,
     setResourceDrafts,
@@ -74,6 +79,14 @@ export default function AdminPage() {
     setCreateSupportFormErrors,
     openSupportEditorId,
     setOpenSupportEditorId,
+    createAllyForm,
+    setCreateAllyForm,
+    isCreateAllyFormOpen,
+    setIsCreateAllyFormOpen,
+    createAllyFormErrors,
+    setCreateAllyFormErrors,
+    openAllyEditorId,
+    setOpenAllyEditorId,
     createTeamForm,
     setCreateTeamForm,
     isCreateTeamFormOpen,
@@ -96,6 +109,7 @@ export default function AdminPage() {
     canAccessProfile,
     canAccessUsers,
     canAccessSupportPaths,
+    canAccessAllies,
     canAccessTeam,
     canAccessResources,
     canAccessMessages,
@@ -107,6 +121,8 @@ export default function AdminPage() {
     draftResourcesCount,
     activeTeamCount,
     inactiveTeamCount,
+    activeAlliesCount,
+    inactiveAlliesCount,
     unreadMessagesCount,
     readMessagesCount,
     inProgressMessagesCount,
@@ -127,6 +143,11 @@ export default function AdminPage() {
     handleCreateSupportPath,
     handleUpdateSupportPath,
     handleDeleteSupportPath,
+    handleToggleCreateAllyForm,
+    handleToggleAllyEditor,
+    handleCreateProjectAlly,
+    handleUpdateProjectAlly,
+    handleDeleteProjectAlly,
     handleToggleCreateTeamForm,
     handleToggleTeamEditor,
     handleCreateTeamMember,
@@ -142,6 +163,7 @@ export default function AdminPage() {
     handleDeleteMessage,
   } = useAdminDashboard();
   const [dismissedToastKey, setDismissedToastKey] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const toastTone = error ? "error" : success ? "success" : null;
   const toastMessage = error ?? success ?? null;
@@ -165,27 +187,8 @@ export default function AdminPage() {
   }, [toastKey, toastTone]);
 
   return (
-    <section className={styles.page}>
-      <div className={`container ${styles.shell}`}>
-        <header className={styles.topBar}>
-          <div>
-            <h1 className={styles.title}>Panel de Administracion</h1>
-            <p className={styles.subtitle}>
-              Gestiona usuarios, revisa mensajes y consulta metricas del backend.
-            </p>
-          </div>
-          {session && (
-            <button
-              type="button"
-              className="btn btn-outline"
-              onClick={handleLogout}
-              disabled={busyAction === "logout"}
-            >
-              {busyAction === "logout" ? "Cerrando..." : "Cerrar sesion"}
-            </button>
-          )}
-        </header>
-
+    <section className={`${styles.page} ${!session ? styles.pageLoggedOut : ""}`}>
+      <div className={`container ${styles.shell} ${!session ? styles.shellLoggedOut : ""}`}>
         {isBootstrapping ? (
           <article className={styles.panel}>
             <h2 className={styles.panelTitle}>Verificando sesion...</h2>
@@ -193,18 +196,25 @@ export default function AdminPage() {
         ) : !session ? (
           <article className={`${styles.panel} ${styles.loginCard}`}>
             <div className={styles.panelHeader}>
-              <h2 className={styles.panelTitle}>Acceso administrador</h2>
-              <p className={styles.panelHint}>
-                Inicia sesion con rol `admin`, `editor` o `investigador`.
-              </p>
+              <div className={styles.loginBrand}>
+                <Image
+                  src="/logo_principal.png"
+                  alt="Vive Tu Red"
+                  width={170}
+                  height={52}
+                  className={styles.loginLogo}
+                  priority
+                />
+              </div>
             </div>
 
             <form onSubmit={handleLogin} className={styles.loginGrid}>
-              <div>
+              <div className={styles.loginField}>
                 <label htmlFor="login-email">Email</label>
                 <input
                   id="login-email"
                   type="email"
+                  autoComplete="email"
                   value={loginForm.email}
                   onChange={(event) =>
                     setLoginForm((prev) => ({ ...prev, email: event.target.value }))
@@ -213,22 +223,95 @@ export default function AdminPage() {
                 />
               </div>
 
-              <div>
+              <div className={styles.loginField}>
                 <label htmlFor="login-password">Contrasena</label>
-                <input
-                  id="login-password"
-                  type="password"
-                  value={loginForm.password}
-                  onChange={(event) =>
-                    setLoginForm((prev) => ({ ...prev, password: event.target.value }))
-                  }
-                  minLength={6}
-                  required
-                />
+                <div className={styles.passwordControl}>
+                  <input
+                    id="login-password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    className={styles.passwordInput}
+                    value={loginForm.password}
+                    onChange={(event) =>
+                      setLoginForm((prev) => ({ ...prev, password: event.target.value }))
+                    }
+                    minLength={6}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className={styles.passwordToggle}
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                    title={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                  >
+                    {showPassword ? (
+                      <svg
+                        className={styles.passwordIcon}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M3 3L21 21"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                        />
+                        <path
+                          d="M9.86 5.13C10.55 5.04 11.26 5 12 5C16.48 5 20.27 7.94 21.54 12C21 13.72 20.06 15.24 18.84 16.45"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M6.24 6.24C4.58 7.54 3.29 9.55 2.46 12C3.73 16.06 7.52 19 12 19C13.64 19 15.18 18.6 16.54 17.9"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        className={styles.passwordIcon}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M2.46 12C3.73 7.94 7.52 5 12 5C16.48 5 20.27 7.94 21.54 12C20.27 16.06 16.48 19 12 19C7.52 19 3.73 16.06 2.46 12Z"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.8" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
               </div>
 
-              <button type="submit" className="btn btn-primary" disabled={busyAction === "login"}>
-                {busyAction === "login" ? "Ingresando..." : "Iniciar sesion"}
+              <p className={styles.loginMeta}>Solo personal autorizado puede acceder al panel.</p>
+
+              <button
+                type="submit"
+                className={`btn btn-primary ${styles.loginSubmit}`}
+                data-loading={busyAction === "login"}
+                disabled={busyAction === "login"}
+              >
+                {busyAction === "login" ? (
+                  <>
+                    <span className={styles.loginSpinner} aria-hidden="true" />
+                    Ingresando...
+                  </>
+                ) : (
+                  "Iniciar sesion"
+                )}
               </button>
             </form>
 
@@ -236,6 +319,16 @@ export default function AdminPage() {
           </article>
         ) : isForbidden ? (
           <article className={styles.panel}>
+            <div className={styles.panelActions}>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={handleLogout}
+                disabled={busyAction === "logout"}
+              >
+                {busyAction === "logout" ? "Cerrando..." : "Cerrar sesion"}
+              </button>
+            </div>
             <h2 className={styles.panelTitle}>Acceso restringido</h2>
             <p className={styles.panelHint}>
               El usuario autenticado no tiene permisos para este panel. Rol actual:{" "}
@@ -245,20 +338,30 @@ export default function AdminPage() {
         ) : (
           <div className={styles.dashboardGrid}>
             <div className={styles.tabsSection}>
-              <nav className={styles.tabsBar} aria-label="Secciones del panel de administracion">
-                {visibleTabs.map((tab) => (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    className={styles.tabButton}
-                    data-active={activeTab === tab.id}
-                    aria-current={activeTab === tab.id ? "page" : undefined}
-                    onClick={() => setActiveTab(tab.id)}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </nav>
+              <div className={styles.tabsHeaderRow}>
+                <nav className={styles.tabsBar} aria-label="Secciones del panel de administracion">
+                  {visibleTabs.map((tab) => (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      className={styles.tabButton}
+                      data-active={activeTab === tab.id}
+                      aria-current={activeTab === tab.id ? "page" : undefined}
+                      onClick={() => setActiveTab(tab.id)}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </nav>
+                <button
+                  type="button"
+                  className={`btn btn-outline ${styles.tabsLogoutButton}`}
+                  onClick={handleLogout}
+                  disabled={busyAction === "logout"}
+                >
+                  {busyAction === "logout" ? "Cerrando..." : "Cerrar sesion"}
+                </button>
+              </div>
             </div>
 
             {canAccessSummary && activeTab === "summary" ? (
@@ -333,6 +436,30 @@ export default function AdminPage() {
                 onCreateSupportPath={handleCreateSupportPath}
                 onUpdateSupportPath={handleUpdateSupportPath}
                 onDeleteSupportPath={handleDeleteSupportPath}
+              />
+            ) : null}
+
+            {canAccessAllies && activeTab === "allies" ? (
+              <AlliesTab
+                projectAllies={projectAllies}
+                activeAlliesCount={activeAlliesCount}
+                inactiveAlliesCount={inactiveAlliesCount}
+                createAllyForm={createAllyForm}
+                setCreateAllyForm={setCreateAllyForm}
+                createAllyFormErrors={createAllyFormErrors}
+                setCreateAllyFormErrors={setCreateAllyFormErrors}
+                isCreateAllyFormOpen={isCreateAllyFormOpen}
+                setIsCreateAllyFormOpen={setIsCreateAllyFormOpen}
+                projectAllyDrafts={projectAllyDrafts}
+                setProjectAllyDrafts={setProjectAllyDrafts}
+                openAllyEditorId={openAllyEditorId}
+                setOpenAllyEditorId={setOpenAllyEditorId}
+                busyAction={busyAction}
+                onToggleCreateAllyForm={handleToggleCreateAllyForm}
+                onToggleAllyEditor={handleToggleAllyEditor}
+                onCreateProjectAlly={handleCreateProjectAlly}
+                onUpdateProjectAlly={handleUpdateProjectAlly}
+                onDeleteProjectAlly={handleDeleteProjectAlly}
               />
             ) : null}
 

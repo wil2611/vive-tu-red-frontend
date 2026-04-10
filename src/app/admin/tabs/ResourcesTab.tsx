@@ -51,6 +51,10 @@ function tagsToArray(raw: string): string[] {
   return values;
 }
 
+function safeText(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
 export function ResourcesTab({
   resources,
   publishedResourcesCount,
@@ -298,6 +302,12 @@ export function ResourcesTab({
           <div className={styles.supportRegistryList}>
             {resources.map((resource) => {
               const draft = resourceDrafts[resource.id] ?? buildResourceDraft(resource);
+              const draftTitle = safeText(draft.title);
+              const draftType = safeText(draft.type);
+              const draftCategory = safeText(draft.category);
+              const draftTags = safeText(draft.tags);
+              const draftFileUrl = safeText(draft.fileUrl);
+              const draftDescription = safeText(draft.description);
               const isUpdating = busyAction === `update-resource-${resource.id}`;
               const isDeleting = busyAction === `delete-resource-${resource.id}`;
               const isEditorOpen = openResourceEditorId === resource.id;
@@ -308,10 +318,10 @@ export function ResourcesTab({
                     <div className={styles.supportListIdentity}>
                       <div className={styles.supportListNameRow}>
                         <h4 className={styles.supportListName}>
-                          {draft.title.trim() || "Recurso sin titulo"}
+                          {draftTitle.trim() || "Recurso sin titulo"}
                         </h4>
                         <span className={`${styles.supportMetaBadge} ${styles.userRoleBadge}`}>
-                          {draft.type.trim() || "Tipo"}
+                          {draftType.trim() || "Tipo"}
                         </span>
                         <span
                           className={styles.supportListStatus}
@@ -321,7 +331,7 @@ export function ResourcesTab({
                         </span>
                       </div>
                       <p className={styles.panelHint}>
-                        {draft.category.trim() || "Sin categoria"} - Aperturas:{" "}
+                        {draftCategory.trim() || "Sin categoria"} - Aperturas:{" "}
                         {resource.openCount}
                       </p>
                     </div>
@@ -351,7 +361,7 @@ export function ResourcesTab({
                         <div className={`${styles.supportField} ${styles.supportFieldWide}`}>
                           <label>Titulo</label>
                           <input
-                            value={draft.title}
+                            value={draftTitle}
                             maxLength={RESOURCE_TITLE_MAX_LENGTH}
                             onChange={(event) =>
                               setResourceDrafts((prev) => ({
@@ -368,7 +378,7 @@ export function ResourcesTab({
                         <div className={styles.supportField}>
                           <label>Tipo</label>
                           <input
-                            value={draft.type}
+                            value={draftType}
                             maxLength={RESOURCE_TYPE_MAX_LENGTH}
                             onChange={(event) =>
                               setResourceDrafts((prev) => ({
@@ -385,7 +395,7 @@ export function ResourcesTab({
                         <div className={styles.supportField}>
                           <label>Categoria</label>
                           <select
-                            value={draft.category}
+                            value={draftCategory || RESOURCE_CATEGORY_OPTIONS[0].id}
                             onChange={(event) =>
                               setResourceDrafts((prev) => ({
                                 ...prev,
@@ -407,7 +417,7 @@ export function ResourcesTab({
                         <div className={`${styles.supportField} ${styles.supportFieldWide}`}>
                           <label>Tags (separados por coma)</label>
                           <input
-                            value={draft.tags}
+                            value={draftTags}
                             maxLength={(RESOURCE_TAG_MAX_LENGTH + 2) * RESOURCE_TAGS_MAX_COUNT}
                             onChange={(event) =>
                               setResourceDrafts((prev) => ({
@@ -424,7 +434,7 @@ export function ResourcesTab({
                         <div className={styles.supportField}>
                           <label>Enlace del archivo</label>
                           <input
-                            value={draft.fileUrl}
+                            value={draftFileUrl}
                             maxLength={RESOURCE_FILE_URL_MAX_LENGTH}
                             onChange={(event) =>
                               setResourceDrafts((prev) => ({
@@ -460,7 +470,7 @@ export function ResourcesTab({
                         <div className={`${styles.supportField} ${styles.supportFieldWide}`}>
                           <label>Descripcion</label>
                           <textarea
-                            value={draft.description}
+                            value={draftDescription}
                             maxLength={RESOURCE_DESCRIPTION_MAX_LENGTH}
                             onChange={(event) =>
                               setResourceDrafts((prev) => ({

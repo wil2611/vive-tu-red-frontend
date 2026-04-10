@@ -9,8 +9,6 @@ import type { AuthSession, AuthUser, LoginPayload, LoginResponse } from "../type
 function toAuthSession(payload: LoginResponse): AuthSession {
   return {
     user: payload.user,
-    accessToken: payload.accessToken,
-    refreshToken: payload.refreshToken,
   };
 }
 

@@ -52,6 +52,13 @@ export {
   updateTeamMemberById,
 } from "./modules/team.api";
 export {
+  createProjectAlly,
+  deleteProjectAllyById,
+  listProjectAlliesAdmin,
+  listPublicProjectAllies,
+  updateProjectAllyById,
+} from "./modules/allies.api";
+export {
   getStatsDashboard,
   getStatsOverview,
   trackInteraction,
@@ -67,9 +74,12 @@ export type {
   ContactMessage,
   ContactMessagesPage,
   CreateResourcePayload,
+  CreateProjectAllyPayload,
   CreateSupportPathPayload,
   CreateTeamMemberPayload,
   CreateUserPayload,
+  ProjectAlly,
+  ProjectAllyType,
   KpiMetric,
   ResourceRecord,
   ListAdminContactMessagesQuery,
@@ -79,6 +89,7 @@ export type {
   StatsOverview,
   TeamMember,
   UpdateResourcePayload,
+  UpdateProjectAllyPayload,
   UpdateTeamMemberPayload,
   UpdateMyProfilePayload,
   UpdateContactMessageStatusPayload,

@@ -79,12 +79,8 @@ async function sendRequest(
   baseUrl: string,
   path: string,
   options: ApiRequestOptions,
-  accessToken?: string,
 ): Promise<Response> {
   const headers = new Headers(options.headers);
-  if (accessToken) {
-    headers.set("Authorization", `Bearer ${accessToken}`);
-  }
 
   const body = toBodyInit(options.body, headers);
 
@@ -92,6 +88,7 @@ async function sendRequest(
     method: options.method ?? "GET",
     headers,
     body,
+    credentials: "include",
   });
 }
 
@@ -111,11 +108,9 @@ class ApiClient {
       "/auth/refresh",
       {
         method: "POST",
-        body: { refreshToken: current.refreshToken },
         auth: false,
         retryOnUnauthorized: false,
       },
-      undefined,
     );
 
     if (!response.ok) {
@@ -123,14 +118,8 @@ class ApiClient {
     }
 
     const payload = await parseJson<RefreshTokenResponse>(response);
-    if (!payload?.accessToken || !payload?.refreshToken) {
-      throw new ApiClientError("Respuesta invalida al refrescar la sesion", 500);
-    }
-
     const nextSession: AuthSession = {
-      ...current,
-      accessToken: payload.accessToken,
-      refreshToken: payload.refreshToken,
+      user: payload?.user ?? current.user,
     };
     setStoredAuthSession(nextSession);
     return nextSession;
@@ -142,9 +131,9 @@ class ApiClient {
     let activeBaseUrl = getApiBaseUrl();
     let retriedWithDefaultBase = false;
 
-    const requestWithFallback = async (accessToken?: string): Promise<Response> => {
+    const requestWithFallback = async (): Promise<Response> => {
       try {
-        return await sendRequest(activeBaseUrl, path, options, accessToken);
+        return await sendRequest(activeBaseUrl, path, options);
       } catch (error) {
         const shouldRetryWithDefault =
           !retriedWithDefaultBase && activeBaseUrl !== DEFAULT_API_BASE_URL;
@@ -156,7 +145,7 @@ class ApiClient {
         retriedWithDefaultBase = true;
         activeBaseUrl = DEFAULT_API_BASE_URL;
         resetApiBaseUrl();
-        return sendRequest(activeBaseUrl, path, options, accessToken);
+        return sendRequest(activeBaseUrl, path, options);
       }
     };
 
@@ -165,7 +154,7 @@ class ApiClient {
       throw new ApiClientError("No hay una sesion activa", 401);
     }
 
-    let response = await requestWithFallback(currentSession?.accessToken);
+    let response = await requestWithFallback();
 
     if (auth && response.status === 401 && retryOnUnauthorized && currentSession) {
       try {
@@ -175,7 +164,7 @@ class ApiClient {
         throw error;
       }
 
-      response = await requestWithFallback(currentSession.accessToken);
+      response = await requestWithFallback();
     }
 
     if (!response.ok) {

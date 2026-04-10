@@ -12,8 +12,6 @@ export type AuthUser = {
 
 export type AuthSession = {
   user: AuthUser;
-  accessToken: string;
-  refreshToken: string;
 };
 
 export type LoginPayload = {
@@ -23,13 +21,10 @@ export type LoginPayload = {
 
 export type LoginResponse = {
   user: AuthUser;
-  accessToken: string;
-  refreshToken: string;
 };
 
 export type RefreshTokenResponse = {
-  accessToken: string;
-  refreshToken: string;
+  user: AuthUser;
 };
 
 export type UserRecord = AuthUser & {
@@ -181,6 +176,31 @@ export type CreateTeamMemberPayload = {
 };
 
 export type UpdateTeamMemberPayload = Partial<CreateTeamMemberPayload>;
+
+export type ProjectAllyType = "ally" | "participant";
+
+export type ProjectAlly = {
+  id: string;
+  institutionName: string;
+  roleLabel: string;
+  type: ProjectAllyType;
+  summary: string;
+  participationScope: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateProjectAllyPayload = {
+  institutionName: string;
+  roleLabel: string;
+  type: ProjectAllyType;
+  summary: string;
+  participationScope: string;
+  isActive?: boolean;
+};
+
+export type UpdateProjectAllyPayload = Partial<CreateProjectAllyPayload>;
 
 export type StatsRow = {
   path?: string;

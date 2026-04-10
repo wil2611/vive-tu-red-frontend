@@ -1,7 +1,10 @@
 import type {
+  CreateProjectAllyPayload,
   CreateResourcePayload,
   CreateSupportPathPayload,
   CreateTeamMemberPayload,
+  ProjectAlly,
+  ProjectAllyType,
   ResourceRecord,
   SupportPath,
   TeamMember,
@@ -47,6 +50,15 @@ export type TeamMemberDraft = {
   isActive: boolean;
 };
 
+export type ProjectAllyDraft = {
+  institutionName: string;
+  roleLabel: string;
+  type: ProjectAllyType;
+  summary: string;
+  participationScope: string;
+  isActive: boolean;
+};
+
 export type SupportCreateFormErrors = {
   institutionName?: string;
   ubicacion?: string;
@@ -69,6 +81,13 @@ export type TeamCreateFormErrors = {
   photo?: string;
 };
 
+export type AllyCreateFormErrors = {
+  institutionName?: string;
+  roleLabel?: string;
+  summary?: string;
+  participationScope?: string;
+};
+
 export type StatsRangePreset = "7d" | "30d" | "90d" | "custom";
 
 export type AdminSectionTab =
@@ -76,6 +95,7 @@ export type AdminSectionTab =
   | "profile"
   | "users"
   | "support-paths"
+  | "allies"
   | "team"
   | "resources"
   | "messages";
@@ -87,6 +107,7 @@ export const ADMIN_SECTION_TABS: Array<{ id: AdminSectionTab; label: string }> =
   { id: "profile", label: "Mi perfil" },
   { id: "users", label: "Usuarios" },
   { id: "support-paths", label: "Instituciones" },
+  { id: "allies", label: "Aliados" },
   { id: "team", label: "Equipo" },
   { id: "resources", label: "Recursos" },
   { id: "messages", label: "Mensajes" },
@@ -121,6 +142,15 @@ export const INITIAL_TEAM_FORM: CreateTeamMemberPayload = {
   isActive: true,
 };
 
+export const INITIAL_ALLY_FORM: CreateProjectAllyPayload = {
+  institutionName: "",
+  roleLabel: "Aliado clave",
+  type: "ally",
+  summary: "",
+  participationScope: "",
+  isActive: true,
+};
+
 export const RESOURCE_CATEGORY_OPTIONS = RESOURCE_CATEGORIES;
 export const RESOURCE_TITLE_MAX_LENGTH = 255;
 export const RESOURCE_TYPE_MAX_LENGTH = 120;
@@ -133,6 +163,10 @@ export const TEAM_PROFILE_MAX_LENGTH = 5000;
 export const TEAM_DEPARTMENT_MAX_LENGTH = 255;
 export const TEAM_DIVISION_MAX_LENGTH = 255;
 export const TEAM_PHOTO_MAX_LENGTH = 2048;
+export const ALLY_INSTITUTION_NAME_MAX_LENGTH = 255;
+export const ALLY_ROLE_LABEL_MAX_LENGTH = 120;
+export const ALLY_SUMMARY_MAX_LENGTH = 5000;
+export const ALLY_PARTICIPATION_SCOPE_MAX_LENGTH = 5000;
 const TEAM_IMAGE_ALLOWED_HOSTS = new Set([
   "plus.unsplash.com",
   "images.unsplash.com",
@@ -142,11 +176,11 @@ const TEAM_IMAGE_ALLOWED_HOSTS = new Set([
 
 export function getAllowedTabsByRole(role: UserRole | null): AdminSectionTab[] {
   if (role === "admin") {
-    return ["summary", "profile", "users", "support-paths", "team", "resources", "messages"];
+    return ["summary", "profile", "users", "support-paths", "allies", "team", "resources", "messages"];
   }
 
   if (role === "editor") {
-    return ["summary", "profile", "support-paths", "team", "resources", "messages"];
+    return ["summary", "profile", "support-paths", "allies", "team", "resources", "messages"];
   }
 
   if (role === "investigador") {
@@ -209,9 +243,9 @@ export function buildSupportDraft(path: SupportPath): SupportPathDraft {
 export function buildResourceDraft(resource: ResourceRecord): ResourceDraft {
   const normalizedCategory = normalizeResourceCategory(resource.category) ?? "prevencion";
   return {
-    title: resource.title,
+    title: textOrEmpty(resource.title),
     description: textOrEmpty(resource.description),
-    type: resource.type,
+    type: textOrEmpty(resource.type),
     fileUrl: textOrEmpty(resource.fileUrl),
     category: normalizedCategory,
     tags: (resource.tags ?? []).join(", "),
@@ -227,6 +261,17 @@ export function buildTeamMemberDraft(teamMember: TeamMember): TeamMemberDraft {
     division: textOrEmpty(teamMember.division),
     photo: textOrEmpty(teamMember.photo),
     isActive: teamMember.isActive,
+  };
+}
+
+export function buildProjectAllyDraft(projectAlly: ProjectAlly): ProjectAllyDraft {
+  return {
+    institutionName: projectAlly.institutionName,
+    roleLabel: projectAlly.roleLabel,
+    type: projectAlly.type,
+    summary: projectAlly.summary,
+    participationScope: projectAlly.participationScope,
+    isActive: projectAlly.isActive,
   };
 }
 
@@ -283,6 +328,19 @@ export function normalizeTeamCreateForm(
     department: (form.department ?? "").trim(),
     division: (form.division ?? "").trim(),
     photo: (form.photo ?? "").trim(),
+    isActive: form.isActive !== false,
+  };
+}
+
+export function normalizeProjectAllyCreateForm(
+  form: CreateProjectAllyPayload,
+): CreateProjectAllyPayload {
+  return {
+    ...form,
+    institutionName: (form.institutionName ?? "").trim(),
+    roleLabel: (form.roleLabel ?? "").trim(),
+    summary: (form.summary ?? "").trim(),
+    participationScope: (form.participationScope ?? "").trim(),
     isActive: form.isActive !== false,
   };
 }
@@ -362,6 +420,44 @@ export function validateResourceCreateForm(
     errors.tags = `No puedes usar mas de ${RESOURCE_TAGS_MAX_COUNT} tags en un recurso.`;
   } else if (normalizedTags.some((tag) => tag.length > RESOURCE_TAG_MAX_LENGTH)) {
     errors.tags = `Cada tag debe tener maximo ${RESOURCE_TAG_MAX_LENGTH} caracteres.`;
+  }
+
+  return errors;
+}
+
+export function validateProjectAllyCreateForm(
+  form: CreateProjectAllyPayload,
+): AllyCreateFormErrors {
+  const errors: AllyCreateFormErrors = {};
+  const institutionName = (form.institutionName ?? "").trim();
+  const roleLabel = (form.roleLabel ?? "").trim();
+  const summary = (form.summary ?? "").trim();
+  const participationScope = (form.participationScope ?? "").trim();
+
+  if (institutionName.length < 3) {
+    errors.institutionName = "La institucion debe tener al menos 3 caracteres.";
+  } else if (institutionName.length > ALLY_INSTITUTION_NAME_MAX_LENGTH) {
+    errors.institutionName =
+      `La institucion no puede superar ${ALLY_INSTITUTION_NAME_MAX_LENGTH} caracteres.`;
+  }
+
+  if (roleLabel.length < 3) {
+    errors.roleLabel = "El rol visible debe tener al menos 3 caracteres.";
+  } else if (roleLabel.length > ALLY_ROLE_LABEL_MAX_LENGTH) {
+    errors.roleLabel = `El rol visible no puede superar ${ALLY_ROLE_LABEL_MAX_LENGTH} caracteres.`;
+  }
+
+  if (summary.length < 10) {
+    errors.summary = "El resumen debe tener al menos 10 caracteres.";
+  } else if (summary.length > ALLY_SUMMARY_MAX_LENGTH) {
+    errors.summary = `El resumen no puede superar ${ALLY_SUMMARY_MAX_LENGTH} caracteres.`;
+  }
+
+  if (participationScope.length < 10) {
+    errors.participationScope = "El alcance de participacion debe tener al menos 10 caracteres.";
+  } else if (participationScope.length > ALLY_PARTICIPATION_SCOPE_MAX_LENGTH) {
+    errors.participationScope =
+      `El alcance no puede superar ${ALLY_PARTICIPATION_SCOPE_MAX_LENGTH} caracteres.`;
   }
 
   return errors;

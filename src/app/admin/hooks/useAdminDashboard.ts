@@ -4,12 +4,15 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ApiClientError,
   clearAuthSession,
+  type CreateProjectAllyPayload,
   type CreateTeamMemberPayload,
   type CreateResourcePayload,
+  type ProjectAlly,
   type ResourceRecord,
   getCurrentAuthSession,
   getCurrentUser,
   getStatsDashboard,
+  listProjectAlliesAdmin,
   listTeamMembersAdmin,
   listAdminContactMessages,
   listResourcesAdmin,
@@ -27,15 +30,19 @@ import {
 } from "@/lib/api";
 import {
   ADMIN_SECTION_TABS,
+  INITIAL_ALLY_FORM,
   INITIAL_RESOURCE_FORM,
   INITIAL_SUPPORT_FORM,
   INITIAL_TEAM_FORM,
+  buildProjectAllyDraft,
   buildResourceDraft,
   buildSupportDraft,
   buildTeamMemberDraft,
   getAllowedTabsByRole,
+  type AllyCreateFormErrors,
   type AdminSectionTab,
   type MessageFilter,
+  type ProjectAllyDraft,
   type ResourceCreateFormErrors,
   type ResourceDraft,
   type StatsRangePreset,
@@ -52,6 +59,7 @@ import { getErrorText } from "./handlers/shared";
 import { useAdminResourceHandlers } from "./handlers/useAdminResourceHandlers";
 import { useAdminStatsHandlers } from "./handlers/useAdminStatsHandlers";
 import { useAdminSupportPathHandlers } from "./handlers/useAdminSupportPathHandlers";
+import { useAdminAlliesHandlers } from "./handlers/useAdminAlliesHandlers";
 import { useAdminTeamHandlers } from "./handlers/useAdminTeamHandlers";
 import { useAdminUserHandlers } from "./handlers/useAdminUserHandlers";
 
@@ -86,6 +94,10 @@ export function useAdminDashboard() {
   const [userDrafts, setUserDrafts] = useState<Record<string, UserDraft>>({});
   const [supportPaths, setSupportPaths] = useState<SupportPath[]>([]);
   const [supportPathDrafts, setSupportPathDrafts] = useState<Record<string, SupportPathDraft>>(
+    {},
+  );
+  const [projectAllies, setProjectAllies] = useState<ProjectAlly[]>([]);
+  const [projectAllyDrafts, setProjectAllyDrafts] = useState<Record<string, ProjectAllyDraft>>(
     {},
   );
   const [resources, setResources] = useState<ResourceRecord[]>([]);
@@ -147,6 +159,12 @@ export function useAdminDashboard() {
   const [createSupportFormErrors, setCreateSupportFormErrors] =
     useState<SupportCreateFormErrors>({});
   const [openSupportEditorId, setOpenSupportEditorId] = useState<string | null>(null);
+  const [createAllyForm, setCreateAllyForm] = useState<CreateProjectAllyPayload>(
+    INITIAL_ALLY_FORM,
+  );
+  const [isCreateAllyFormOpen, setIsCreateAllyFormOpen] = useState(false);
+  const [createAllyFormErrors, setCreateAllyFormErrors] = useState<AllyCreateFormErrors>({});
+  const [openAllyEditorId, setOpenAllyEditorId] = useState<string | null>(null);
   const [createTeamForm, setCreateTeamForm] = useState<CreateTeamMemberPayload>(
     INITIAL_TEAM_FORM,
   );
@@ -168,6 +186,8 @@ export function useAdminDashboard() {
     setUserDrafts({});
     setSupportPaths([]);
     setSupportPathDrafts({});
+    setProjectAllies([]);
+    setProjectAllyDrafts({});
     setResources([]);
     setResourceDrafts({});
     setTeamMembers([]);
@@ -201,6 +221,14 @@ export function useAdminDashboard() {
       drafts[supportPath.id] = buildSupportDraft(supportPath);
     }
     setSupportPathDrafts(drafts);
+  }, []);
+
+  const syncProjectAllyDrafts = useCallback((nextProjectAllies: ProjectAlly[]) => {
+    const drafts: Record<string, ProjectAllyDraft> = {};
+    for (const projectAlly of nextProjectAllies) {
+      drafts[projectAlly.id] = buildProjectAllyDraft(projectAlly);
+    }
+    setProjectAllyDrafts(drafts);
   }, []);
 
   const syncResourceDrafts = useCallback((nextResources: ResourceRecord[]) => {
@@ -303,6 +331,7 @@ export function useAdminDashboard() {
         const canReadMessages = allowedTabs.includes("messages");
         const canManageUsers = allowedTabs.includes("users");
         const canManageSupportPaths = allowedTabs.includes("support-paths");
+        const canManageAllies = allowedTabs.includes("allies");
         const canManageTeam = allowedTabs.includes("team");
         const canManageResources = allowedTabs.includes("resources");
         const statsQuery = buildStatsQuery();
@@ -313,6 +342,8 @@ export function useAdminDashboard() {
           setUserDrafts({});
           setSupportPaths([]);
           setSupportPathDrafts({});
+          setProjectAllies([]);
+          setProjectAllyDrafts({});
           setTeamMembers([]);
           setTeamMemberDrafts({});
           setResources([]);
@@ -332,6 +363,9 @@ export function useAdminDashboard() {
         const supportPathsPromise: Promise<SupportPath[] | null> = canManageSupportPaths
           ? listSupportPathsAdmin()
           : Promise.resolve(null);
+        const projectAlliesPromise: Promise<ProjectAlly[] | null> = canManageAllies
+          ? listProjectAlliesAdmin()
+          : Promise.resolve(null);
         const teamMembersPromise: Promise<TeamMember[] | null> = canManageTeam
           ? listTeamMembersAdmin()
           : Promise.resolve(null);
@@ -342,15 +376,57 @@ export function useAdminDashboard() {
           ? getStatsDashboard(statsQuery)
           : Promise.resolve(null);
 
-        const [usersData, allMessagesPage, supportPathsData, teamMembersData, resourcesData, statsData] =
-          await Promise.all([
-            usersPromise,
-            allMessagesPromise,
-            supportPathsPromise,
-            teamMembersPromise,
-            resourcesPromise,
-            statsPromise,
-          ]);
+        const settledResults = (await Promise.allSettled([
+          usersPromise,
+          allMessagesPromise,
+          supportPathsPromise,
+          projectAlliesPromise,
+          teamMembersPromise,
+          resourcesPromise,
+          statsPromise,
+        ])) as [
+          PromiseSettledResult<UserRecord[] | null>,
+          PromiseSettledResult<ContactMessagesPage | null>,
+          PromiseSettledResult<SupportPath[] | null>,
+          PromiseSettledResult<ProjectAlly[] | null>,
+          PromiseSettledResult<TeamMember[] | null>,
+          PromiseSettledResult<ResourceRecord[] | null>,
+          PromiseSettledResult<StatsDashboard | null>,
+        ];
+
+        const hasUnauthorizedModuleError = settledResults.some(
+          (result) =>
+            result.status === "rejected" &&
+            result.reason instanceof ApiClientError &&
+            result.reason.status === 401,
+        );
+
+        if (hasUnauthorizedModuleError) {
+          clearSessionState();
+          return false;
+        }
+
+        const failedModulesCount = settledResults.filter(
+          (result) => result.status === "rejected",
+        ).length;
+        if (failedModulesCount > 0 && !options?.suppressGlobalError) {
+          setError(
+            "Algunos modulos del panel no se pudieron cargar. Puedes seguir trabajando mientras recargas.",
+          );
+        }
+
+        const usersData = settledResults[0].status === "fulfilled" ? settledResults[0].value : null;
+        const allMessagesPage =
+          settledResults[1].status === "fulfilled" ? settledResults[1].value : null;
+        const supportPathsData =
+          settledResults[2].status === "fulfilled" ? settledResults[2].value : null;
+        const projectAlliesData =
+          settledResults[3].status === "fulfilled" ? settledResults[3].value : null;
+        const teamMembersData =
+          settledResults[4].status === "fulfilled" ? settledResults[4].value : null;
+        const resourcesData =
+          settledResults[5].status === "fulfilled" ? settledResults[5].value : null;
+        const statsData = settledResults[6].status === "fulfilled" ? settledResults[6].value : null;
 
         if (usersData) {
           setUsers(usersData);
@@ -366,6 +442,14 @@ export function useAdminDashboard() {
         } else {
           setSupportPaths([]);
           setSupportPathDrafts({});
+        }
+
+        if (projectAlliesData) {
+          setProjectAllies(projectAlliesData);
+          syncProjectAllyDrafts(projectAlliesData);
+        } else {
+          setProjectAllies([]);
+          setProjectAllyDrafts({});
         }
 
         if (teamMembersData) {
@@ -396,7 +480,9 @@ export function useAdminDashboard() {
           setMessagesSummary(EMPTY_MESSAGE_SUMMARY);
         }
         setStats(statsData);
-        setAppliedStatsQueryKey(serializeStatsQuery(statsQuery));
+        if (settledResults[6].status === "fulfilled") {
+          setAppliedStatsQueryKey(serializeStatsQuery(statsQuery));
+        }
         return true;
       } catch (errorValue) {
         if (!options?.suppressGlobalError) {
@@ -417,6 +503,7 @@ export function useAdminDashboard() {
       clearSessionState,
       serializeStatsQuery,
       syncResourceDrafts,
+      syncProjectAllyDrafts,
       syncSupportPathDrafts,
       syncTeamMemberDrafts,
       syncUserDrafts,
@@ -544,6 +631,26 @@ export function useAdminDashboard() {
   });
 
   const {
+    handleToggleCreateAllyForm,
+    handleToggleAllyEditor,
+    handleCreateProjectAlly,
+    handleUpdateProjectAlly,
+    handleDeleteProjectAlly,
+  } = useAdminAlliesHandlers({
+    createAllyForm,
+    projectAllyDrafts,
+    openAllyEditorId,
+    setCreateAllyForm,
+    setCreateAllyFormErrors,
+    setIsCreateAllyFormOpen,
+    setOpenAllyEditorId,
+    setBusyAction,
+    setError,
+    setSuccess,
+    loadDashboardData,
+  });
+
+  const {
     handleToggleCreateResourceForm,
     handleToggleResourceEditor,
     handleCreateResource,
@@ -608,6 +715,7 @@ export function useAdminDashboard() {
   const canAccessProfile = allowedTabs.includes("profile");
   const canAccessUsers = allowedTabs.includes("users");
   const canAccessSupportPaths = allowedTabs.includes("support-paths");
+  const canAccessAllies = allowedTabs.includes("allies");
   const canAccessTeam = allowedTabs.includes("team");
   const canAccessResources = allowedTabs.includes("resources");
   const canAccessMessages = allowedTabs.includes("messages");
@@ -619,6 +727,8 @@ export function useAdminDashboard() {
   const draftResourcesCount = resources.length - publishedResourcesCount;
   const activeTeamCount = teamMembers.filter((item) => item.isActive).length;
   const inactiveTeamCount = teamMembers.length - activeTeamCount;
+  const activeAlliesCount = projectAllies.filter((item) => item.isActive).length;
+  const inactiveAlliesCount = projectAllies.length - activeAlliesCount;
   const allMessagesCount = messagesSummary.totalAll;
   const unreadMessagesCount = messagesSummary.statusTotals.new;
   const readMessagesCount = messagesSummary.statusTotals.read;
@@ -656,6 +766,13 @@ export function useAdminDashboard() {
   }, [activeTab]);
 
   useEffect(() => {
+    if (activeTab === "allies") return;
+    setIsCreateAllyFormOpen(false);
+    setCreateAllyFormErrors({});
+    setOpenAllyEditorId(null);
+  }, [activeTab]);
+
+  useEffect(() => {
     if (activeTab === "team") return;
     setIsCreateTeamFormOpen(false);
     setCreateTeamFormErrors({});
@@ -682,6 +799,9 @@ export function useAdminDashboard() {
     supportPaths,
     supportPathDrafts,
     setSupportPathDrafts,
+    projectAllies,
+    projectAllyDrafts,
+    setProjectAllyDrafts,
     resources,
     resourceDrafts,
     setResourceDrafts,
@@ -731,6 +851,14 @@ export function useAdminDashboard() {
     setCreateSupportFormErrors,
     openSupportEditorId,
     setOpenSupportEditorId,
+    createAllyForm,
+    setCreateAllyForm,
+    isCreateAllyFormOpen,
+    setIsCreateAllyFormOpen,
+    createAllyFormErrors,
+    setCreateAllyFormErrors,
+    openAllyEditorId,
+    setOpenAllyEditorId,
     createTeamForm,
     setCreateTeamForm,
     isCreateTeamFormOpen,
@@ -753,6 +881,7 @@ export function useAdminDashboard() {
     canAccessProfile,
     canAccessUsers,
     canAccessSupportPaths,
+    canAccessAllies,
     canAccessTeam,
     canAccessResources,
     canAccessMessages,
@@ -764,6 +893,8 @@ export function useAdminDashboard() {
     draftResourcesCount,
     activeTeamCount,
     inactiveTeamCount,
+    activeAlliesCount,
+    inactiveAlliesCount,
     unreadMessagesCount,
     readMessagesCount,
     inProgressMessagesCount,
@@ -785,6 +916,11 @@ export function useAdminDashboard() {
     handleCreateSupportPath,
     handleUpdateSupportPath,
     handleDeleteSupportPath,
+    handleToggleCreateAllyForm,
+    handleToggleAllyEditor,
+    handleCreateProjectAlly,
+    handleUpdateProjectAlly,
+    handleDeleteProjectAlly,
     handleToggleCreateTeamForm,
     handleToggleTeamEditor,
     handleCreateTeamMember,

@@ -1,15 +1,23 @@
 .page {
   background:
-    radial-gradient(circle at 90% -10%, rgba(0, 85, 90, 0.08), transparent 35%),
     radial-gradient(circle at 0% 10%, rgba(201, 106, 74, 0.08), transparent 28%),
     linear-gradient(180deg, #faf9f5 0%, #f3efdf 100%);
   min-height: calc(100vh - 160px);
   padding: 28px 0 40px;
 }
 
+.pageLoggedOut {
+  padding-top: clamp(34px, 7vh, 78px);
+}
+
 .shell {
   display: grid;
   gap: 16px;
+}
+
+.shellLoggedOut {
+  min-height: calc(100vh - 260px);
+  align-content: center;
 }
 
 .topBar {
@@ -56,7 +64,11 @@
 }
 
 .loginCard {
-  max-width: 560px;
+  max-width: 530px;
+  margin-inline: auto;
+  background: linear-gradient(180deg, #fff 0%, #f9f6ea 100%);
+  border-color: #d7cfb0;
+  padding: 24px;
 }
 
 .panelHeader {
@@ -70,9 +82,30 @@
 }
 
 .panelHint {
-  margin: 6px 0 0;
-  color: #5a7d66;
+  margin: 4px 0 0;
+  color: #4f6d5c;
   line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.loginCard .panelTitle {
+  font-size: 1.95rem;
+  letter-spacing: -0.01em;
+}
+
+.loginBrand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  margin-bottom: 2px;
+}
+
+.loginLogo {
+  width: auto;
+  height: 64px;
+  flex-shrink: 0;
 }
 
 .rangeSummary {
@@ -158,6 +191,86 @@
 .loginGrid {
   display: grid;
   gap: 12px;
+  grid-template-columns: 1fr;
+  align-items: end;
+  margin-top: 8px;
+}
+
+.loginField {
+  display: grid;
+  gap: 6px;
+}
+
+.passwordControl {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordInput {
+  padding-right: 52px;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 8px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid transparent;
+  background: #fff;
+  color: #1d3e2a;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.passwordToggle:hover,
+.passwordToggle:focus-visible {
+  background: #f4f2e8;
+  border-color: rgba(29, 62, 42, 0.2);
+  outline: none;
+}
+
+.passwordIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.loginMeta {
+  margin: 0;
+  color: #6b8072;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.loginSubmit {
+  width: min(280px, 100%);
+  min-width: 0;
+  justify-self: center;
+  justify-content: center;
+}
+
+.loginSubmit[data-loading="true"] {
+  transform: none;
+  box-shadow: none;
+}
+
+.loginSpinner {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #fff;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .dashboardGrid {
@@ -168,6 +281,26 @@
 .tabsSection {
   display: grid;
   gap: 8px;
+}
+
+.tabsHeaderRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tabsLogoutButton {
+  min-width: 170px;
+  justify-content: center;
+  text-align: center;
+}
+
+.panelActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
 }
 
 .tabsCaption {
@@ -1546,6 +1679,14 @@
 }
 
 @media (max-width: 900px) {
+  .tabsHeaderRow {
+    align-items: stretch;
+  }
+
+  .tabsLogoutButton {
+    min-width: 0;
+  }
+
   .profileInfoGrid {
     grid-template-columns: 1fr;
   }
@@ -1634,6 +1775,31 @@
 }
 
 @media (max-width: 620px) {
+  .tabsHeaderRow {
+    width: 100%;
+  }
+
+  .tabsLogoutButton {
+    width: 100%;
+  }
+
+  .shellLoggedOut {
+    min-height: auto;
+    align-content: start;
+  }
+
+  .loginGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .loginLogo {
+    height: 54px;
+  }
+
+  .loginSubmit {
+    width: 100%;
+  }
+
   .tabsSection {
     gap: 6px;
   }

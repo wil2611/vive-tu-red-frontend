@@ -2,14 +2,28 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { listPublicTeamMembers, type TeamMember } from "@/lib/api";
+import {
+  listPublicProjectAllies,
+  listPublicTeamMembers,
+  type ProjectAlly,
+  type TeamMember,
+} from "@/lib/api";
 import styles from "./page.module.css";
-import { allies, specificObjectives } from "./sobre.data";
+import { specificObjectives } from "./sobre.data";
 
 type TeamRole = {
   name: string;
   role: string;
   initials: string;
+};
+
+type AllyCardViewModel = {
+  id: string;
+  institutionName: string;
+  roleLabel: string;
+  roleClass: "badge-teal" | "badge-gold";
+  summary: string;
+  participationScope: string;
 };
 
 function getInitials(name: string): string {
@@ -26,7 +40,7 @@ function getInitials(name: string): string {
 function toTeamRole(member: TeamMember): TeamRole {
   const role = [member.department, member.division]
     .filter((value): value is string => Boolean(value && value.trim()))
-    .join(" · ");
+    .join(" - ");
 
   return {
     name: member.name,
@@ -35,10 +49,24 @@ function toTeamRole(member: TeamMember): TeamRole {
   };
 }
 
+function toAllyCard(ally: ProjectAlly): AllyCardViewModel {
+  return {
+    id: ally.id,
+    institutionName: ally.institutionName,
+    roleLabel: ally.roleLabel,
+    roleClass: ally.type === "participant" ? "badge-gold" : "badge-teal",
+    summary: ally.summary,
+    participationScope: ally.participationScope,
+  };
+}
+
 export default function SobrePage() {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [projectAllies, setProjectAllies] = useState<ProjectAlly[]>([]);
   const [isTeamLoading, setIsTeamLoading] = useState(true);
+  const [isAlliesLoading, setIsAlliesLoading] = useState(true);
   const [teamLoadError, setTeamLoadError] = useState<string | null>(null);
+  const [alliesLoadError, setAlliesLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -71,64 +99,92 @@ export default function SobrePage() {
     };
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadAllies() {
+      setIsAlliesLoading(true);
+      setAlliesLoadError(null);
+
+      try {
+        const response = await listPublicProjectAllies();
+        if (!cancelled) {
+          setProjectAllies(response);
+        }
+      } catch {
+        if (!cancelled) {
+          setProjectAllies([]);
+          setAlliesLoadError("No se pudieron cargar los aliados en este momento.");
+        }
+      } finally {
+        if (!cancelled) {
+          setIsAlliesLoading(false);
+        }
+      }
+    }
+
+    void loadAllies();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const teamRoles = useMemo(() => teamMembers.map(toTeamRole), [teamMembers]);
+  const alliesCards = useMemo(() => projectAllies.map(toAllyCard), [projectAllies]);
 
   return (
     <div>
-      {/* Hero */}
       <section className={styles.heroSection}>
         <div className="container">
           <div className={styles.heroShell}>
             <h1 className={styles.heroTitle}>Conoce el proyecto</h1>
             <p className={styles.heroDesc}>
-              #ViveTuRed es una propuesta de investigación-creación que busca fortalecer redes de apoyo
-              y prevenir la Violencia Basada en Género (VBG) en la Educación Superior en Barranquilla,
-              mediante una serie narrativa multimedia y herramientas de apropiación social del conocimiento.
+              #ViveTuRed es una propuesta de investigacion-creacion que busca fortalecer redes de
+              apoyo y prevenir la Violencia Basada en Genero (VBG) en la Educacion Superior en
+              Barranquilla, mediante una serie narrativa multimedia y herramientas de apropiacion
+              social del conocimiento.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Naturaleza y objetivo general */}
       <section className={styles.sectionWarm}>
         <div className={`container ${styles.sectionContainer}`}>
           <div className="accent-bar" />
-          <h2 className={styles.sectionTitlePrimary}>
-            Naturaleza del proyecto
-          </h2>
+          <h2 className={styles.sectionTitlePrimary}>Naturaleza del proyecto</h2>
           <div className={styles.projectText}>
             <p>
-              El proyecto articula investigación formativa, narrativa y diseño de herramientas
-              pedagógicas para comprender las experiencias de VBG y activar rutas de cuidado en
+              El proyecto articula investigacion formativa, narrativa y diseno de herramientas
+              pedagogicas para comprender las experiencias de VBG y activar rutas de cuidado en
               contextos universitarios.
             </p>
             <p>
-              Su enfoque combina producción de contenidos, espacios de socialización y
-              trabajo colaborativo con instituciones aliadas para fortalecer capacidades
-              de prevención, orientación y protección.
+              Su enfoque combina produccion de contenidos, espacios de socializacion y trabajo
+              colaborativo con instituciones aliadas para fortalecer capacidades de prevencion,
+              orientacion y proteccion.
             </p>
           </div>
 
           <div className={`notice notice-info ${styles.objectiveNotice}`}>
-            <span className={styles.objectiveIcon}>🎯</span>
+            <span className={styles.objectiveIcon}>Objetivo</span>
             <div>
               <strong className={styles.objectiveStrong}>Objetivo general</strong>
               <p className={styles.objectiveNoticeText}>
-                Desarrollar una serie narrativa multimedia para fomentar las redes de apoyo
-                y la prevención de la Violencia Basada en Género (VBG) en la Educación
-                Superior en Barranquilla.
+                Desarrollar una serie narrativa multimedia para fomentar las redes de apoyo y la
+                prevencion de la Violencia Basada en Genero (VBG) en la Educacion Superior en
+                Barranquilla.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Objetivos específicos */}
       <section className={styles.sectionNeutral}>
         <div className={`container ${styles.sectionContainer}`}>
           <div className="accent-bar" />
           <h2 className={`${styles.sectionTitle} ${styles.sectionTitleObjectives}`}>
-            Objetivos específicos
+            Objetivos especificos
           </h2>
 
           <div className={styles.objectiveGrid}>
@@ -140,60 +196,57 @@ export default function SobrePage() {
                 <h3 className={styles.objectiveTitle} style={{ color: obj.color }}>
                   {obj.title}
                 </h3>
-                <p className={styles.objectiveDesc}>
-                  {obj.desc}
-                </p>
+                <p className={styles.objectiveDesc}>{obj.desc}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Aliados y participantes */}
       <section className={styles.sectionWarm}>
         <div className={`container ${styles.sectionContainer}`}>
           <div className="accent-bar" />
-          <h2 className={styles.sectionTitle}>
-            Aliados y participantes
-          </h2>
+          <h2 className={styles.sectionTitle}>Aliados y participantes</h2>
           <p className={styles.alliesLead}>
-            La propuesta se desarrolla con aliados estratégicos que fortalecen la
-            coordinación, la difusión y la reflexión colectiva alrededor de la prevención
-            de la VBG en Educación Superior.
+            La propuesta se desarrolla con aliados estrategicos que fortalecen la coordinacion, la
+            difusion y la reflexion colectiva alrededor de la prevencion de la VBG en Educacion
+            Superior.
           </p>
+          {isAlliesLoading ? <p className={styles.alliesLead}>Cargando aliados...</p> : null}
+          {alliesLoadError ? <p className={styles.alliesLead}>{alliesLoadError}</p> : null}
 
           <div className={styles.alliesGrid}>
-            {allies.map((ally) => (
-              <article key={ally.institution} className={styles.allyCard}>
+            {alliesCards.map((ally) => (
+              <article key={ally.id} className={styles.allyCard}>
                 <header className={styles.allyCardHead}>
-                  <span className={`badge ${ally.roleClass}`}>{ally.role}</span>
-                  <h3 className={styles.allyCardTitle}>{ally.institution}</h3>
+                  <span className={`badge ${ally.roleClass}`}>{ally.roleLabel}</span>
+                  <h3 className={styles.allyCardTitle}>{ally.institutionName}</h3>
                 </header>
 
                 <section className={styles.allyCardSection}>
                   <h4>Rol en el proyecto</h4>
                   <p>{ally.summary}</p>
                   <div className={styles.allyCardDivider} aria-hidden="true" />
-                  <h4>Alcance de participación</h4>
-                  <p>{ally.note}</p>
+                  <h4>Alcance de participacion</h4>
+                  <p>{ally.participationScope}</p>
                 </section>
               </article>
             ))}
           </div>
+          {!isAlliesLoading && !alliesLoadError && !alliesCards.length ? (
+            <p className={styles.alliesLead}>Aun no hay aliados o participantes activos.</p>
+          ) : null}
         </div>
       </section>
 
-      {/* Equipo investigador */}
       <section className={styles.sectionNeutral}>
         <div className={`container ${styles.sectionContainer} ${styles.sectionContainerLast}`}>
           <div className="accent-bar" />
-          <h2 className={styles.sectionTitle}>
-            Equipo investigador
-          </h2>
+          <h2 className={styles.sectionTitle}>Equipo investigador</h2>
           <p className={styles.teamLead}>
-            Esta sección resume el equipo real del proyecto: {teamRoles.length} integrantes
-            con trayectorias complementarias en ciencias sociales, educación, derecho,
-            diseño, ciencias básicas e ingeniería.
+            Esta seccion resume el equipo real del proyecto: {teamRoles.length} integrantes con
+            trayectorias complementarias en ciencias sociales, educacion, derecho, diseno,
+            ciencias basicas e ingenieria.
           </p>
 
           {isTeamLoading ? <p className={styles.teamLead}>Cargando equipo...</p> : null}
@@ -227,7 +280,7 @@ export default function SobrePage() {
 
           <div className={styles.teamCta}>
             <Link className="btn btn-primary" href="/equipo">
-              Conoce más sobre el equipo &rarr;
+              Conoce mas sobre el equipo &rarr;
             </Link>
           </div>
         </div>

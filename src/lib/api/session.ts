@@ -22,11 +22,7 @@ function isAuthUser(value: unknown): value is AuthUser {
 export function isAuthSession(value: unknown): value is AuthSession {
   if (!value || typeof value !== "object") return false;
   const session = value as Partial<AuthSession>;
-  return (
-    isAuthUser(session.user) &&
-    typeof session.accessToken === "string" &&
-    typeof session.refreshToken === "string"
-  );
+  return isAuthUser(session.user);
 }
 
 export function getStoredAuthSession(): AuthSession | null {
