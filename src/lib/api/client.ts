@@ -1,4 +1,4 @@
-import { getApiBaseUrl } from "./config";
+import { DEFAULT_API_BASE_URL, getApiBaseUrl, resetApiBaseUrl } from "./config";
 import {
   clearStoredAuthSession,
   getStoredAuthSession,
@@ -139,34 +139,43 @@ class ApiClient {
   async request<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
     const auth = options.auth ?? true;
     const retryOnUnauthorized = options.retryOnUnauthorized ?? true;
-    const baseUrl = getApiBaseUrl();
+    let activeBaseUrl = getApiBaseUrl();
+    let retriedWithDefaultBase = false;
+
+    const requestWithFallback = async (accessToken?: string): Promise<Response> => {
+      try {
+        return await sendRequest(activeBaseUrl, path, options, accessToken);
+      } catch (error) {
+        const shouldRetryWithDefault =
+          !retriedWithDefaultBase && activeBaseUrl !== DEFAULT_API_BASE_URL;
+
+        if (!shouldRetryWithDefault) {
+          throw error;
+        }
+
+        retriedWithDefaultBase = true;
+        activeBaseUrl = DEFAULT_API_BASE_URL;
+        resetApiBaseUrl();
+        return sendRequest(activeBaseUrl, path, options, accessToken);
+      }
+    };
 
     let currentSession = auth ? getStoredAuthSession() : null;
     if (auth && !currentSession) {
       throw new ApiClientError("No hay una sesion activa", 401);
     }
 
-    let response = await sendRequest(
-      baseUrl,
-      path,
-      options,
-      currentSession?.accessToken,
-    );
+    let response = await requestWithFallback(currentSession?.accessToken);
 
     if (auth && response.status === 401 && retryOnUnauthorized && currentSession) {
       try {
-        currentSession = await this.refreshSession(baseUrl, currentSession);
+        currentSession = await this.refreshSession(activeBaseUrl, currentSession);
       } catch (error) {
         clearStoredAuthSession();
         throw error;
       }
 
-      response = await sendRequest(
-        baseUrl,
-        path,
-        options,
-        currentSession.accessToken,
-      );
+      response = await requestWithFallback(currentSession.accessToken);
     }
 
     if (!response.ok) {

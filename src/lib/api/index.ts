@@ -45,6 +45,13 @@ export {
   updateResourceById,
 } from "./modules/resources.api";
 export {
+  createTeamMember,
+  deleteTeamMemberById,
+  listPublicTeamMembers,
+  listTeamMembersAdmin,
+  updateTeamMemberById,
+} from "./modules/team.api";
+export {
   getStatsDashboard,
   getStatsOverview,
   trackInteraction,
@@ -61,6 +68,7 @@ export type {
   ContactMessagesPage,
   CreateResourcePayload,
   CreateSupportPathPayload,
+  CreateTeamMemberPayload,
   CreateUserPayload,
   KpiMetric,
   ResourceRecord,
@@ -69,7 +77,9 @@ export type {
   SupportPath,
   StatsDashboard,
   StatsOverview,
+  TeamMember,
   UpdateResourcePayload,
+  UpdateTeamMemberPayload,
   UpdateMyProfilePayload,
   UpdateContactMessageStatusPayload,
   UpdateSupportPathPayload,

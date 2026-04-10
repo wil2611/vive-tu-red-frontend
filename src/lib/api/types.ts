@@ -159,6 +159,29 @@ export type CreateResourcePayload = {
 
 export type UpdateResourcePayload = Partial<CreateResourcePayload>;
 
+export type TeamMember = {
+  id: string;
+  name: string;
+  profile: string;
+  department: string | null;
+  division: string | null;
+  photo: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateTeamMemberPayload = {
+  name: string;
+  profile: string;
+  department?: string;
+  division?: string;
+  photo?: string;
+  isActive?: boolean;
+};
+
+export type UpdateTeamMemberPayload = Partial<CreateTeamMemberPayload>;
+
 export type StatsRow = {
   path?: string;
   type?: string;

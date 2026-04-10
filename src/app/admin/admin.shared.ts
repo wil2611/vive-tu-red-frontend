@@ -1,8 +1,10 @@
 import type {
   CreateResourcePayload,
   CreateSupportPathPayload,
+  CreateTeamMemberPayload,
   ResourceRecord,
   SupportPath,
+  TeamMember,
   UserRole,
 } from "@/lib/api";
 import {
@@ -36,6 +38,15 @@ export type ResourceDraft = {
   isPublished: boolean;
 };
 
+export type TeamMemberDraft = {
+  name: string;
+  profile: string;
+  department: string;
+  division: string;
+  photo: string;
+  isActive: boolean;
+};
+
 export type SupportCreateFormErrors = {
   institutionName?: string;
   ubicacion?: string;
@@ -51,6 +62,12 @@ export type ResourceCreateFormErrors = {
   fileUrl?: string;
 };
 
+export type TeamCreateFormErrors = {
+  name?: string;
+  profile?: string;
+  photo?: string;
+};
+
 export type StatsRangePreset = "7d" | "30d" | "90d" | "custom";
 
 export type AdminSectionTab =
@@ -58,6 +75,7 @@ export type AdminSectionTab =
   | "profile"
   | "users"
   | "support-paths"
+  | "team"
   | "resources"
   | "messages";
 
@@ -68,6 +86,7 @@ export const ADMIN_SECTION_TABS: Array<{ id: AdminSectionTab; label: string }> =
   { id: "profile", label: "Mi perfil" },
   { id: "users", label: "Usuarios" },
   { id: "support-paths", label: "Instituciones" },
+  { id: "team", label: "Equipo" },
   { id: "resources", label: "Recursos" },
   { id: "messages", label: "Mensajes" },
 ];
@@ -92,15 +111,35 @@ export const INITIAL_RESOURCE_FORM: CreateResourcePayload = {
   isPublished: true,
 };
 
+export const INITIAL_TEAM_FORM: CreateTeamMemberPayload = {
+  name: "",
+  profile: "",
+  department: "",
+  division: "",
+  photo: "",
+  isActive: true,
+};
+
 export const RESOURCE_CATEGORY_OPTIONS = RESOURCE_CATEGORIES;
+export const TEAM_NAME_MAX_LENGTH = 255;
+export const TEAM_PROFILE_MAX_LENGTH = 5000;
+export const TEAM_DEPARTMENT_MAX_LENGTH = 255;
+export const TEAM_DIVISION_MAX_LENGTH = 255;
+export const TEAM_PHOTO_MAX_LENGTH = 2048;
+const TEAM_IMAGE_ALLOWED_HOSTS = new Set([
+  "plus.unsplash.com",
+  "images.unsplash.com",
+  "drive.google.com",
+  "lh3.googleusercontent.com",
+]);
 
 export function getAllowedTabsByRole(role: UserRole | null): AdminSectionTab[] {
   if (role === "admin") {
-    return ["summary", "profile", "users", "support-paths", "resources", "messages"];
+    return ["summary", "profile", "users", "support-paths", "team", "resources", "messages"];
   }
 
   if (role === "editor") {
-    return ["summary", "profile", "support-paths", "resources", "messages"];
+    return ["summary", "profile", "support-paths", "team", "resources", "messages"];
   }
 
   if (role === "investigador") {
@@ -129,6 +168,25 @@ function isSafeHttpUrl(value: string): boolean {
   }
 }
 
+export function isAllowedTeamPhotoUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    const hostname = parsed.hostname.toLowerCase();
+
+    if (TEAM_IMAGE_ALLOWED_HOSTS.has(hostname)) {
+      return true;
+    }
+
+    if (hostname === "docs.google.com") {
+      return true;
+    }
+
+    return hostname.endsWith(".sharepoint.com") || hostname === "sharepoint.com";
+  } catch {
+    return false;
+  }
+}
+
 export function buildSupportDraft(path: SupportPath): SupportPathDraft {
   return {
     institutionName: path.institutionName,
@@ -151,6 +209,17 @@ export function buildResourceDraft(resource: ResourceRecord): ResourceDraft {
     category: normalizedCategory,
     tags: (resource.tags ?? []).join(", "),
     isPublished: resource.isPublished,
+  };
+}
+
+export function buildTeamMemberDraft(teamMember: TeamMember): TeamMemberDraft {
+  return {
+    name: teamMember.name,
+    profile: teamMember.profile,
+    department: textOrEmpty(teamMember.department),
+    division: textOrEmpty(teamMember.division),
+    photo: textOrEmpty(teamMember.photo),
+    isActive: teamMember.isActive,
   };
 }
 
@@ -194,6 +263,20 @@ export function normalizeResourceCreateForm(
     category: normalizedCategory,
     tags: normalizeTags(Array.isArray(form.tags) ? form.tags.join(",") : ""),
     isPublished: form.isPublished !== false,
+  };
+}
+
+export function normalizeTeamCreateForm(
+  form: CreateTeamMemberPayload,
+): CreateTeamMemberPayload {
+  return {
+    ...form,
+    name: (form.name ?? "").trim(),
+    profile: (form.profile ?? "").trim(),
+    department: (form.department ?? "").trim(),
+    division: (form.division ?? "").trim(),
+    photo: (form.photo ?? "").trim(),
+    isActive: form.isActive !== false,
   };
 }
 
@@ -257,6 +340,38 @@ export function validateResourceCreateForm(
 
   if (form.isPublished !== false && !fileUrl) {
     errors.fileUrl = "Si el recurso esta publicado, debes agregar el enlace del archivo.";
+  }
+
+  return errors;
+}
+
+export function validateTeamCreateForm(
+  form: CreateTeamMemberPayload,
+): TeamCreateFormErrors {
+  const errors: TeamCreateFormErrors = {};
+  const name = (form.name ?? "").trim();
+  const profile = (form.profile ?? "").trim();
+  const photo = (form.photo ?? "").trim();
+
+  if (name.length < 3) {
+    errors.name = "El nombre debe tener al menos 3 caracteres.";
+  } else if (name.length > TEAM_NAME_MAX_LENGTH) {
+    errors.name = `El nombre no puede superar ${TEAM_NAME_MAX_LENGTH} caracteres.`;
+  }
+
+  if (profile.length < 20) {
+    errors.profile = "El perfil debe tener al menos 20 caracteres.";
+  } else if (profile.length > TEAM_PROFILE_MAX_LENGTH) {
+    errors.profile = `El perfil no puede superar ${TEAM_PROFILE_MAX_LENGTH} caracteres.`;
+  }
+
+  if (photo && !isSafeHttpUrl(photo)) {
+    errors.photo = "La foto debe ser una URL con http:// o https://.";
+  } else if (photo && !isAllowedTeamPhotoUrl(photo)) {
+    errors.photo =
+      "Dominio de foto no permitido. Usa Drive, SharePoint o agrega el dominio a next.config.ts.";
+  } else if (photo.length > TEAM_PHOTO_MAX_LENGTH) {
+    errors.photo = `La URL de la foto no puede superar ${TEAM_PHOTO_MAX_LENGTH} caracteres.`;
   }
 
   return errors;

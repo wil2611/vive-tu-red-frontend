@@ -1,8 +1,78 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { listPublicTeamMembers, type TeamMember } from "@/lib/api";
 import styles from "./page.module.css";
-import { allies, specificObjectives, teamRoles } from "./sobre.data";
+import { allies, specificObjectives } from "./sobre.data";
+
+type TeamRole = {
+  name: string;
+  role: string;
+  initials: string;
+};
+
+function getInitials(name: string): string {
+  const parts = name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+
+  if (!parts.length) return "--";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+}
+
+function toTeamRole(member: TeamMember): TeamRole {
+  const role = [member.department, member.division]
+    .filter((value): value is string => Boolean(value && value.trim()))
+    .join(" · ");
+
+  return {
+    name: member.name,
+    role: role || "Equipo investigador",
+    initials: getInitials(member.name),
+  };
+}
 
 export default function SobrePage() {
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [isTeamLoading, setIsTeamLoading] = useState(true);
+  const [teamLoadError, setTeamLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadTeamMembers() {
+      setIsTeamLoading(true);
+      setTeamLoadError(null);
+
+      try {
+        const response = await listPublicTeamMembers();
+        if (!cancelled) {
+          setTeamMembers(response);
+        }
+      } catch {
+        if (!cancelled) {
+          setTeamMembers([]);
+          setTeamLoadError("No se pudo cargar el equipo en este momento.");
+        }
+      } finally {
+        if (!cancelled) {
+          setIsTeamLoading(false);
+        }
+      }
+    }
+
+    void loadTeamMembers();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const teamRoles = useMemo(() => teamMembers.map(toTeamRole), [teamMembers]);
+
   return (
     <div>
       {/* Hero */}
@@ -126,27 +196,34 @@ export default function SobrePage() {
             diseño, ciencias básicas e ingeniería.
           </p>
 
-          <div className={styles.teamGrid}>
-            {teamRoles.map((member, index) => (
-              <article className={styles.teamRoleCard} key={member.initials}>
-                <div
-                  className={styles.teamRoleBadge}
-                  style={{
-                    background:
-                      index % 2 === 0
-                        ? "linear-gradient(135deg, #C96A4A 0%, #DCA15D 100%)"
-                        : "linear-gradient(135deg, #00555A 0%, #0b7b81 100%)",
-                  }}
-                >
-                  {member.initials}
-                </div>
-                <div className={styles.teamRoleBody}>
-                  <h3 className={styles.teamRoleName}>{member.name}</h3>
-                  <p className={styles.teamRoleDesc}>{member.role}</p>
-                </div>
-              </article>
-            ))}
-          </div>
+          {isTeamLoading ? <p className={styles.teamLead}>Cargando equipo...</p> : null}
+          {teamLoadError ? <p className={styles.teamLead}>{teamLoadError}</p> : null}
+
+          {teamRoles.length ? (
+            <div className={styles.teamGrid}>
+              {teamRoles.map((member, index) => (
+                <article className={styles.teamRoleCard} key={`${member.name}-${index}`}>
+                  <div
+                    className={styles.teamRoleBadge}
+                    style={{
+                      background:
+                        index % 2 === 0
+                          ? "linear-gradient(135deg, #C96A4A 0%, #DCA15D 100%)"
+                          : "linear-gradient(135deg, #00555A 0%, #0b7b81 100%)",
+                    }}
+                  >
+                    {member.initials}
+                  </div>
+                  <div className={styles.teamRoleBody}>
+                    <h3 className={styles.teamRoleName}>{member.name}</h3>
+                    <p className={styles.teamRoleDesc}>{member.role}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : !isTeamLoading && !teamLoadError ? (
+            <p className={styles.teamLead}>Aun no hay integrantes activos en el equipo.</p>
+          ) : null}
 
           <div className={styles.teamCta}>
             <Link className="btn btn-primary" href="/equipo">

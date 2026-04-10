@@ -4,11 +4,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ApiClientError,
   clearAuthSession,
+  type CreateTeamMemberPayload,
   type CreateResourcePayload,
   type ResourceRecord,
   getCurrentAuthSession,
   getCurrentUser,
   getStatsDashboard,
+  listTeamMembersAdmin,
   listAdminContactMessages,
   listResourcesAdmin,
   listSupportPathsAdmin,
@@ -20,14 +22,17 @@ import {
   type CreateUserPayload,
   type SupportPath,
   type StatsDashboard,
+  type TeamMember,
   type UserRecord,
 } from "@/lib/api";
 import {
   ADMIN_SECTION_TABS,
   INITIAL_RESOURCE_FORM,
   INITIAL_SUPPORT_FORM,
+  INITIAL_TEAM_FORM,
   buildResourceDraft,
   buildSupportDraft,
+  buildTeamMemberDraft,
   getAllowedTabsByRole,
   type AdminSectionTab,
   type MessageFilter,
@@ -36,6 +41,8 @@ import {
   type StatsRangePreset,
   type SupportCreateFormErrors,
   type SupportPathDraft,
+  type TeamCreateFormErrors,
+  type TeamMemberDraft,
   type UserDraft,
 } from "../admin.shared";
 import { useAdminAuthHandlers } from "./handlers/useAdminAuthHandlers";
@@ -45,6 +52,7 @@ import { getErrorText } from "./handlers/shared";
 import { useAdminResourceHandlers } from "./handlers/useAdminResourceHandlers";
 import { useAdminStatsHandlers } from "./handlers/useAdminStatsHandlers";
 import { useAdminSupportPathHandlers } from "./handlers/useAdminSupportPathHandlers";
+import { useAdminTeamHandlers } from "./handlers/useAdminTeamHandlers";
 import { useAdminUserHandlers } from "./handlers/useAdminUserHandlers";
 
 type LoadDashboardOptions = {
@@ -82,6 +90,8 @@ export function useAdminDashboard() {
   );
   const [resources, setResources] = useState<ResourceRecord[]>([]);
   const [resourceDrafts, setResourceDrafts] = useState<Record<string, ResourceDraft>>({});
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [teamMemberDrafts, setTeamMemberDrafts] = useState<Record<string, TeamMemberDraft>>({});
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [messagesFilter, setMessagesFilter] = useState<MessageFilter>("all");
   const [messagesSearch, setMessagesSearch] = useState("");
@@ -137,6 +147,12 @@ export function useAdminDashboard() {
   const [createSupportFormErrors, setCreateSupportFormErrors] =
     useState<SupportCreateFormErrors>({});
   const [openSupportEditorId, setOpenSupportEditorId] = useState<string | null>(null);
+  const [createTeamForm, setCreateTeamForm] = useState<CreateTeamMemberPayload>(
+    INITIAL_TEAM_FORM,
+  );
+  const [isCreateTeamFormOpen, setIsCreateTeamFormOpen] = useState(false);
+  const [createTeamFormErrors, setCreateTeamFormErrors] = useState<TeamCreateFormErrors>({});
+  const [openTeamEditorId, setOpenTeamEditorId] = useState<string | null>(null);
   const [createResourceForm, setCreateResourceForm] = useState<CreateResourcePayload>(
     INITIAL_RESOURCE_FORM,
   );
@@ -154,6 +170,8 @@ export function useAdminDashboard() {
     setSupportPathDrafts({});
     setResources([]);
     setResourceDrafts({});
+    setTeamMembers([]);
+    setTeamMemberDrafts({});
     setMessages([]);
     setMessagesTotal(0);
     setMessagesTotalPages(1);
@@ -191,6 +209,14 @@ export function useAdminDashboard() {
       drafts[resource.id] = buildResourceDraft(resource);
     }
     setResourceDrafts(drafts);
+  }, []);
+
+  const syncTeamMemberDrafts = useCallback((nextTeamMembers: TeamMember[]) => {
+    const drafts: Record<string, TeamMemberDraft> = {};
+    for (const teamMember of nextTeamMembers) {
+      drafts[teamMember.id] = buildTeamMemberDraft(teamMember);
+    }
+    setTeamMemberDrafts(drafts);
   }, []);
 
   const buildStatsQuery = useCallback(() => {
@@ -277,6 +303,7 @@ export function useAdminDashboard() {
         const canReadMessages = allowedTabs.includes("messages");
         const canManageUsers = allowedTabs.includes("users");
         const canManageSupportPaths = allowedTabs.includes("support-paths");
+        const canManageTeam = allowedTabs.includes("team");
         const canManageResources = allowedTabs.includes("resources");
         const statsQuery = buildStatsQuery();
 
@@ -286,6 +313,8 @@ export function useAdminDashboard() {
           setUserDrafts({});
           setSupportPaths([]);
           setSupportPathDrafts({});
+          setTeamMembers([]);
+          setTeamMemberDrafts({});
           setResources([]);
           setResourceDrafts({});
           setMessages([]);
@@ -303,6 +332,9 @@ export function useAdminDashboard() {
         const supportPathsPromise: Promise<SupportPath[] | null> = canManageSupportPaths
           ? listSupportPathsAdmin()
           : Promise.resolve(null);
+        const teamMembersPromise: Promise<TeamMember[] | null> = canManageTeam
+          ? listTeamMembersAdmin()
+          : Promise.resolve(null);
         const resourcesPromise: Promise<ResourceRecord[] | null> = canManageResources
           ? listResourcesAdmin()
           : Promise.resolve(null);
@@ -310,11 +342,12 @@ export function useAdminDashboard() {
           ? getStatsDashboard(statsQuery)
           : Promise.resolve(null);
 
-        const [usersData, allMessagesPage, supportPathsData, resourcesData, statsData] =
+        const [usersData, allMessagesPage, supportPathsData, teamMembersData, resourcesData, statsData] =
           await Promise.all([
             usersPromise,
             allMessagesPromise,
             supportPathsPromise,
+            teamMembersPromise,
             resourcesPromise,
             statsPromise,
           ]);
@@ -333,6 +366,14 @@ export function useAdminDashboard() {
         } else {
           setSupportPaths([]);
           setSupportPathDrafts({});
+        }
+
+        if (teamMembersData) {
+          setTeamMembers(teamMembersData);
+          syncTeamMemberDrafts(teamMembersData);
+        } else {
+          setTeamMembers([]);
+          setTeamMemberDrafts({});
         }
 
         if (resourcesData) {
@@ -377,6 +418,7 @@ export function useAdminDashboard() {
       serializeStatsQuery,
       syncResourceDrafts,
       syncSupportPathDrafts,
+      syncTeamMemberDrafts,
       syncUserDrafts,
     ],
   );
@@ -521,6 +563,26 @@ export function useAdminDashboard() {
     loadDashboardData,
   });
 
+  const {
+    handleToggleCreateTeamForm,
+    handleToggleTeamEditor,
+    handleCreateTeamMember,
+    handleUpdateTeamMember,
+    handleDeleteTeamMember,
+  } = useAdminTeamHandlers({
+    createTeamForm,
+    teamMemberDrafts,
+    openTeamEditorId,
+    setCreateTeamForm,
+    setCreateTeamFormErrors,
+    setIsCreateTeamFormOpen,
+    setOpenTeamEditorId,
+    setBusyAction,
+    setError,
+    setSuccess,
+    loadDashboardData,
+  });
+
   const { handleMarkMessageRead, handleUpdateMessageStatus, handleDeleteMessage } =
     useAdminMessageHandlers({
       setMessages,
@@ -546,6 +608,7 @@ export function useAdminDashboard() {
   const canAccessProfile = allowedTabs.includes("profile");
   const canAccessUsers = allowedTabs.includes("users");
   const canAccessSupportPaths = allowedTabs.includes("support-paths");
+  const canAccessTeam = allowedTabs.includes("team");
   const canAccessResources = allowedTabs.includes("resources");
   const canAccessMessages = allowedTabs.includes("messages");
   const canMarkMessages = canAccessMessages;
@@ -554,6 +617,8 @@ export function useAdminDashboard() {
   const inactiveUsersCount = users.length - activeUsersCount;
   const publishedResourcesCount = resources.filter((item) => item.isPublished).length;
   const draftResourcesCount = resources.length - publishedResourcesCount;
+  const activeTeamCount = teamMembers.filter((item) => item.isActive).length;
+  const inactiveTeamCount = teamMembers.length - activeTeamCount;
   const allMessagesCount = messagesSummary.totalAll;
   const unreadMessagesCount = messagesSummary.statusTotals.new;
   const readMessagesCount = messagesSummary.statusTotals.read;
@@ -591,6 +656,13 @@ export function useAdminDashboard() {
   }, [activeTab]);
 
   useEffect(() => {
+    if (activeTab === "team") return;
+    setIsCreateTeamFormOpen(false);
+    setCreateTeamFormErrors({});
+    setOpenTeamEditorId(null);
+  }, [activeTab]);
+
+  useEffect(() => {
     if (activeTab === "resources") return;
     setIsCreateResourceFormOpen(false);
     setCreateResourceFormErrors({});
@@ -613,6 +685,9 @@ export function useAdminDashboard() {
     resources,
     resourceDrafts,
     setResourceDrafts,
+    teamMembers,
+    teamMemberDrafts,
+    setTeamMemberDrafts,
     messages,
     messagesFilter,
     setMessagesFilter,
@@ -656,6 +731,14 @@ export function useAdminDashboard() {
     setCreateSupportFormErrors,
     openSupportEditorId,
     setOpenSupportEditorId,
+    createTeamForm,
+    setCreateTeamForm,
+    isCreateTeamFormOpen,
+    setIsCreateTeamFormOpen,
+    createTeamFormErrors,
+    setCreateTeamFormErrors,
+    openTeamEditorId,
+    setOpenTeamEditorId,
     createResourceForm,
     setCreateResourceForm,
     isCreateResourceFormOpen,
@@ -670,6 +753,7 @@ export function useAdminDashboard() {
     canAccessProfile,
     canAccessUsers,
     canAccessSupportPaths,
+    canAccessTeam,
     canAccessResources,
     canAccessMessages,
     canMarkMessages,
@@ -678,6 +762,8 @@ export function useAdminDashboard() {
     inactiveUsersCount,
     publishedResourcesCount,
     draftResourcesCount,
+    activeTeamCount,
+    inactiveTeamCount,
     unreadMessagesCount,
     readMessagesCount,
     inProgressMessagesCount,
@@ -699,6 +785,11 @@ export function useAdminDashboard() {
     handleCreateSupportPath,
     handleUpdateSupportPath,
     handleDeleteSupportPath,
+    handleToggleCreateTeamForm,
+    handleToggleTeamEditor,
+    handleCreateTeamMember,
+    handleUpdateTeamMember,
+    handleDeleteTeamMember,
     handleToggleCreateResourceForm,
     handleToggleResourceEditor,
     handleCreateResource,

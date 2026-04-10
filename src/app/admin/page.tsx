@@ -9,6 +9,7 @@ import { ProfileTab } from "./tabs/ProfileTab";
 import { ResourcesTab } from "./tabs/ResourcesTab";
 import { SummaryTab } from "./tabs/SummaryTab";
 import { SupportPathsTab } from "./tabs/SupportPathsTab";
+import { TeamTab } from "./tabs/TeamTab";
 import { UsersTab } from "./tabs/UsersTab";
 
 export default function AdminPage() {
@@ -28,6 +29,9 @@ export default function AdminPage() {
     resources,
     resourceDrafts,
     setResourceDrafts,
+    teamMembers,
+    teamMemberDrafts,
+    setTeamMemberDrafts,
     messagesFilter,
     setMessagesFilter,
     messagesSearch,
@@ -70,6 +74,14 @@ export default function AdminPage() {
     setCreateSupportFormErrors,
     openSupportEditorId,
     setOpenSupportEditorId,
+    createTeamForm,
+    setCreateTeamForm,
+    isCreateTeamFormOpen,
+    setIsCreateTeamFormOpen,
+    createTeamFormErrors,
+    setCreateTeamFormErrors,
+    openTeamEditorId,
+    setOpenTeamEditorId,
     createResourceForm,
     setCreateResourceForm,
     isCreateResourceFormOpen,
@@ -84,6 +96,7 @@ export default function AdminPage() {
     canAccessProfile,
     canAccessUsers,
     canAccessSupportPaths,
+    canAccessTeam,
     canAccessResources,
     canAccessMessages,
     canMarkMessages,
@@ -92,6 +105,8 @@ export default function AdminPage() {
     inactiveUsersCount,
     publishedResourcesCount,
     draftResourcesCount,
+    activeTeamCount,
+    inactiveTeamCount,
     unreadMessagesCount,
     readMessagesCount,
     inProgressMessagesCount,
@@ -112,6 +127,11 @@ export default function AdminPage() {
     handleCreateSupportPath,
     handleUpdateSupportPath,
     handleDeleteSupportPath,
+    handleToggleCreateTeamForm,
+    handleToggleTeamEditor,
+    handleCreateTeamMember,
+    handleUpdateTeamMember,
+    handleDeleteTeamMember,
     handleToggleCreateResourceForm,
     handleToggleResourceEditor,
     handleCreateResource,
@@ -337,6 +357,30 @@ export default function AdminPage() {
                 onCreateResource={handleCreateResource}
                 onUpdateResource={handleUpdateResource}
                 onDeleteResource={handleDeleteResource}
+              />
+            ) : null}
+
+            {canAccessTeam && activeTab === "team" ? (
+              <TeamTab
+                teamMembers={teamMembers}
+                activeTeamCount={activeTeamCount}
+                inactiveTeamCount={inactiveTeamCount}
+                createTeamForm={createTeamForm}
+                setCreateTeamForm={setCreateTeamForm}
+                createTeamFormErrors={createTeamFormErrors}
+                setCreateTeamFormErrors={setCreateTeamFormErrors}
+                isCreateTeamFormOpen={isCreateTeamFormOpen}
+                setIsCreateTeamFormOpen={setIsCreateTeamFormOpen}
+                teamMemberDrafts={teamMemberDrafts}
+                setTeamMemberDrafts={setTeamMemberDrafts}
+                openTeamEditorId={openTeamEditorId}
+                setOpenTeamEditorId={setOpenTeamEditorId}
+                busyAction={busyAction}
+                onToggleCreateTeamForm={handleToggleCreateTeamForm}
+                onToggleTeamEditor={handleToggleTeamEditor}
+                onCreateTeamMember={handleCreateTeamMember}
+                onUpdateTeamMember={handleUpdateTeamMember}
+                onDeleteTeamMember={handleDeleteTeamMember}
               />
             ) : null}
 
