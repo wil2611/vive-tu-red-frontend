@@ -26,8 +26,6 @@ export {
   createContactMessage,
   deleteContactMessage,
   listAdminContactMessages,
-  listAllContactMessages,
-  listUnreadContactMessages,
   markContactMessageAsRead,
   updateContactMessageStatus,
 } from "./modules/contact.api";
@@ -38,6 +36,14 @@ export {
   listSupportPathsAdmin,
   updateSupportPathById,
 } from "./modules/support.api";
+export {
+  createResource,
+  deleteResourceById,
+  listPublishedResources,
+  listResourcesAdmin,
+  trackResourceOpen,
+  updateResourceById,
+} from "./modules/resources.api";
 export {
   getStatsDashboard,
   getStatsOverview,
@@ -53,14 +59,17 @@ export type {
   ChangeMyPasswordPayload,
   ContactMessage,
   ContactMessagesPage,
+  CreateResourcePayload,
   CreateSupportPathPayload,
   CreateUserPayload,
   KpiMetric,
+  ResourceRecord,
   ListAdminContactMessagesQuery,
   LoginPayload,
   SupportPath,
   StatsDashboard,
   StatsOverview,
+  UpdateResourcePayload,
   UpdateMyProfilePayload,
   UpdateContactMessageStatusPayload,
   UpdateSupportPathPayload,

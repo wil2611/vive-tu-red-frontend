@@ -24,14 +24,6 @@ export function createContactMessage(
   });
 }
 
-export function listUnreadContactMessages(): Promise<ContactMessage[]> {
-  return apiClient.request<ContactMessage[]>("/contact/admin/unread");
-}
-
-export function listAllContactMessages(): Promise<ContactMessage[]> {
-  return apiClient.request<ContactMessage[]>("/contact/admin/all");
-}
-
 export function listAdminContactMessages(
   query: ListAdminContactMessagesQuery = {},
 ): Promise<ContactMessagesPage> {

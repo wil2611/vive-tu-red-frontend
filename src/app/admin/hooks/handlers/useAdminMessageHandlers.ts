@@ -12,7 +12,7 @@ type UseAdminMessageHandlersParams = {
   setBusyAction: Dispatch<SetStateAction<string | null>>;
   setError: Dispatch<SetStateAction<string | null>>;
   setSuccess: Dispatch<SetStateAction<string | null>>;
-  loadMessagesData: () => Promise<void>;
+  loadMessagesData: (options?: { suppressGlobalError?: boolean }) => Promise<boolean>;
 };
 
 export function useAdminMessageHandlers({
@@ -33,6 +33,11 @@ export function useAdminMessageHandlers({
         setMessages((prev) =>
           prev.map((item) => (item.id === id ? response.item : item)),
         );
+        const refreshed = await loadMessagesData({ suppressGlobalError: true });
+        if (!refreshed) {
+          setError("Se marco el mensaje como leido, pero no se pudo refrescar la lista.");
+          return;
+        }
         setSuccess("Mensaje marcado como leido");
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo actualizar el mensaje"));
@@ -40,7 +45,7 @@ export function useAdminMessageHandlers({
         setBusyAction(null);
       }
     },
-    [setBusyAction, setError, setMessages, setSuccess],
+    [loadMessagesData, setBusyAction, setError, setMessages, setSuccess],
   );
 
   const handleUpdateMessageStatus = useCallback(
@@ -54,6 +59,11 @@ export function useAdminMessageHandlers({
         setMessages((prev) =>
           prev.map((item) => (item.id === id ? response.item : item)),
         );
+        const refreshed = await loadMessagesData({ suppressGlobalError: true });
+        if (!refreshed) {
+          setError("Se actualizo el estado, pero no se pudo refrescar la lista.");
+          return;
+        }
         setSuccess("Estado del mensaje actualizado");
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo actualizar el estado"));
@@ -61,7 +71,7 @@ export function useAdminMessageHandlers({
         setBusyAction(null);
       }
     },
-    [setBusyAction, setError, setMessages, setSuccess],
+    [loadMessagesData, setBusyAction, setError, setMessages, setSuccess],
   );
 
   const handleDeleteMessage = useCallback(
@@ -77,7 +87,12 @@ export function useAdminMessageHandlers({
 
       try {
         await deleteContactMessage(id);
-        await loadMessagesData();
+        setMessages((prev) => prev.filter((item) => item.id !== id));
+        const refreshed = await loadMessagesData({ suppressGlobalError: true });
+        if (!refreshed) {
+          setError("El mensaje se elimino, pero no se pudo refrescar la lista.");
+          return;
+        }
         setSuccess("Mensaje eliminado");
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo eliminar el mensaje"));
@@ -85,7 +100,7 @@ export function useAdminMessageHandlers({
         setBusyAction(null);
       }
     },
-    [loadMessagesData, setBusyAction, setError, setSuccess],
+    [loadMessagesData, setBusyAction, setError, setMessages, setSuccess],
   );
 
   return {

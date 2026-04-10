@@ -4,7 +4,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { contactCards, createInitialContactForm, subjectOptions, type ContactFormState } from "./contacto.data";
-import { createContactMessage } from "@/lib/api";
+import { ApiClientError, createContactMessage } from "@/lib/api";
 import { recordInteraction } from "@/lib/analytics/tracker";
 
 export default function ContactoPage() {
@@ -42,7 +42,11 @@ export default function ContactoPage() {
       });
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : "No se pudo enviar el mensaje";
+        err instanceof ApiClientError && err.status === 429
+          ? "Ya recibimos un mensaje muy similar hace poco. Espera un momento antes de reenviar."
+          : err instanceof Error
+            ? err.message
+            : "No se pudo enviar el mensaje";
       setError(message);
     } finally {
       setIsSending(false);

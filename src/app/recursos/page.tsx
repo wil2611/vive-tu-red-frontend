@@ -1,19 +1,108 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { listPublishedResources, trackResourceOpen, type ResourceRecord } from "@/lib/api";
 import styles from "./page.module.css";
-import {
-  categories,
-  getResourcesByCategory,
-  type ResourceCategoryId,
-  type ResourceItem,
-} from "./recursos.data";
-import { recordInteraction } from "@/lib/analytics/tracker";
+import { categories, getResourcesByCategory } from "./recursos.data";
+import { normalizeResourceCategory, type ResourceCategoryId } from "@/lib/resources/resource-categories";
+
+function getSafeExternalUrl(value: string | null | undefined): string | null {
+  if (!value) return null;
+
+  try {
+    const parsed = new URL(value);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return null;
+    }
+    return parsed.toString();
+  } catch {
+    return null;
+  }
+}
+
+const SECTION_CONFIG: Record<
+  ResourceCategoryId,
+  {
+    sectionClassName: string;
+    containerClassName: string;
+    pillClassName: string;
+    pillLabel: string;
+    title: string;
+    description: string;
+  }
+> = {
+  prevencion: {
+    sectionClassName: styles.sectionWarm,
+    containerClassName: styles.sectionContainer,
+    pillClassName: `${styles.pill} ${styles.pillPrevencion}`,
+    pillLabel: "Prevencion",
+    title: "Herramientas para la prevencion",
+    description:
+      "Materiales para reconocer la VBG, identificar senales de alerta y fortalecer la cultura de prevencion.",
+  },
+  orientacion: {
+    sectionClassName: styles.sectionNeutral,
+    containerClassName: styles.sectionContainer,
+    pillClassName: `${styles.pill} ${styles.pillOrientacion}`,
+    pillLabel: "Orientacion",
+    title: "Materiales de apoyo y orientacion",
+    description:
+      "Guias e infografias para saber a donde acudir y como navegar las rutas de atencion disponibles.",
+  },
+  formacion: {
+    sectionClassName: styles.sectionWarm,
+    containerClassName: `${styles.sectionContainer} ${styles.sectionContainerLast}`,
+    pillClassName: `${styles.pill} ${styles.pillFormacion}`,
+    pillLabel: "Formacion",
+    title: "Recursos para la formacion",
+    description:
+      "Manuales, guias metodologicas e instrumentos para docentes, facilitadores/as e investigadores/as.",
+  },
+};
 
 export default function RecursosPage() {
-  const prevencionDocs = getResourcesByCategory("prevencion");
-  const orientacionDocs = getResourcesByCategory("orientacion");
-  const formacionDocs = getResourcesByCategory("formacion");
+  const [resources, setResources] = useState<ResourceRecord[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadResources() {
+      setIsLoading(true);
+      setLoadError(null);
+      try {
+        const response = await listPublishedResources();
+        if (!cancelled) {
+          setResources(response);
+        }
+      } catch {
+        if (!cancelled) {
+          setLoadError("No se pudieron cargar los recursos en este momento.");
+          setResources([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void loadResources();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const resourcesByCategory = useMemo(
+    () => ({
+      prevencion: getResourcesByCategory(resources, "prevencion"),
+      orientacion: getResourcesByCategory(resources, "orientacion"),
+      formacion: getResourcesByCategory(resources, "formacion"),
+    }),
+    [resources],
+  );
 
   return (
     <div>
@@ -22,9 +111,8 @@ export default function RecursosPage() {
           <div className={styles.heroShell}>
             <h1 className={styles.heroTitle}>Recursos y materiales de apoyo</h1>
             <p className={styles.heroDesc}>
-              Herramientas para la prevencion, orientacion y formacion en
-              Violencia Basada en Genero (VBG). Todos los materiales son de
-              acceso libre y descarga gratuita.
+              Herramientas para la prevencion, orientacion y formacion en Violencia Basada en
+              Genero (VBG). Todos los materiales son de acceso libre mediante enlace externo.
             </p>
 
             <div className={styles.quickNav} aria-label="Accesos rapidos por categoria">
@@ -40,42 +128,30 @@ export default function RecursosPage() {
                 </a>
               ))}
             </div>
+
+            {isLoading ? <p className={styles.heroDesc}>Cargando recursos...</p> : null}
+            {loadError ? <p className={styles.heroDesc}>{loadError}</p> : null}
           </div>
         </div>
       </section>
 
-      <ResourceSection
-        id="prevencion"
-        sectionClassName={styles.sectionWarm}
-        containerClassName={styles.sectionContainer}
-        pillClassName={`${styles.pill} ${styles.pillPrevencion}`}
-        pillLabel="Prevencion"
-        title="Herramientas para la prevencion"
-        description="Materiales para reconocer la VBG, identificar senales de alerta y fortalecer la cultura de prevencion."
-        docs={prevencionDocs}
-      />
-
-      <ResourceSection
-        id="orientacion"
-        sectionClassName={styles.sectionNeutral}
-        containerClassName={styles.sectionContainer}
-        pillClassName={`${styles.pill} ${styles.pillOrientacion}`}
-        pillLabel="Orientacion"
-        title="Materiales de apoyo y orientacion"
-        description="Guias e infografias para saber a donde acudir y como navegar las rutas de atencion disponibles."
-        docs={orientacionDocs}
-      />
-
-      <ResourceSection
-        id="formacion"
-        sectionClassName={styles.sectionWarm}
-        containerClassName={`${styles.sectionContainer} ${styles.sectionContainerLast}`}
-        pillClassName={`${styles.pill} ${styles.pillFormacion}`}
-        pillLabel="Formacion"
-        title="Recursos para la formacion"
-        description="Manuales, guias metodologicas e instrumentos para docentes, facilitadores/as e investigadores/as."
-        docs={formacionDocs}
-      />
+      {(["prevencion", "orientacion", "formacion"] as const).map((categoryId) => {
+        const config = SECTION_CONFIG[categoryId];
+        const docs = resourcesByCategory[categoryId];
+        return (
+          <ResourceSection
+            key={categoryId}
+            id={categoryId}
+            sectionClassName={config.sectionClassName}
+            containerClassName={config.containerClassName}
+            pillClassName={config.pillClassName}
+            pillLabel={config.pillLabel}
+            title={config.title}
+            description={config.description}
+            docs={docs}
+          />
+        );
+      })}
     </div>
   );
 }
@@ -88,7 +164,7 @@ interface ResourceSectionProps {
   pillLabel: string;
   title: string;
   description: string;
-  docs: ResourceItem[];
+  docs: ResourceRecord[];
 }
 
 function ResourceSection({
@@ -108,21 +184,48 @@ function ResourceSection({
         <div className="accent-bar" />
         <h2 className={styles.sectionTitle}>{title}</h2>
         <p className={styles.sectionDesc}>{description}</p>
-        <div className={styles.resourceList}>
-          {docs.map((doc) => (
-            <ResourceCard key={doc.title} doc={doc} />
-          ))}
-        </div>
+
+        {docs.length ? (
+          <div className={styles.resourceList}>
+            {docs.map((doc) => (
+              <ResourceCard key={doc.id} doc={doc} />
+            ))}
+          </div>
+        ) : (
+          <p className={styles.sectionDesc}>Aun no hay recursos publicados en esta categoria.</p>
+        )}
       </div>
     </section>
   );
 }
 
-function ResourceCard({ doc }: { doc: ResourceItem }) {
+function ResourceCard({ doc }: { doc: ResourceRecord }) {
+  const category = normalizeResourceCategory(doc.category);
+  const cardColor =
+    category === "prevencion"
+      ? "#C96A4A"
+      : category === "orientacion"
+        ? "#00555A"
+        : category === "formacion"
+          ? "#1D3E2A"
+          : "#1D3E2A";
+
   const typeBadgeStyle = {
-    background: `${doc.color}14`,
-    color: doc.color,
+    background: `${cardColor}14`,
+    color: cardColor,
   } as CSSProperties;
+
+  const tags = (doc.tags ?? []).filter(Boolean);
+  const safeFileUrl = getSafeExternalUrl(doc.fileUrl);
+  const canOpen = !!safeFileUrl;
+
+  const handleOpen = () => {
+    if (!safeFileUrl) return;
+
+    void trackResourceOpen(doc.id);
+
+    window.open(safeFileUrl, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <article className={`card ${styles.resourceCard}`}>
@@ -133,35 +236,51 @@ function ResourceCard({ doc }: { doc: ResourceItem }) {
             <span className={`badge ${styles.typeBadge}`} style={typeBadgeStyle}>
               {doc.type}
             </span>
-            <span className={`badge badge-forest ${styles.sizeBadge}`}>{doc.size}</span>
           </div>
         </div>
 
         <dl className={styles.resourceCardMeta}>
-          <dt>Para quien?</dt>
-          <dd>{doc.forWho}</dd>
-          <dt>Para que sirve?</dt>
-          <dd>{doc.forWhat}</dd>
+          <dt>Descripcion</dt>
+          <dd>{doc.description?.trim() || "Sin descripcion disponible."}</dd>
+          <dt>Tags</dt>
+          <dd>{tags.length ? tags.join(", ") : "Sin tags"}</dd>
         </dl>
       </div>
 
       <button
         className={`btn btn-outline ${styles.resourceCardBtn}`}
-        onClick={() =>
-          void recordInteraction({
-            type: "resource_download",
-            targetType: "resource",
-            targetId: doc.title,
-            metadata: {
-              category: doc.category,
-              resourceType: doc.type,
-              size: doc.size,
-            },
-          })
-        }
+        onClick={handleOpen}
+        disabled={!canOpen}
       >
-        <span className={styles.downloadIcon}>⬇</span>
-        Descargar
+        <span className={styles.downloadIcon} aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+            <path
+              d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M14 2v5h5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M10 14h7m0 0-2.4-2.4M17 14l-2.4 2.4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+        {canOpen ? "Abrir archivo" : "Archivo no disponible"}
       </button>
     </article>
   );

@@ -4,14 +4,18 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ApiClientError,
   clearAuthSession,
+  type CreateResourcePayload,
+  type ResourceRecord,
   getCurrentAuthSession,
   getCurrentUser,
   getStatsDashboard,
   listAdminContactMessages,
+  listResourcesAdmin,
   listSupportPathsAdmin,
   listUsers,
   type AuthSession,
   type ContactMessage,
+  type ContactMessagesPage,
   type CreateSupportPathPayload,
   type CreateUserPayload,
   type SupportPath,
@@ -20,11 +24,15 @@ import {
 } from "@/lib/api";
 import {
   ADMIN_SECTION_TABS,
+  INITIAL_RESOURCE_FORM,
   INITIAL_SUPPORT_FORM,
+  buildResourceDraft,
   buildSupportDraft,
   getAllowedTabsByRole,
   type AdminSectionTab,
   type MessageFilter,
+  type ResourceCreateFormErrors,
+  type ResourceDraft,
   type StatsRangePreset,
   type SupportCreateFormErrors,
   type SupportPathDraft,
@@ -34,12 +42,27 @@ import { useAdminAuthHandlers } from "./handlers/useAdminAuthHandlers";
 import { useAdminMessageHandlers } from "./handlers/useAdminMessageHandlers";
 import { useAdminProfileHandlers } from "./handlers/useAdminProfileHandlers";
 import { getErrorText } from "./handlers/shared";
+import { useAdminResourceHandlers } from "./handlers/useAdminResourceHandlers";
 import { useAdminStatsHandlers } from "./handlers/useAdminStatsHandlers";
 import { useAdminSupportPathHandlers } from "./handlers/useAdminSupportPathHandlers";
 import { useAdminUserHandlers } from "./handlers/useAdminUserHandlers";
 
 type LoadDashboardOptions = {
   suppressGlobalError?: boolean;
+};
+
+type LoadMessagesOptions = {
+  suppressGlobalError?: boolean;
+};
+
+const EMPTY_MESSAGE_SUMMARY: ContactMessagesPage["summary"] = {
+  totalAll: 0,
+  statusTotals: {
+    new: 0,
+    read: 0,
+    in_progress: 0,
+    responded: 0,
+  },
 };
 
 export function useAdminDashboard() {
@@ -57,6 +80,8 @@ export function useAdminDashboard() {
   const [supportPathDrafts, setSupportPathDrafts] = useState<Record<string, SupportPathDraft>>(
     {},
   );
+  const [resources, setResources] = useState<ResourceRecord[]>([]);
+  const [resourceDrafts, setResourceDrafts] = useState<Record<string, ResourceDraft>>({});
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [messagesFilter, setMessagesFilter] = useState<MessageFilter>("all");
   const [messagesSearch, setMessagesSearch] = useState("");
@@ -65,6 +90,8 @@ export function useAdminDashboard() {
   const [messagesLimit] = useState(12);
   const [messagesTotal, setMessagesTotal] = useState(0);
   const [messagesTotalPages, setMessagesTotalPages] = useState(1);
+  const [messagesSummary, setMessagesSummary] =
+    useState<ContactMessagesPage["summary"]>(EMPTY_MESSAGE_SUMMARY);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [stats, setStats] = useState<StatsDashboard | null>(null);
   const [statsRangePreset, setStatsRangePreset] = useState<StatsRangePreset>("30d");
@@ -110,6 +137,13 @@ export function useAdminDashboard() {
   const [createSupportFormErrors, setCreateSupportFormErrors] =
     useState<SupportCreateFormErrors>({});
   const [openSupportEditorId, setOpenSupportEditorId] = useState<string | null>(null);
+  const [createResourceForm, setCreateResourceForm] = useState<CreateResourcePayload>(
+    INITIAL_RESOURCE_FORM,
+  );
+  const [isCreateResourceFormOpen, setIsCreateResourceFormOpen] = useState(false);
+  const [createResourceFormErrors, setCreateResourceFormErrors] =
+    useState<ResourceCreateFormErrors>({});
+  const [openResourceEditorId, setOpenResourceEditorId] = useState<string | null>(null);
 
   const clearDashboardState = useCallback(() => {
     setCurrentUser(null);
@@ -118,9 +152,12 @@ export function useAdminDashboard() {
     setUserDrafts({});
     setSupportPaths([]);
     setSupportPathDrafts({});
+    setResources([]);
+    setResourceDrafts({});
     setMessages([]);
     setMessagesTotal(0);
     setMessagesTotalPages(1);
+    setMessagesSummary(EMPTY_MESSAGE_SUMMARY);
     setMessagesPage(1);
     setStats(null);
     setAppliedStatsQueryKey(JSON.stringify({ rangeDays: 30 }));
@@ -146,6 +183,14 @@ export function useAdminDashboard() {
       drafts[supportPath.id] = buildSupportDraft(supportPath);
     }
     setSupportPathDrafts(drafts);
+  }, []);
+
+  const syncResourceDrafts = useCallback((nextResources: ResourceRecord[]) => {
+    const drafts: Record<string, ResourceDraft> = {};
+    for (const resource of nextResources) {
+      drafts[resource.id] = buildResourceDraft(resource);
+    }
+    setResourceDrafts(drafts);
   }, []);
 
   const buildStatsQuery = useCallback(() => {
@@ -177,37 +222,46 @@ export function useAdminDashboard() {
     };
   }, [debouncedMessagesSearch, messagesFilter, messagesLimit, messagesPage]);
 
-  const loadMessagesData = useCallback(async () => {
-    const allowedTabs = getAllowedTabsByRole(currentUser?.role ?? null);
-    if (!allowedTabs.includes("messages")) {
-      setMessages([]);
-      setMessagesTotal(0);
-      setMessagesTotalPages(1);
-      return;
-    }
-
-    setIsLoadingMessages(true);
-    setError(null);
-
-    try {
-      const messagePage = await listAdminContactMessages(buildMessagesQuery());
-      setMessages(messagePage.items);
-      setMessagesTotal(messagePage.total);
-      setMessagesTotalPages(messagePage.totalPages);
-
-      if (messagePage.page !== messagesPage) {
-        setMessagesPage(messagePage.page);
+  const loadMessagesData = useCallback(
+    async (options?: LoadMessagesOptions): Promise<boolean> => {
+      const allowedTabs = getAllowedTabsByRole(currentUser?.role ?? null);
+      if (!allowedTabs.includes("messages")) {
+        setMessages([]);
+        setMessagesTotal(0);
+        setMessagesTotalPages(1);
+        setMessagesSummary(EMPTY_MESSAGE_SUMMARY);
+        return true;
       }
-    } catch (errorValue) {
-      setError(getErrorText(errorValue, "No se pudieron cargar los mensajes"));
 
-      if (errorValue instanceof ApiClientError && errorValue.status === 401) {
-        clearSessionState();
+      setIsLoadingMessages(true);
+      setError(null);
+
+      try {
+        const messagePage = await listAdminContactMessages(buildMessagesQuery());
+        setMessages(messagePage.items);
+        setMessagesTotal(messagePage.total);
+        setMessagesTotalPages(messagePage.totalPages);
+        setMessagesSummary(messagePage.summary ?? EMPTY_MESSAGE_SUMMARY);
+
+        if (messagePage.page !== messagesPage) {
+          setMessagesPage(messagePage.page);
+        }
+        return true;
+      } catch (errorValue) {
+        if (!options?.suppressGlobalError) {
+          setError(getErrorText(errorValue, "No se pudieron cargar los mensajes"));
+        }
+
+        if (errorValue instanceof ApiClientError && errorValue.status === 401) {
+          clearSessionState();
+        }
+        return false;
+      } finally {
+        setIsLoadingMessages(false);
       }
-    } finally {
-      setIsLoadingMessages(false);
-    }
-  }, [buildMessagesQuery, clearSessionState, currentUser?.role, messagesPage]);
+    },
+    [buildMessagesQuery, clearSessionState, currentUser?.role, messagesPage],
+  );
 
   const loadDashboardData = useCallback(
     async (showLoader = true, options?: LoadDashboardOptions): Promise<boolean> => {
@@ -223,6 +277,7 @@ export function useAdminDashboard() {
         const canReadMessages = allowedTabs.includes("messages");
         const canManageUsers = allowedTabs.includes("users");
         const canManageSupportPaths = allowedTabs.includes("support-paths");
+        const canManageResources = allowedTabs.includes("resources");
         const statsQuery = buildStatsQuery();
 
         if (!allowedTabs.length) {
@@ -231,6 +286,8 @@ export function useAdminDashboard() {
           setUserDrafts({});
           setSupportPaths([]);
           setSupportPathDrafts({});
+          setResources([]);
+          setResourceDrafts({});
           setMessages([]);
           setStats(null);
           return true;
@@ -240,29 +297,27 @@ export function useAdminDashboard() {
         const usersPromise: Promise<UserRecord[] | null> = canManageUsers
           ? listUsers()
           : Promise.resolve(null);
-        const allMessagesPromise: Promise<
-          | {
-              items: ContactMessage[];
-              total: number;
-              totalPages: number;
-            }
-          | null
-        > = canReadMessages
+        const allMessagesPromise: Promise<ContactMessagesPage | null> = canReadMessages
           ? listAdminContactMessages(buildMessagesQuery())
           : Promise.resolve(null);
         const supportPathsPromise: Promise<SupportPath[] | null> = canManageSupportPaths
           ? listSupportPathsAdmin()
           : Promise.resolve(null);
+        const resourcesPromise: Promise<ResourceRecord[] | null> = canManageResources
+          ? listResourcesAdmin()
+          : Promise.resolve(null);
         const statsPromise: Promise<StatsDashboard | null> = canReadSummary
           ? getStatsDashboard(statsQuery)
           : Promise.resolve(null);
 
-        const [usersData, allMessagesPage, supportPathsData, statsData] = await Promise.all([
-          usersPromise,
-          allMessagesPromise,
-          supportPathsPromise,
-          statsPromise,
-        ]);
+        const [usersData, allMessagesPage, supportPathsData, resourcesData, statsData] =
+          await Promise.all([
+            usersPromise,
+            allMessagesPromise,
+            supportPathsPromise,
+            resourcesPromise,
+            statsPromise,
+          ]);
 
         if (usersData) {
           setUsers(usersData);
@@ -280,14 +335,24 @@ export function useAdminDashboard() {
           setSupportPathDrafts({});
         }
 
+        if (resourcesData) {
+          setResources(resourcesData);
+          syncResourceDrafts(resourcesData);
+        } else {
+          setResources([]);
+          setResourceDrafts({});
+        }
+
         if (allMessagesPage) {
           setMessages(allMessagesPage.items);
           setMessagesTotal(allMessagesPage.total);
           setMessagesTotalPages(allMessagesPage.totalPages);
+          setMessagesSummary(allMessagesPage.summary ?? EMPTY_MESSAGE_SUMMARY);
         } else {
           setMessages([]);
           setMessagesTotal(0);
           setMessagesTotalPages(1);
+          setMessagesSummary(EMPTY_MESSAGE_SUMMARY);
         }
         setStats(statsData);
         setAppliedStatsQueryKey(serializeStatsQuery(statsQuery));
@@ -310,6 +375,7 @@ export function useAdminDashboard() {
       buildStatsQuery,
       clearSessionState,
       serializeStatsQuery,
+      syncResourceDrafts,
       syncSupportPathDrafts,
       syncUserDrafts,
     ],
@@ -435,6 +501,26 @@ export function useAdminDashboard() {
     loadDashboardData,
   });
 
+  const {
+    handleToggleCreateResourceForm,
+    handleToggleResourceEditor,
+    handleCreateResource,
+    handleUpdateResource,
+    handleDeleteResource,
+  } = useAdminResourceHandlers({
+    createResourceForm,
+    resourceDrafts,
+    openResourceEditorId,
+    setCreateResourceForm,
+    setCreateResourceFormErrors,
+    setIsCreateResourceFormOpen,
+    setOpenResourceEditorId,
+    setBusyAction,
+    setError,
+    setSuccess,
+    loadDashboardData,
+  });
+
   const { handleMarkMessageRead, handleUpdateMessageStatus, handleDeleteMessage } =
     useAdminMessageHandlers({
       setMessages,
@@ -460,15 +546,19 @@ export function useAdminDashboard() {
   const canAccessProfile = allowedTabs.includes("profile");
   const canAccessUsers = allowedTabs.includes("users");
   const canAccessSupportPaths = allowedTabs.includes("support-paths");
+  const canAccessResources = allowedTabs.includes("resources");
   const canAccessMessages = allowedTabs.includes("messages");
   const canMarkMessages = canAccessMessages;
   const canDeleteMessages = currentRole === "admin";
   const activeUsersCount = users.filter((item) => item.isActive).length;
   const inactiveUsersCount = users.length - activeUsersCount;
-  const unreadMessagesCount = messages.filter((item) => item.status === "new").length;
-  const readMessagesCount = messages.filter((item) => item.status === "read").length;
-  const inProgressMessagesCount = messages.filter((item) => item.status === "in_progress").length;
-  const respondedMessagesCount = messages.filter((item) => item.status === "responded").length;
+  const publishedResourcesCount = resources.filter((item) => item.isPublished).length;
+  const draftResourcesCount = resources.length - publishedResourcesCount;
+  const allMessagesCount = messagesSummary.totalAll;
+  const unreadMessagesCount = messagesSummary.statusTotals.new;
+  const readMessagesCount = messagesSummary.statusTotals.read;
+  const inProgressMessagesCount = messagesSummary.statusTotals.in_progress;
+  const respondedMessagesCount = messagesSummary.statusTotals.responded;
   const filteredMessages = messages;
 
   useEffect(() => {
@@ -500,6 +590,13 @@ export function useAdminDashboard() {
     setOpenSupportEditorId(null);
   }, [activeTab]);
 
+  useEffect(() => {
+    if (activeTab === "resources") return;
+    setIsCreateResourceFormOpen(false);
+    setCreateResourceFormErrors({});
+    setOpenResourceEditorId(null);
+  }, [activeTab]);
+
   return {
     session,
     isBootstrapping,
@@ -513,6 +610,9 @@ export function useAdminDashboard() {
     supportPaths,
     supportPathDrafts,
     setSupportPathDrafts,
+    resources,
+    resourceDrafts,
+    setResourceDrafts,
     messages,
     messagesFilter,
     setMessagesFilter,
@@ -556,21 +656,33 @@ export function useAdminDashboard() {
     setCreateSupportFormErrors,
     openSupportEditorId,
     setOpenSupportEditorId,
+    createResourceForm,
+    setCreateResourceForm,
+    isCreateResourceFormOpen,
+    setIsCreateResourceFormOpen,
+    createResourceFormErrors,
+    setCreateResourceFormErrors,
+    openResourceEditorId,
+    setOpenResourceEditorId,
     isCustomRangeIncomplete,
     visibleTabs,
     canAccessSummary,
     canAccessProfile,
     canAccessUsers,
     canAccessSupportPaths,
+    canAccessResources,
     canAccessMessages,
     canMarkMessages,
     canDeleteMessages,
     activeUsersCount,
     inactiveUsersCount,
+    publishedResourcesCount,
+    draftResourcesCount,
     unreadMessagesCount,
     readMessagesCount,
     inProgressMessagesCount,
     respondedMessagesCount,
+    allMessagesCount,
     filteredMessages,
     handleApplyStatsFilters,
     handleLogin,
@@ -587,6 +699,11 @@ export function useAdminDashboard() {
     handleCreateSupportPath,
     handleUpdateSupportPath,
     handleDeleteSupportPath,
+    handleToggleCreateResourceForm,
+    handleToggleResourceEditor,
+    handleCreateResource,
+    handleUpdateResource,
+    handleDeleteResource,
     handleMarkMessageRead,
     handleUpdateMessageStatus,
     handleDeleteMessage,

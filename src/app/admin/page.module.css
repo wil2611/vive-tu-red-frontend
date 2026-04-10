@@ -1223,7 +1223,10 @@
 }
 
 .messageFilterButton:disabled {
-  opacity: 0.55;
+  opacity: 1;
+  color: #6b8274;
+  background: #f2efe6;
+  border-color: #d8d2c2;
   cursor: not-allowed;
 }
 
@@ -1236,10 +1239,10 @@
 .messageItem {
   border: 1px solid #ece5cf;
   border-radius: 12px;
-  padding: 12px;
+  padding: 14px;
   background: linear-gradient(180deg, #fff 0%, #f8f5ea 100%);
   display: grid;
-  gap: 4px;
+  gap: 6px;
 }
 
 .messageMeta {
@@ -1247,9 +1250,48 @@
   color: #1d3e2a;
 }
 
+.messageHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.messageSubject {
+  margin: 0;
+  color: #1d3e2a;
+}
+
+.messageHeaderMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.messageDateText {
+  font-size: 0.84rem;
+  color: #2f5f48;
+  white-space: nowrap;
+}
+
+.messageSender {
+  margin: 0;
+  color: #2f5f48;
+}
+
+.messageContentBox {
+  margin-top: 4px;
+  border: 1px solid #e5dfcb;
+  background: rgba(255, 255, 255, 0.68);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
 .messageBody {
-  margin: 6px 0 2px;
-  color: #365a45;
+  margin: 0;
+  color: #305241;
   line-height: 1.6;
   white-space: pre-wrap;
 }
@@ -1268,8 +1310,8 @@
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  padding: 3px 8px;
-  font-size: 0.74rem;
+  padding: 2px 8px;
+  font-size: 0.72rem;
   font-weight: 700;
   border: 1px solid transparent;
 }
@@ -1299,14 +1341,14 @@
 }
 
 .messageReadAt {
-  margin: 6px 0 0;
+  margin: 4px 0 0;
   font-size: 0.82rem;
   color: #5a7d66;
 }
 
 .messageStatusEditor {
   display: grid;
-  gap: 4px;
+  gap: 5px;
   max-width: 220px;
   margin: 0;
 }
@@ -1321,25 +1363,25 @@
 }
 
 .messagesPagination {
-  margin-top: 12px;
+  margin-top: 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .messagesPageInfo {
   margin: 0;
-  color: #365a45;
-  font-size: 0.9rem;
+  color: #2f5b48;
+  font-size: 0.92rem;
 }
 
 .messageActionsGrid {
-  margin-top: 6px;
+  margin-top: 10px;
   display: flex;
   gap: 10px;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   flex-wrap: wrap;
 }
 
@@ -1358,6 +1400,17 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+@media (max-width: 700px) {
+  .messageHeaderMeta {
+    width: 100%;
+  }
+
+  .messageDateText {
+    white-space: normal;
+  }
 }
 
 .smallButton,

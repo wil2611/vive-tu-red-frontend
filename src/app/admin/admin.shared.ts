@@ -1,8 +1,15 @@
 import type {
+  CreateResourcePayload,
   CreateSupportPathPayload,
+  ResourceRecord,
   SupportPath,
   UserRole,
 } from "@/lib/api";
+import {
+  RESOURCE_CATEGORIES,
+  type ResourceCategoryId,
+  normalizeResourceCategory,
+} from "@/lib/resources/resource-categories";
 
 export type UserDraft = {
   role: UserRole;
@@ -19,6 +26,16 @@ export type SupportPathDraft = {
   description: string;
 };
 
+export type ResourceDraft = {
+  title: string;
+  description: string;
+  type: string;
+  fileUrl: string;
+  category: ResourceCategoryId;
+  tags: string;
+  isPublished: boolean;
+};
+
 export type SupportCreateFormErrors = {
   institutionName?: string;
   ubicacion?: string;
@@ -27,9 +44,22 @@ export type SupportCreateFormErrors = {
   schedule?: string;
 };
 
+export type ResourceCreateFormErrors = {
+  title?: string;
+  type?: string;
+  category?: string;
+  fileUrl?: string;
+};
+
 export type StatsRangePreset = "7d" | "30d" | "90d" | "custom";
 
-export type AdminSectionTab = "summary" | "profile" | "users" | "support-paths" | "messages";
+export type AdminSectionTab =
+  | "summary"
+  | "profile"
+  | "users"
+  | "support-paths"
+  | "resources"
+  | "messages";
 
 export type MessageFilter = "all" | "new" | "in_progress" | "responded" | "read";
 
@@ -38,6 +68,7 @@ export const ADMIN_SECTION_TABS: Array<{ id: AdminSectionTab; label: string }> =
   { id: "profile", label: "Mi perfil" },
   { id: "users", label: "Usuarios" },
   { id: "support-paths", label: "Instituciones" },
+  { id: "resources", label: "Recursos" },
   { id: "messages", label: "Mensajes" },
 ];
 
@@ -51,13 +82,25 @@ export const INITIAL_SUPPORT_FORM: CreateSupportPathPayload = {
   isActive: true,
 };
 
+export const INITIAL_RESOURCE_FORM: CreateResourcePayload = {
+  title: "",
+  description: "",
+  type: "pdf",
+  fileUrl: "",
+  category: "prevencion",
+  tags: [],
+  isPublished: true,
+};
+
+export const RESOURCE_CATEGORY_OPTIONS = RESOURCE_CATEGORIES;
+
 export function getAllowedTabsByRole(role: UserRole | null): AdminSectionTab[] {
   if (role === "admin") {
-    return ["summary", "profile", "users", "support-paths", "messages"];
+    return ["summary", "profile", "users", "support-paths", "resources", "messages"];
   }
 
   if (role === "editor") {
-    return ["summary", "profile", "support-paths", "messages"];
+    return ["summary", "profile", "support-paths", "resources", "messages"];
   }
 
   if (role === "investigador") {
@@ -77,6 +120,15 @@ export function textOrEmpty(value: string | null): string {
   return value ?? "";
 }
 
+function isSafeHttpUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function buildSupportDraft(path: SupportPath): SupportPathDraft {
   return {
     institutionName: path.institutionName,
@@ -86,6 +138,19 @@ export function buildSupportDraft(path: SupportPath): SupportPathDraft {
     schedule: textOrEmpty(path.schedule),
     isActive: path.isActive,
     description: textOrEmpty(path.description),
+  };
+}
+
+export function buildResourceDraft(resource: ResourceRecord): ResourceDraft {
+  const normalizedCategory = normalizeResourceCategory(resource.category) ?? "prevencion";
+  return {
+    title: resource.title,
+    description: textOrEmpty(resource.description),
+    type: resource.type,
+    fileUrl: textOrEmpty(resource.fileUrl),
+    category: normalizedCategory,
+    tags: (resource.tags ?? []).join(", "),
+    isPublished: resource.isPublished,
   };
 }
 
@@ -101,6 +166,34 @@ export function normalizeSupportCreateForm(
     email: (form.email ?? "").trim(),
     schedule: (form.schedule ?? "").trim(),
     isActive: form.isActive !== false,
+  };
+}
+
+function normalizeTags(tagsInput: string): string[] {
+  const unique = new Set<string>();
+
+  for (const rawTag of tagsInput.split(",")) {
+    const tag = rawTag.trim();
+    if (!tag) continue;
+    unique.add(tag);
+  }
+
+  return Array.from(unique);
+}
+
+export function normalizeResourceCreateForm(
+  form: CreateResourcePayload,
+): CreateResourcePayload {
+  const normalizedCategory = normalizeResourceCategory(form.category) ?? "prevencion";
+  return {
+    ...form,
+    title: (form.title ?? "").trim(),
+    description: (form.description ?? "").trim(),
+    type: (form.type ?? "").trim(),
+    fileUrl: (form.fileUrl ?? "").trim(),
+    category: normalizedCategory,
+    tags: normalizeTags(Array.isArray(form.tags) ? form.tags.join(",") : ""),
+    isPublished: form.isPublished !== false,
   };
 }
 
@@ -132,6 +225,38 @@ export function validateSupportCreateForm(
 
   if (schedule && schedule.length < 4) {
     errors.schedule = "El horario debe ser mas descriptivo.";
+  }
+
+  return errors;
+}
+
+export function validateResourceCreateForm(
+  form: CreateResourcePayload,
+): ResourceCreateFormErrors {
+  const errors: ResourceCreateFormErrors = {};
+  const title = (form.title ?? "").trim();
+  const type = (form.type ?? "").trim();
+  const category = normalizeResourceCategory(form.category);
+  const fileUrl = (form.fileUrl ?? "").trim();
+
+  if (title.length < 3) {
+    errors.title = "El titulo debe tener al menos 3 caracteres.";
+  }
+
+  if (type.length < 2) {
+    errors.type = "El tipo del recurso es obligatorio.";
+  }
+
+  if (!category) {
+    errors.category = "Selecciona una categoria valida.";
+  }
+
+  if (fileUrl && !isSafeHttpUrl(fileUrl)) {
+    errors.fileUrl = "El enlace del archivo debe iniciar con http:// o https://.";
+  }
+
+  if (form.isPublished !== false && !fileUrl) {
+    errors.fileUrl = "Si el recurso esta publicado, debes agregar el enlace del archivo.";
   }
 
   return errors;

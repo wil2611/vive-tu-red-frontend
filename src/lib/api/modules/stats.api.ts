@@ -9,7 +9,7 @@ export type CreatePageViewPayload = {
 
 export type InteractionType =
   | "book_read"
-  | "resource_download"
+  | "resource_open"
   | "network_created"
   | "contact_submitted";
 

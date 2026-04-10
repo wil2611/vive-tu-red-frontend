@@ -15,7 +15,7 @@ type MessagesTabProps = {
   setMessagesSearch: Dispatch<SetStateAction<string>>;
   messagesPage: number;
   setMessagesPage: Dispatch<SetStateAction<number>>;
-  messagesTotal: number;
+  allMessagesCount: number;
   messagesTotalPages: number;
   isLoadingMessages: boolean;
   busyAction: string | null;
@@ -48,7 +48,7 @@ export function MessagesTab({
   setMessagesSearch,
   messagesPage,
   setMessagesPage,
-  messagesTotal,
+  allMessagesCount,
   messagesTotalPages,
   isLoadingMessages,
   busyAction,
@@ -97,7 +97,7 @@ export function MessagesTab({
             setMessagesPage(1);
           }}
         >
-          Todos ({messagesTotal})
+          Todos ({allMessagesCount})
         </button>
         <button
           type="button"
@@ -152,22 +152,29 @@ export function MessagesTab({
           filteredMessages.map((msg) => {
             const reading = busyAction === `read-${msg.id}`;
             const deleting = busyAction === `delete-msg-${msg.id}`;
-            const changingStatus = busyAction === `status-${msg.id}`;
-            return (
-              <article key={msg.id} className={styles.messageItem}>
-                <p className={styles.messageMeta}>
-                  <strong>{msg.subject}</strong> - {msg.name} ({msg.email})
-                </p>
-                <p className={styles.messageDate}>
-                  {formatDate(msg.createdAt)}
-                  <span className={styles.messageStatus} data-status={msg.status}>
-                    {statusLabelByValue[msg.status]}
-                  </span>
-                </p>
-                {msg.readAt ? (
-                  <p className={styles.messageReadAt}>Primera lectura: {formatDate(msg.readAt)}</p>
-                ) : null}
-                <p className={styles.messageBody}>{msg.message}</p>
+              const changingStatus = busyAction === `status-${msg.id}`;
+              return (
+                <article key={msg.id} className={styles.messageItem}>
+                  <div className={styles.messageHeaderRow}>
+                    <p className={styles.messageSubject}>
+                      <strong>{msg.subject}</strong>
+                    </p>
+                    <div className={styles.messageHeaderMeta}>
+                      <span className={styles.messageStatus} data-status={msg.status}>
+                        {statusLabelByValue[msg.status]}
+                      </span>
+                      <span className={styles.messageDateText}>{formatDate(msg.createdAt)}</span>
+                    </div>
+                  </div>
+                  <p className={styles.messageSender}>
+                    {msg.name} ({msg.email})
+                  </p>
+                  {msg.readAt ? (
+                    <p className={styles.messageReadAt}>Primera lectura: {formatDate(msg.readAt)}</p>
+                  ) : null}
+                <div className={styles.messageContentBox}>
+                  <p className={styles.messageBody}>{msg.message}</p>
+                </div>
                 <div className={styles.messageActionsGrid}>
                   <div className={styles.messageStatusEditor}>
                     <label htmlFor={`msg-status-${msg.id}`}>Estado</label>

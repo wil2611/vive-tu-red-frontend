@@ -1,3 +1,5 @@
+import type { ResourceCategoryId } from "@/lib/resources/resource-categories";
+
 export type UserRole = "admin" | "editor" | "investigador";
 
 export type AuthUser = {
@@ -91,6 +93,15 @@ export type ContactMessagesPage = {
   page: number;
   limit: number;
   totalPages: number;
+  summary: {
+    totalAll: number;
+    statusTotals: {
+      new: number;
+      read: number;
+      in_progress: number;
+      responded: number;
+    };
+  };
 };
 
 export type UpdateContactMessageStatusPayload = {
@@ -122,6 +133,32 @@ export type CreateSupportPathPayload = {
 
 export type UpdateSupportPathPayload = Partial<CreateSupportPathPayload>;
 
+export type ResourceRecord = {
+  id: string;
+  title: string;
+  description: string | null;
+  type: string;
+  fileUrl: string | null;
+  category: string | null;
+  tags: string[] | null;
+  isPublished: boolean;
+  openCount: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateResourcePayload = {
+  title: string;
+  description?: string;
+  type: string;
+  fileUrl?: string;
+  category: ResourceCategoryId;
+  tags?: string[];
+  isPublished?: boolean;
+};
+
+export type UpdateResourcePayload = Partial<CreateResourcePayload>;
+
 export type StatsRow = {
   path?: string;
   type?: string;
@@ -138,7 +175,7 @@ export type StatsOverview = {
   interactions: {
     total: number;
     bookReads: number;
-    resourceDownloads: number;
+    resourceOpens: number;
     networksCreated: number;
   };
   topPages: StatsRow[];
@@ -163,7 +200,7 @@ export type StatsDashboard = {
     pageViews: KpiMetric;
     interactions: KpiMetric;
     uniqueSessions: KpiMetric;
-    resourceDownloads: KpiMetric;
+    resourceOpens: KpiMetric;
     bookReads: KpiMetric;
     networksCreated: KpiMetric;
     contactSubmitted: KpiMetric;

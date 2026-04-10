@@ -6,6 +6,7 @@ import { roleLabel } from "./admin.shared";
 import { useAdminDashboard } from "./hooks/useAdminDashboard";
 import { MessagesTab } from "./tabs/MessagesTab";
 import { ProfileTab } from "./tabs/ProfileTab";
+import { ResourcesTab } from "./tabs/ResourcesTab";
 import { SummaryTab } from "./tabs/SummaryTab";
 import { SupportPathsTab } from "./tabs/SupportPathsTab";
 import { UsersTab } from "./tabs/UsersTab";
@@ -24,14 +25,17 @@ export default function AdminPage() {
     supportPaths,
     supportPathDrafts,
     setSupportPathDrafts,
+    resources,
+    resourceDrafts,
+    setResourceDrafts,
     messagesFilter,
     setMessagesFilter,
     messagesSearch,
     setMessagesSearch,
     messagesPage,
     setMessagesPage,
-    messagesTotal,
     messagesTotalPages,
+    allMessagesCount,
     isLoadingMessages,
     stats,
     statsRangePreset,
@@ -66,17 +70,28 @@ export default function AdminPage() {
     setCreateSupportFormErrors,
     openSupportEditorId,
     setOpenSupportEditorId,
+    createResourceForm,
+    setCreateResourceForm,
+    isCreateResourceFormOpen,
+    setIsCreateResourceFormOpen,
+    createResourceFormErrors,
+    setCreateResourceFormErrors,
+    openResourceEditorId,
+    setOpenResourceEditorId,
     isCustomRangeIncomplete,
     visibleTabs,
     canAccessSummary,
     canAccessProfile,
     canAccessUsers,
     canAccessSupportPaths,
+    canAccessResources,
     canAccessMessages,
     canMarkMessages,
     canDeleteMessages,
     activeUsersCount,
     inactiveUsersCount,
+    publishedResourcesCount,
+    draftResourcesCount,
     unreadMessagesCount,
     readMessagesCount,
     inProgressMessagesCount,
@@ -97,6 +112,11 @@ export default function AdminPage() {
     handleCreateSupportPath,
     handleUpdateSupportPath,
     handleDeleteSupportPath,
+    handleToggleCreateResourceForm,
+    handleToggleResourceEditor,
+    handleCreateResource,
+    handleUpdateResource,
+    handleDeleteResource,
     handleMarkMessageRead,
     handleUpdateMessageStatus,
     handleDeleteMessage,
@@ -296,6 +316,30 @@ export default function AdminPage() {
               />
             ) : null}
 
+            {canAccessResources && activeTab === "resources" ? (
+              <ResourcesTab
+                resources={resources}
+                publishedResourcesCount={publishedResourcesCount}
+                draftResourcesCount={draftResourcesCount}
+                createResourceForm={createResourceForm}
+                setCreateResourceForm={setCreateResourceForm}
+                createResourceFormErrors={createResourceFormErrors}
+                setCreateResourceFormErrors={setCreateResourceFormErrors}
+                isCreateResourceFormOpen={isCreateResourceFormOpen}
+                setIsCreateResourceFormOpen={setIsCreateResourceFormOpen}
+                resourceDrafts={resourceDrafts}
+                setResourceDrafts={setResourceDrafts}
+                openResourceEditorId={openResourceEditorId}
+                setOpenResourceEditorId={setOpenResourceEditorId}
+                busyAction={busyAction}
+                onToggleCreateResourceForm={handleToggleCreateResourceForm}
+                onToggleResourceEditor={handleToggleResourceEditor}
+                onCreateResource={handleCreateResource}
+                onUpdateResource={handleUpdateResource}
+                onDeleteResource={handleDeleteResource}
+              />
+            ) : null}
+
             {canAccessMessages && activeTab === "messages" ? (
               <MessagesTab
                 filteredMessages={filteredMessages}
@@ -309,7 +353,7 @@ export default function AdminPage() {
                 setMessagesSearch={setMessagesSearch}
                 messagesPage={messagesPage}
                 setMessagesPage={setMessagesPage}
-                messagesTotal={messagesTotal}
+                allMessagesCount={allMessagesCount}
                 messagesTotalPages={messagesTotalPages}
                 isLoadingMessages={isLoadingMessages}
                 busyAction={busyAction}

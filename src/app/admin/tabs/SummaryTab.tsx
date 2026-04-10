@@ -48,7 +48,8 @@ function formatPercent(value: number): string {
 function formatInteractionTypeLabel(type: string): string {
   const labels: Record<string, string> = {
     book_read: "Lectura de libro",
-    resource_download: "Descarga de recursos",
+    resource_open: "Apertura de recurso",
+    resource_download: "Apertura de recurso",
     network_created: "Red creada",
     contact_submitted: "Formulario de contacto",
   };
@@ -327,7 +328,7 @@ export function SummaryTab({
       id: "interactions",
       title: "Interacciones",
       description:
-        "Acciones registradas por usuarios: descargas, lectura de libro, red creada, contacto, etc.",
+        "Acciones registradas por usuarios: apertura de recursos, lectura de libro, red creada, contacto, etc.",
       metric: stats?.kpis.interactions ?? null,
       formatter: formatNumber,
     },
@@ -340,10 +341,10 @@ export function SummaryTab({
       formatter: formatNumber,
     },
     {
-      id: "resourceDownloads",
-      title: "Descargas",
-      description: "Numero de eventos de descarga de recursos registrados en el periodo.",
-      metric: stats?.kpis.resourceDownloads ?? null,
+      id: "resourceOpens",
+      title: "Aperturas de recursos",
+      description: "Numero de eventos de apertura de recursos registrados en el periodo.",
+      metric: stats?.kpis.resourceOpens ?? null,
       formatter: formatNumber,
     },
     {
