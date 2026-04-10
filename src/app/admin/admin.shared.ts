@@ -60,6 +60,7 @@ export type ResourceCreateFormErrors = {
   type?: string;
   category?: string;
   fileUrl?: string;
+  tags?: string;
 };
 
 export type TeamCreateFormErrors = {
@@ -121,6 +122,12 @@ export const INITIAL_TEAM_FORM: CreateTeamMemberPayload = {
 };
 
 export const RESOURCE_CATEGORY_OPTIONS = RESOURCE_CATEGORIES;
+export const RESOURCE_TITLE_MAX_LENGTH = 255;
+export const RESOURCE_TYPE_MAX_LENGTH = 120;
+export const RESOURCE_FILE_URL_MAX_LENGTH = 2048;
+export const RESOURCE_DESCRIPTION_MAX_LENGTH = 5000;
+export const RESOURCE_TAG_MAX_LENGTH = 80;
+export const RESOURCE_TAGS_MAX_COUNT = 30;
 export const TEAM_NAME_MAX_LENGTH = 255;
 export const TEAM_PROFILE_MAX_LENGTH = 5000;
 export const TEAM_DEPARTMENT_MAX_LENGTH = 255;
@@ -321,13 +328,20 @@ export function validateResourceCreateForm(
   const type = (form.type ?? "").trim();
   const category = normalizeResourceCategory(form.category);
   const fileUrl = (form.fileUrl ?? "").trim();
+  const normalizedTags = (form.tags ?? [])
+    .map((tag) => tag.trim())
+    .filter((tag) => tag.length > 0);
 
   if (title.length < 3) {
     errors.title = "El titulo debe tener al menos 3 caracteres.";
+  } else if (title.length > RESOURCE_TITLE_MAX_LENGTH) {
+    errors.title = `El titulo no puede superar ${RESOURCE_TITLE_MAX_LENGTH} caracteres.`;
   }
 
   if (type.length < 2) {
     errors.type = "El tipo del recurso es obligatorio.";
+  } else if (type.length > RESOURCE_TYPE_MAX_LENGTH) {
+    errors.type = `El tipo no puede superar ${RESOURCE_TYPE_MAX_LENGTH} caracteres.`;
   }
 
   if (!category) {
@@ -336,10 +350,18 @@ export function validateResourceCreateForm(
 
   if (fileUrl && !isSafeHttpUrl(fileUrl)) {
     errors.fileUrl = "El enlace del archivo debe iniciar con http:// o https://.";
+  } else if (fileUrl.length > RESOURCE_FILE_URL_MAX_LENGTH) {
+    errors.fileUrl = `El enlace no puede superar ${RESOURCE_FILE_URL_MAX_LENGTH} caracteres.`;
   }
 
   if (form.isPublished !== false && !fileUrl) {
     errors.fileUrl = "Si el recurso esta publicado, debes agregar el enlace del archivo.";
+  }
+
+  if (normalizedTags.length > RESOURCE_TAGS_MAX_COUNT) {
+    errors.tags = `No puedes usar mas de ${RESOURCE_TAGS_MAX_COUNT} tags en un recurso.`;
+  } else if (normalizedTags.some((tag) => tag.length > RESOURCE_TAG_MAX_LENGTH)) {
+    errors.tags = `Cada tag debe tener maximo ${RESOURCE_TAG_MAX_LENGTH} caracteres.`;
   }
 
   return errors;

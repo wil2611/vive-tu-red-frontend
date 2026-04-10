@@ -1,6 +1,12 @@
 import type { Dispatch, FormEvent, SetStateAction } from "react";
 import type { CreateResourcePayload, ResourceRecord } from "@/lib/api";
 import {
+  RESOURCE_DESCRIPTION_MAX_LENGTH,
+  RESOURCE_FILE_URL_MAX_LENGTH,
+  RESOURCE_TAG_MAX_LENGTH,
+  RESOURCE_TAGS_MAX_COUNT,
+  RESOURCE_TITLE_MAX_LENGTH,
+  RESOURCE_TYPE_MAX_LENGTH,
   RESOURCE_CATEGORY_OPTIONS,
   buildResourceDraft,
   type ResourceCreateFormErrors,
@@ -120,6 +126,7 @@ export function ResourcesTab({
                   id="resource-title"
                   className={createResourceFormErrors.title ? styles.fieldError : ""}
                   value={createResourceForm.title ?? ""}
+                  maxLength={RESOURCE_TITLE_MAX_LENGTH}
                   onChange={(event) => {
                     setCreateResourceForm((prev) => ({
                       ...prev,
@@ -142,6 +149,7 @@ export function ResourcesTab({
                   id="resource-type"
                   className={createResourceFormErrors.type ? styles.fieldError : ""}
                   value={createResourceForm.type ?? ""}
+                  maxLength={RESOURCE_TYPE_MAX_LENGTH}
                   onChange={(event) => {
                     setCreateResourceForm((prev) => ({
                       ...prev,
@@ -186,13 +194,21 @@ export function ResourcesTab({
                 <input
                   id="resource-tags"
                   value={(createResourceForm.tags ?? []).join(", ")}
-                  onChange={(event) =>
+                  maxLength={(RESOURCE_TAG_MAX_LENGTH + 2) * RESOURCE_TAGS_MAX_COUNT}
+                  onChange={(event) => {
                     setCreateResourceForm((prev) => ({
                       ...prev,
                       tags: tagsToArray(event.target.value),
-                    }))
-                  }
+                    }));
+                    setCreateResourceFormErrors((prev) => ({
+                      ...prev,
+                      tags: undefined,
+                    }));
+                  }}
                 />
+                {createResourceFormErrors.tags ? (
+                  <p className={styles.fieldErrorText}>{createResourceFormErrors.tags}</p>
+                ) : null}
               </div>
               <div>
                 <label htmlFor="resource-file-url">Enlace del archivo</label>
@@ -200,6 +216,7 @@ export function ResourcesTab({
                   id="resource-file-url"
                   className={createResourceFormErrors.fileUrl ? styles.fieldError : ""}
                   value={createResourceForm.fileUrl ?? ""}
+                  maxLength={RESOURCE_FILE_URL_MAX_LENGTH}
                   onChange={(event) => {
                     setCreateResourceForm((prev) => ({
                       ...prev,
@@ -238,6 +255,7 @@ export function ResourcesTab({
               <textarea
                 id="resource-description"
                 value={createResourceForm.description ?? ""}
+                maxLength={RESOURCE_DESCRIPTION_MAX_LENGTH}
                 onChange={(event) =>
                   setCreateResourceForm((prev) => ({
                     ...prev,
@@ -303,7 +321,7 @@ export function ResourcesTab({
                         </span>
                       </div>
                       <p className={styles.panelHint}>
-                        {draft.category.trim() || "Sin categoria"} · Aperturas:{" "}
+                        {draft.category.trim() || "Sin categoria"} - Aperturas:{" "}
                         {resource.openCount}
                       </p>
                     </div>
@@ -334,6 +352,7 @@ export function ResourcesTab({
                           <label>Titulo</label>
                           <input
                             value={draft.title}
+                            maxLength={RESOURCE_TITLE_MAX_LENGTH}
                             onChange={(event) =>
                               setResourceDrafts((prev) => ({
                                 ...prev,
@@ -350,6 +369,7 @@ export function ResourcesTab({
                           <label>Tipo</label>
                           <input
                             value={draft.type}
+                            maxLength={RESOURCE_TYPE_MAX_LENGTH}
                             onChange={(event) =>
                               setResourceDrafts((prev) => ({
                                 ...prev,
@@ -388,6 +408,7 @@ export function ResourcesTab({
                           <label>Tags (separados por coma)</label>
                           <input
                             value={draft.tags}
+                            maxLength={(RESOURCE_TAG_MAX_LENGTH + 2) * RESOURCE_TAGS_MAX_COUNT}
                             onChange={(event) =>
                               setResourceDrafts((prev) => ({
                                 ...prev,
@@ -404,6 +425,7 @@ export function ResourcesTab({
                           <label>Enlace del archivo</label>
                           <input
                             value={draft.fileUrl}
+                            maxLength={RESOURCE_FILE_URL_MAX_LENGTH}
                             onChange={(event) =>
                               setResourceDrafts((prev) => ({
                                 ...prev,
@@ -439,6 +461,7 @@ export function ResourcesTab({
                           <label>Descripcion</label>
                           <textarea
                             value={draft.description}
+                            maxLength={RESOURCE_DESCRIPTION_MAX_LENGTH}
                             onChange={(event) =>
                               setResourceDrafts((prev) => ({
                                 ...prev,
@@ -484,3 +507,4 @@ export function ResourcesTab({
     </article>
   );
 }
+

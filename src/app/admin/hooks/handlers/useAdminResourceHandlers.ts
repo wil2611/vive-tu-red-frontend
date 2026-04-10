@@ -42,15 +42,6 @@ function parseTags(raw: string): string[] {
   return Array.from(unique);
 }
 
-function isSafeHttpUrl(value: string): boolean {
-  try {
-    const parsed = new URL(value);
-    return parsed.protocol === "http:" || parsed.protocol === "https:";
-  } catch {
-    return false;
-  }
-}
-
 export function useAdminResourceHandlers({
   createResourceForm,
   resourceDrafts,
@@ -131,15 +122,25 @@ export function useAdminResourceHandlers({
       const draft = resourceDrafts[resource.id];
       if (!draft) return;
 
-      const fileUrl = draft.fileUrl.trim();
-      if (draft.isPublished && !fileUrl) {
-        setError("Si el recurso esta publicado, debes agregar el enlace del archivo.");
-        setSuccess(null);
-        return;
-      }
-
-      if (fileUrl && !isSafeHttpUrl(fileUrl)) {
-        setError("El enlace del archivo debe iniciar con http:// o https://.");
+      const normalizedPayload = normalizeResourceCreateForm({
+        title: draft.title,
+        description: draft.description,
+        type: draft.type,
+        fileUrl: draft.fileUrl,
+        category: draft.category,
+        tags: parseTags(draft.tags),
+        isPublished: draft.isPublished,
+      });
+      const formErrors = validateResourceCreateForm(normalizedPayload);
+      if (Object.keys(formErrors).length > 0) {
+        const firstError =
+          formErrors.title ??
+          formErrors.type ??
+          formErrors.category ??
+          formErrors.fileUrl ??
+          formErrors.tags ??
+          "Revisa los campos del recurso antes de guardar.";
+        setError(firstError);
         setSuccess(null);
         return;
       }
@@ -150,23 +151,23 @@ export function useAdminResourceHandlers({
 
       try {
         await updateResourceById(resource.id, {
-          title: draft.title.trim(),
-          description: draft.description.trim(),
-          type: draft.type.trim(),
-          fileUrl,
-          category: draft.category,
-          tags: parseTags(draft.tags),
-          isPublished: draft.isPublished,
+          title: normalizedPayload.title,
+          description: normalizedPayload.description,
+          type: normalizedPayload.type,
+          fileUrl: normalizedPayload.fileUrl,
+          category: normalizedPayload.category,
+          tags: normalizedPayload.tags,
+          isPublished: normalizedPayload.isPublished,
         });
         setOpenResourceEditorId(null);
-        setSuccess(`Recurso ${draft.title.trim() || "sin titulo"} actualizado`);
+        setSuccess(`Recurso ${normalizedPayload.title || "sin titulo"} actualizado`);
 
         const refreshed = await loadDashboardData(false, {
           suppressGlobalError: true,
         });
         if (!refreshed) {
           setSuccess(
-            `Recurso ${draft.title.trim() || "sin titulo"} actualizado. No se pudo refrescar la lista automaticamente.`,
+            `Recurso ${normalizedPayload.title || "sin titulo"} actualizado. No se pudo refrescar la lista automaticamente.`,
           );
         }
       } catch (errorValue) {

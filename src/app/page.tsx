@@ -50,7 +50,7 @@ export default function HomePage() {
           <div className="hero-grid">
             <div className="hero-content">
               <h1 className="hero-title">
-                Transformando realidades a través de la red.
+                Transformando realidades a través de tu red.
               </h1>
               <p className="hero-desc">
                 Sensibilización social, concienciación y creación de redes de apoyo
