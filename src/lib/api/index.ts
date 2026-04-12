@@ -59,6 +59,13 @@ export {
   updateProjectAllyById,
 } from "./modules/allies.api";
 export {
+  createNews,
+  deleteNewsById,
+  listNewsAdmin,
+  listPublishedNews,
+  updateNewsById,
+} from "./modules/news.api";
+export {
   getStatsDashboard,
   getStatsOverview,
   trackInteraction,
@@ -73,6 +80,7 @@ export type {
   ChangeMyPasswordPayload,
   ContactMessage,
   ContactMessagesPage,
+  CreateNewsPayload,
   CreateResourcePayload,
   CreateProjectAllyPayload,
   CreateSupportPathPayload,
@@ -84,11 +92,13 @@ export type {
   ResourceRecord,
   ListAdminContactMessagesQuery,
   LoginPayload,
+  NewsItem,
   SupportPath,
   StatsDashboard,
   StatsOverview,
   TeamMember,
   UpdateResourcePayload,
+  UpdateNewsPayload,
   UpdateProjectAllyPayload,
   UpdateTeamMemberPayload,
   UpdateMyProfilePayload,

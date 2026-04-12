@@ -1,8 +1,10 @@
 import type {
+  CreateNewsPayload,
   CreateProjectAllyPayload,
   CreateResourcePayload,
   CreateSupportPathPayload,
   CreateTeamMemberPayload,
+  NewsItem,
   ProjectAlly,
   ProjectAllyType,
   ResourceRecord,
@@ -59,6 +61,17 @@ export type ProjectAllyDraft = {
   isActive: boolean;
 };
 
+export type NewsDraft = {
+  title: string;
+  excerpt: string;
+  body: string;
+  coverImageUrl: string;
+  coverImageAlt: string;
+  authorName: string;
+  isPublished: boolean;
+  publishedAt: string;
+};
+
 export type SupportCreateFormErrors = {
   institutionName?: string;
   ubicacion?: string;
@@ -88,6 +101,16 @@ export type AllyCreateFormErrors = {
   participationScope?: string;
 };
 
+export type NewsCreateFormErrors = {
+  title?: string;
+  excerpt?: string;
+  body?: string;
+  coverImageUrl?: string;
+  coverImageAlt?: string;
+  authorName?: string;
+  publishedAt?: string;
+};
+
 export type StatsRangePreset = "7d" | "30d" | "90d" | "custom";
 
 export type AdminSectionTab =
@@ -96,6 +119,7 @@ export type AdminSectionTab =
   | "users"
   | "support-paths"
   | "allies"
+  | "news"
   | "team"
   | "resources"
   | "messages";
@@ -108,6 +132,7 @@ export const ADMIN_SECTION_TABS: Array<{ id: AdminSectionTab; label: string }> =
   { id: "users", label: "Usuarios" },
   { id: "support-paths", label: "Instituciones" },
   { id: "allies", label: "Aliados" },
+  { id: "news", label: "Noticias" },
   { id: "team", label: "Equipo" },
   { id: "resources", label: "Recursos" },
   { id: "messages", label: "Mensajes" },
@@ -151,6 +176,17 @@ export const INITIAL_ALLY_FORM: CreateProjectAllyPayload = {
   isActive: true,
 };
 
+export const INITIAL_NEWS_FORM: CreateNewsPayload = {
+  title: "",
+  excerpt: "",
+  body: "",
+  coverImageUrl: "",
+  coverImageAlt: "",
+  authorName: "",
+  isPublished: true,
+  publishedAt: "",
+};
+
 export const RESOURCE_CATEGORY_OPTIONS = RESOURCE_CATEGORIES;
 export const RESOURCE_TITLE_MAX_LENGTH = 255;
 export const RESOURCE_TYPE_MAX_LENGTH = 120;
@@ -167,6 +203,12 @@ export const ALLY_INSTITUTION_NAME_MAX_LENGTH = 255;
 export const ALLY_ROLE_LABEL_MAX_LENGTH = 120;
 export const ALLY_SUMMARY_MAX_LENGTH = 5000;
 export const ALLY_PARTICIPATION_SCOPE_MAX_LENGTH = 5000;
+export const NEWS_TITLE_MAX_LENGTH = 255;
+export const NEWS_EXCERPT_MAX_LENGTH = 300;
+export const NEWS_BODY_MAX_LENGTH = 50000;
+export const NEWS_COVER_IMAGE_URL_MAX_LENGTH = 2048;
+export const NEWS_COVER_IMAGE_ALT_MAX_LENGTH = 180;
+export const NEWS_AUTHOR_NAME_MAX_LENGTH = 120;
 const TEAM_IMAGE_ALLOWED_HOSTS = new Set([
   "plus.unsplash.com",
   "images.unsplash.com",
@@ -176,11 +218,30 @@ const TEAM_IMAGE_ALLOWED_HOSTS = new Set([
 
 export function getAllowedTabsByRole(role: UserRole | null): AdminSectionTab[] {
   if (role === "admin") {
-    return ["summary", "profile", "users", "support-paths", "allies", "team", "resources", "messages"];
+    return [
+      "summary",
+      "profile",
+      "users",
+      "support-paths",
+      "allies",
+      "news",
+      "team",
+      "resources",
+      "messages",
+    ];
   }
 
   if (role === "editor") {
-    return ["summary", "profile", "support-paths", "allies", "team", "resources", "messages"];
+    return [
+      "summary",
+      "profile",
+      "support-paths",
+      "allies",
+      "news",
+      "team",
+      "resources",
+      "messages",
+    ];
   }
 
   if (role === "investigador") {
@@ -275,6 +336,29 @@ export function buildProjectAllyDraft(projectAlly: ProjectAlly): ProjectAllyDraf
   };
 }
 
+function toDateTimeLocalValue(value: string | null): string {
+  if (!value) return "";
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "";
+
+  const localDate = new Date(parsed.getTime() - parsed.getTimezoneOffset() * 60000);
+  return localDate.toISOString().slice(0, 16);
+}
+
+export function buildNewsDraft(newsItem: NewsItem): NewsDraft {
+  return {
+    title: newsItem.title,
+    excerpt: textOrEmpty(newsItem.excerpt),
+    body: newsItem.body,
+    coverImageUrl: textOrEmpty(newsItem.coverImageUrl),
+    coverImageAlt: textOrEmpty(newsItem.coverImageAlt),
+    authorName: textOrEmpty(newsItem.authorName),
+    isPublished: newsItem.isPublished,
+    publishedAt: toDateTimeLocalValue(newsItem.publishedAt),
+  };
+}
+
 export function normalizeSupportCreateForm(
   form: CreateSupportPathPayload,
 ): CreateSupportPathPayload {
@@ -342,6 +426,20 @@ export function normalizeProjectAllyCreateForm(
     summary: (form.summary ?? "").trim(),
     participationScope: (form.participationScope ?? "").trim(),
     isActive: form.isActive !== false,
+  };
+}
+
+export function normalizeNewsCreateForm(form: CreateNewsPayload): CreateNewsPayload {
+  return {
+    ...form,
+    title: (form.title ?? "").trim(),
+    excerpt: (form.excerpt ?? "").trim(),
+    body: (form.body ?? "").trim(),
+    coverImageUrl: (form.coverImageUrl ?? "").trim(),
+    coverImageAlt: (form.coverImageAlt ?? "").trim(),
+    authorName: (form.authorName ?? "").trim(),
+    publishedAt: (form.publishedAt ?? "").trim(),
+    isPublished: form.isPublished !== false,
   };
 }
 
@@ -490,6 +588,61 @@ export function validateTeamCreateForm(
       "Dominio de foto no permitido. Usa Drive, SharePoint o agrega el dominio a next.config.ts.";
   } else if (photo.length > TEAM_PHOTO_MAX_LENGTH) {
     errors.photo = `La URL de la foto no puede superar ${TEAM_PHOTO_MAX_LENGTH} caracteres.`;
+  }
+
+  return errors;
+}
+
+export function validateNewsCreateForm(form: CreateNewsPayload): NewsCreateFormErrors {
+  const errors: NewsCreateFormErrors = {};
+  const title = (form.title ?? "").trim();
+  const excerpt = (form.excerpt ?? "").trim();
+  const body = (form.body ?? "").trim();
+  const coverImageUrl = (form.coverImageUrl ?? "").trim();
+  const coverImageAlt = (form.coverImageAlt ?? "").trim();
+  const authorName = (form.authorName ?? "").trim();
+  const publishedAt = (form.publishedAt ?? "").trim();
+
+  if (title.length < 3) {
+    errors.title = "El titulo debe tener al menos 3 caracteres.";
+  } else if (title.length > NEWS_TITLE_MAX_LENGTH) {
+    errors.title = `El titulo no puede superar ${NEWS_TITLE_MAX_LENGTH} caracteres.`;
+  }
+
+  if (excerpt.length > NEWS_EXCERPT_MAX_LENGTH) {
+    errors.excerpt = `El resumen no puede superar ${NEWS_EXCERPT_MAX_LENGTH} caracteres.`;
+  }
+
+  if (body.length < 30) {
+    errors.body = "El cuerpo debe tener al menos 30 caracteres.";
+  } else if (body.length > NEWS_BODY_MAX_LENGTH) {
+    errors.body = `El cuerpo no puede superar ${NEWS_BODY_MAX_LENGTH} caracteres.`;
+  }
+
+  if (coverImageUrl && !isSafeHttpUrl(coverImageUrl)) {
+    errors.coverImageUrl = "La portada debe ser una URL con http:// o https://.";
+  } else if (coverImageUrl.length > NEWS_COVER_IMAGE_URL_MAX_LENGTH) {
+    errors.coverImageUrl =
+      `La URL de portada no puede superar ${NEWS_COVER_IMAGE_URL_MAX_LENGTH} caracteres.`;
+  }
+
+  if (coverImageAlt.length > NEWS_COVER_IMAGE_ALT_MAX_LENGTH) {
+    errors.coverImageAlt =
+      `El texto alternativo no puede superar ${NEWS_COVER_IMAGE_ALT_MAX_LENGTH} caracteres.`;
+  } else if (coverImageAlt && !coverImageUrl) {
+    errors.coverImageAlt = "Agrega una URL de portada antes de definir texto alternativo.";
+  }
+
+  if (authorName.length > NEWS_AUTHOR_NAME_MAX_LENGTH) {
+    errors.authorName =
+      `El nombre de autora/or no puede superar ${NEWS_AUTHOR_NAME_MAX_LENGTH} caracteres.`;
+  }
+
+  if (publishedAt) {
+    const parsed = new Date(publishedAt);
+    if (Number.isNaN(parsed.getTime())) {
+      errors.publishedAt = "La fecha de publicacion no es valida.";
+    }
   }
 
   return errors;

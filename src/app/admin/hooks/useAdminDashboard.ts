@@ -4,14 +4,17 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ApiClientError,
   clearAuthSession,
+  type CreateNewsPayload,
   type CreateProjectAllyPayload,
   type CreateTeamMemberPayload,
   type CreateResourcePayload,
+  type NewsItem,
   type ProjectAlly,
   type ResourceRecord,
   getCurrentAuthSession,
   getCurrentUser,
   getStatsDashboard,
+  listNewsAdmin,
   listProjectAlliesAdmin,
   listTeamMembersAdmin,
   listAdminContactMessages,
@@ -31,9 +34,11 @@ import {
 import {
   ADMIN_SECTION_TABS,
   INITIAL_ALLY_FORM,
+  INITIAL_NEWS_FORM,
   INITIAL_RESOURCE_FORM,
   INITIAL_SUPPORT_FORM,
   INITIAL_TEAM_FORM,
+  buildNewsDraft,
   buildProjectAllyDraft,
   buildResourceDraft,
   buildSupportDraft,
@@ -42,6 +47,8 @@ import {
   type AllyCreateFormErrors,
   type AdminSectionTab,
   type MessageFilter,
+  type NewsCreateFormErrors,
+  type NewsDraft,
   type ProjectAllyDraft,
   type ResourceCreateFormErrors,
   type ResourceDraft,
@@ -54,6 +61,7 @@ import {
 } from "../admin.shared";
 import { useAdminAuthHandlers } from "./handlers/useAdminAuthHandlers";
 import { useAdminMessageHandlers } from "./handlers/useAdminMessageHandlers";
+import { useAdminNewsHandlers } from "./handlers/useAdminNewsHandlers";
 import { useAdminProfileHandlers } from "./handlers/useAdminProfileHandlers";
 import { getErrorText } from "./handlers/shared";
 import { useAdminResourceHandlers } from "./handlers/useAdminResourceHandlers";
@@ -102,6 +110,8 @@ export function useAdminDashboard() {
   );
   const [resources, setResources] = useState<ResourceRecord[]>([]);
   const [resourceDrafts, setResourceDrafts] = useState<Record<string, ResourceDraft>>({});
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [newsDrafts, setNewsDrafts] = useState<Record<string, NewsDraft>>({});
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [teamMemberDrafts, setTeamMemberDrafts] = useState<Record<string, TeamMemberDraft>>({});
   const [messages, setMessages] = useState<ContactMessage[]>([]);
@@ -178,6 +188,10 @@ export function useAdminDashboard() {
   const [createResourceFormErrors, setCreateResourceFormErrors] =
     useState<ResourceCreateFormErrors>({});
   const [openResourceEditorId, setOpenResourceEditorId] = useState<string | null>(null);
+  const [createNewsForm, setCreateNewsForm] = useState<CreateNewsPayload>(INITIAL_NEWS_FORM);
+  const [isCreateNewsFormOpen, setIsCreateNewsFormOpen] = useState(false);
+  const [createNewsFormErrors, setCreateNewsFormErrors] = useState<NewsCreateFormErrors>({});
+  const [openNewsEditorId, setOpenNewsEditorId] = useState<string | null>(null);
 
   const clearDashboardState = useCallback(() => {
     setCurrentUser(null);
@@ -190,6 +204,8 @@ export function useAdminDashboard() {
     setProjectAllyDrafts({});
     setResources([]);
     setResourceDrafts({});
+    setNewsItems([]);
+    setNewsDrafts({});
     setTeamMembers([]);
     setTeamMemberDrafts({});
     setMessages([]);
@@ -237,6 +253,14 @@ export function useAdminDashboard() {
       drafts[resource.id] = buildResourceDraft(resource);
     }
     setResourceDrafts(drafts);
+  }, []);
+
+  const syncNewsDrafts = useCallback((nextNewsItems: NewsItem[]) => {
+    const drafts: Record<string, NewsDraft> = {};
+    for (const newsItem of nextNewsItems) {
+      drafts[newsItem.id] = buildNewsDraft(newsItem);
+    }
+    setNewsDrafts(drafts);
   }, []);
 
   const syncTeamMemberDrafts = useCallback((nextTeamMembers: TeamMember[]) => {
@@ -334,6 +358,7 @@ export function useAdminDashboard() {
         const canManageAllies = allowedTabs.includes("allies");
         const canManageTeam = allowedTabs.includes("team");
         const canManageResources = allowedTabs.includes("resources");
+        const canManageNews = allowedTabs.includes("news");
         const statsQuery = buildStatsQuery();
 
         if (!allowedTabs.length) {
@@ -348,6 +373,8 @@ export function useAdminDashboard() {
           setTeamMemberDrafts({});
           setResources([]);
           setResourceDrafts({});
+          setNewsItems([]);
+          setNewsDrafts({});
           setMessages([]);
           setStats(null);
           return true;
@@ -372,6 +399,9 @@ export function useAdminDashboard() {
         const resourcesPromise: Promise<ResourceRecord[] | null> = canManageResources
           ? listResourcesAdmin()
           : Promise.resolve(null);
+        const newsPromise: Promise<NewsItem[] | null> = canManageNews
+          ? listNewsAdmin()
+          : Promise.resolve(null);
         const statsPromise: Promise<StatsDashboard | null> = canReadSummary
           ? getStatsDashboard(statsQuery)
           : Promise.resolve(null);
@@ -383,6 +413,7 @@ export function useAdminDashboard() {
           projectAlliesPromise,
           teamMembersPromise,
           resourcesPromise,
+          newsPromise,
           statsPromise,
         ])) as [
           PromiseSettledResult<UserRecord[] | null>,
@@ -391,6 +422,7 @@ export function useAdminDashboard() {
           PromiseSettledResult<ProjectAlly[] | null>,
           PromiseSettledResult<TeamMember[] | null>,
           PromiseSettledResult<ResourceRecord[] | null>,
+          PromiseSettledResult<NewsItem[] | null>,
           PromiseSettledResult<StatsDashboard | null>,
         ];
 
@@ -426,7 +458,8 @@ export function useAdminDashboard() {
           settledResults[4].status === "fulfilled" ? settledResults[4].value : null;
         const resourcesData =
           settledResults[5].status === "fulfilled" ? settledResults[5].value : null;
-        const statsData = settledResults[6].status === "fulfilled" ? settledResults[6].value : null;
+        const newsData = settledResults[6].status === "fulfilled" ? settledResults[6].value : null;
+        const statsData = settledResults[7].status === "fulfilled" ? settledResults[7].value : null;
 
         if (usersData) {
           setUsers(usersData);
@@ -468,6 +501,14 @@ export function useAdminDashboard() {
           setResourceDrafts({});
         }
 
+        if (newsData) {
+          setNewsItems(newsData);
+          syncNewsDrafts(newsData);
+        } else {
+          setNewsItems([]);
+          setNewsDrafts({});
+        }
+
         if (allMessagesPage) {
           setMessages(allMessagesPage.items);
           setMessagesTotal(allMessagesPage.total);
@@ -480,7 +521,7 @@ export function useAdminDashboard() {
           setMessagesSummary(EMPTY_MESSAGE_SUMMARY);
         }
         setStats(statsData);
-        if (settledResults[6].status === "fulfilled") {
+        if (settledResults[7].status === "fulfilled") {
           setAppliedStatsQueryKey(serializeStatsQuery(statsQuery));
         }
         return true;
@@ -503,6 +544,7 @@ export function useAdminDashboard() {
       clearSessionState,
       serializeStatsQuery,
       syncResourceDrafts,
+      syncNewsDrafts,
       syncProjectAllyDrafts,
       syncSupportPathDrafts,
       syncTeamMemberDrafts,
@@ -671,6 +713,26 @@ export function useAdminDashboard() {
   });
 
   const {
+    handleToggleCreateNewsForm,
+    handleToggleNewsEditor,
+    handleCreateNews,
+    handleUpdateNews,
+    handleDeleteNews,
+  } = useAdminNewsHandlers({
+    createNewsForm,
+    newsDrafts,
+    openNewsEditorId,
+    setCreateNewsForm,
+    setCreateNewsFormErrors,
+    setIsCreateNewsFormOpen,
+    setOpenNewsEditorId,
+    setBusyAction,
+    setError,
+    setSuccess,
+    loadDashboardData,
+  });
+
+  const {
     handleToggleCreateTeamForm,
     handleToggleTeamEditor,
     handleCreateTeamMember,
@@ -716,6 +778,7 @@ export function useAdminDashboard() {
   const canAccessUsers = allowedTabs.includes("users");
   const canAccessSupportPaths = allowedTabs.includes("support-paths");
   const canAccessAllies = allowedTabs.includes("allies");
+  const canAccessNews = allowedTabs.includes("news");
   const canAccessTeam = allowedTabs.includes("team");
   const canAccessResources = allowedTabs.includes("resources");
   const canAccessMessages = allowedTabs.includes("messages");
@@ -725,6 +788,8 @@ export function useAdminDashboard() {
   const inactiveUsersCount = users.length - activeUsersCount;
   const publishedResourcesCount = resources.filter((item) => item.isPublished).length;
   const draftResourcesCount = resources.length - publishedResourcesCount;
+  const publishedNewsCount = newsItems.filter((item) => item.isPublished).length;
+  const draftNewsCount = newsItems.length - publishedNewsCount;
   const activeTeamCount = teamMembers.filter((item) => item.isActive).length;
   const inactiveTeamCount = teamMembers.length - activeTeamCount;
   const activeAlliesCount = projectAllies.filter((item) => item.isActive).length;
@@ -786,6 +851,13 @@ export function useAdminDashboard() {
     setOpenResourceEditorId(null);
   }, [activeTab]);
 
+  useEffect(() => {
+    if (activeTab === "news") return;
+    setIsCreateNewsFormOpen(false);
+    setCreateNewsFormErrors({});
+    setOpenNewsEditorId(null);
+  }, [activeTab]);
+
   return {
     session,
     isBootstrapping,
@@ -805,6 +877,9 @@ export function useAdminDashboard() {
     resources,
     resourceDrafts,
     setResourceDrafts,
+    newsItems,
+    newsDrafts,
+    setNewsDrafts,
     teamMembers,
     teamMemberDrafts,
     setTeamMemberDrafts,
@@ -875,6 +950,14 @@ export function useAdminDashboard() {
     setCreateResourceFormErrors,
     openResourceEditorId,
     setOpenResourceEditorId,
+    createNewsForm,
+    setCreateNewsForm,
+    isCreateNewsFormOpen,
+    setIsCreateNewsFormOpen,
+    createNewsFormErrors,
+    setCreateNewsFormErrors,
+    openNewsEditorId,
+    setOpenNewsEditorId,
     isCustomRangeIncomplete,
     visibleTabs,
     canAccessSummary,
@@ -882,6 +965,7 @@ export function useAdminDashboard() {
     canAccessUsers,
     canAccessSupportPaths,
     canAccessAllies,
+    canAccessNews,
     canAccessTeam,
     canAccessResources,
     canAccessMessages,
@@ -891,6 +975,8 @@ export function useAdminDashboard() {
     inactiveUsersCount,
     publishedResourcesCount,
     draftResourcesCount,
+    publishedNewsCount,
+    draftNewsCount,
     activeTeamCount,
     inactiveTeamCount,
     activeAlliesCount,
@@ -931,6 +1017,11 @@ export function useAdminDashboard() {
     handleCreateResource,
     handleUpdateResource,
     handleDeleteResource,
+    handleToggleCreateNewsForm,
+    handleToggleNewsEditor,
+    handleCreateNews,
+    handleUpdateNews,
+    handleDeleteNews,
     handleMarkMessageRead,
     handleUpdateMessageStatus,
     handleDeleteMessage,

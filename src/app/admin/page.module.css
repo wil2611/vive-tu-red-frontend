@@ -284,17 +284,20 @@
 }
 
 .tabsHeaderRow {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
 }
 
 .tabsLogoutButton {
-  min-width: 170px;
+  min-width: 148px;
+  min-height: 38px;
+  border-radius: 999px;
+  padding: 8px 16px;
   justify-content: center;
   text-align: center;
+  white-space: nowrap;
 }
 
 .panelActions {
@@ -315,11 +318,11 @@
 .tabsBar {
   display: flex;
   flex-wrap: nowrap;
-  gap: 6px;
-  width: fit-content;
+  gap: 5px;
+  width: 100%;
   max-width: 100%;
-  justify-self: start;
-  padding: 6px;
+  justify-self: stretch;
+  padding: 5px;
   border-radius: 999px;
   border: 1px solid #d9d1b5;
   background: linear-gradient(180deg, #fcfaf1 0%, #f6f2e3 100%);
@@ -331,9 +334,9 @@
   background: transparent;
   color: #365a45;
   border-radius: 999px;
-  padding: 9px 16px;
-  min-height: 40px;
-  font-size: 0.9rem;
+  padding: 8px 14px;
+  min-height: 38px;
+  font-size: 0.88rem;
   font-weight: 700;
   cursor: pointer;
   transition:
@@ -1307,6 +1310,18 @@
   color: #9f4830;
 }
 
+.characterCounter {
+  margin: 4px 0 0;
+  font-size: 0.74rem;
+  color: #5a7d66;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.characterCounterLimit {
+  color: #9f4830;
+  font-weight: 700;
+}
+
 .createForm textarea {
   width: 100%;
   min-height: 92px;
@@ -1680,11 +1695,13 @@
 
 @media (max-width: 900px) {
   .tabsHeaderRow {
+    grid-template-columns: 1fr;
     align-items: stretch;
   }
 
   .tabsLogoutButton {
     min-width: 0;
+    justify-self: end;
   }
 
   .profileInfoGrid {
@@ -1732,9 +1749,9 @@
   }
 
   .tabButton {
-    min-height: 38px;
-    padding: 8px 13px;
-    font-size: 0.84rem;
+    min-height: 36px;
+    padding: 7px 12px;
+    font-size: 0.82rem;
   }
 
   .kpiTopRow {
@@ -1781,6 +1798,7 @@
 
   .tabsLogoutButton {
     width: 100%;
+    justify-self: stretch;
   }
 
   .shellLoggedOut {
@@ -1807,12 +1825,12 @@
   .tabsBar {
     width: 100%;
     justify-self: stretch;
-    overflow-x: auto;
-    scrollbar-width: thin;
+    flex-wrap: wrap;
+    row-gap: 6px;
   }
 
   .tabButton {
-    flex: 1 0 auto;
+    flex: 0 1 auto;
   }
 
   .metricGrid {

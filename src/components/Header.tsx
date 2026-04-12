@@ -22,6 +22,7 @@ export default function Header() {
 
   return (
     <header
+      data-site-header="true"
       style={{
         position: "sticky",
         top: 0,

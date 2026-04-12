@@ -6,6 +6,7 @@ import styles from "./page.module.css";
 import { roleLabel } from "./admin.shared";
 import { useAdminDashboard } from "./hooks/useAdminDashboard";
 import { MessagesTab } from "./tabs/MessagesTab";
+import { NewsTab } from "./tabs/NewsTab";
 import { ProfileTab } from "./tabs/ProfileTab";
 import { ResourcesTab } from "./tabs/ResourcesTab";
 import { SummaryTab } from "./tabs/SummaryTab";
@@ -34,6 +35,9 @@ export default function AdminPage() {
     resources,
     resourceDrafts,
     setResourceDrafts,
+    newsItems,
+    newsDrafts,
+    setNewsDrafts,
     teamMembers,
     teamMemberDrafts,
     setTeamMemberDrafts,
@@ -103,6 +107,14 @@ export default function AdminPage() {
     setCreateResourceFormErrors,
     openResourceEditorId,
     setOpenResourceEditorId,
+    createNewsForm,
+    setCreateNewsForm,
+    isCreateNewsFormOpen,
+    setIsCreateNewsFormOpen,
+    createNewsFormErrors,
+    setCreateNewsFormErrors,
+    openNewsEditorId,
+    setOpenNewsEditorId,
     isCustomRangeIncomplete,
     visibleTabs,
     canAccessSummary,
@@ -110,6 +122,7 @@ export default function AdminPage() {
     canAccessUsers,
     canAccessSupportPaths,
     canAccessAllies,
+    canAccessNews,
     canAccessTeam,
     canAccessResources,
     canAccessMessages,
@@ -119,6 +132,8 @@ export default function AdminPage() {
     inactiveUsersCount,
     publishedResourcesCount,
     draftResourcesCount,
+    publishedNewsCount,
+    draftNewsCount,
     activeTeamCount,
     inactiveTeamCount,
     activeAlliesCount,
@@ -158,6 +173,11 @@ export default function AdminPage() {
     handleCreateResource,
     handleUpdateResource,
     handleDeleteResource,
+    handleToggleCreateNewsForm,
+    handleToggleNewsEditor,
+    handleCreateNews,
+    handleUpdateNews,
+    handleDeleteNews,
     handleMarkMessageRead,
     handleUpdateMessageStatus,
     handleDeleteMessage,
@@ -484,6 +504,30 @@ export default function AdminPage() {
                 onCreateResource={handleCreateResource}
                 onUpdateResource={handleUpdateResource}
                 onDeleteResource={handleDeleteResource}
+              />
+            ) : null}
+
+            {canAccessNews && activeTab === "news" ? (
+              <NewsTab
+                newsItems={newsItems}
+                publishedNewsCount={publishedNewsCount}
+                draftNewsCount={draftNewsCount}
+                createNewsForm={createNewsForm}
+                setCreateNewsForm={setCreateNewsForm}
+                createNewsFormErrors={createNewsFormErrors}
+                setCreateNewsFormErrors={setCreateNewsFormErrors}
+                isCreateNewsFormOpen={isCreateNewsFormOpen}
+                setIsCreateNewsFormOpen={setIsCreateNewsFormOpen}
+                newsDrafts={newsDrafts}
+                setNewsDrafts={setNewsDrafts}
+                openNewsEditorId={openNewsEditorId}
+                setOpenNewsEditorId={setOpenNewsEditorId}
+                busyAction={busyAction}
+                onToggleCreateNewsForm={handleToggleCreateNewsForm}
+                onToggleNewsEditor={handleToggleNewsEditor}
+                onCreateNews={handleCreateNews}
+                onUpdateNews={handleUpdateNews}
+                onDeleteNews={handleDeleteNews}
               />
             ) : null}
 

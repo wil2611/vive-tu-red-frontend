@@ -154,6 +154,34 @@ export type CreateResourcePayload = {
 
 export type UpdateResourcePayload = Partial<CreateResourcePayload>;
 
+export type NewsItem = {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  body: string;
+  coverImageUrl: string | null;
+  coverImageAlt: string | null;
+  authorName: string | null;
+  isPublished: boolean;
+  publishedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateNewsPayload = {
+  title: string;
+  excerpt?: string;
+  body: string;
+  coverImageUrl?: string;
+  coverImageAlt?: string;
+  authorName?: string;
+  isPublished?: boolean;
+  publishedAt?: string | null;
+};
+
+export type UpdateNewsPayload = Partial<CreateNewsPayload>;
+
 export type TeamMember = {
   id: string;
   name: string;
