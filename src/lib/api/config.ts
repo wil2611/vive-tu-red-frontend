@@ -1,6 +1,6 @@
 import { readStorage, removeStorage, writeStorage } from "./storage";
 
-const FALLBACK_API_BASE_URL = "http://localhost:3000/api";
+const FALLBACK_API_BASE_URL = "https://vive-tu-red-backend.vercel.app/api";
 export const API_BASE_STORAGE_KEY = "api_base_url_v1";
 
 function trimTrailingSlashes(value: string): string {
