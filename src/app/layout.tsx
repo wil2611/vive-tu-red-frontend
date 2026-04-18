@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import AnalyticsTracker from "@/components/AnalyticsTracker";
+import LayoutChrome from "@/components/LayoutChrome";
 
 export const metadata: Metadata = {
   title: "#ViveTuRed — Sensibilización y prevención de VBG",
@@ -17,9 +17,8 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <AnalyticsTracker />
+        <LayoutChrome>{children}</LayoutChrome>
       </body>
     </html>
   );

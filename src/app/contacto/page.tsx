@@ -4,20 +4,53 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { contactCards, createInitialContactForm, subjectOptions, type ContactFormState } from "./contacto.data";
+import { ApiClientError, createContactMessage } from "@/lib/api";
+import { recordInteraction } from "@/lib/analytics/tracker";
 
 export default function ContactoPage() {
   const [form, setForm] = useState<ContactFormState>(createInitialContactForm);
   const [sent, setSent] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // Aqui iria la logica de envio
-    setSent(true);
+    setError(null);
+    setIsSending(true);
+
+    try {
+      await createContactMessage({
+        name: form.nombre.trim(),
+        email: form.email.trim(),
+        subject: form.asunto.trim() || "consulta",
+        message: form.mensaje.trim(),
+      });
+
+      setSent(true);
+
+      void recordInteraction({
+        type: "contact_submitted",
+        targetType: "contact",
+        metadata: {
+          subject: form.asunto.trim() || "consulta",
+        },
+      });
+    } catch (err) {
+      const message =
+        err instanceof ApiClientError && err.status === 429
+          ? "Ya recibimos un mensaje muy similar hace poco. Espera un momento antes de reenviar."
+          : err instanceof Error
+            ? err.message
+            : "No se pudo enviar el mensaje";
+      setError(message);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -148,8 +181,19 @@ export default function ContactoPage() {
                     </p>
                   </div>
 
-                  <button className={`btn btn-primary ${styles.formSubmit}`} type="submit">
-                    Enviar mensaje
+                  {error ? (
+                    <div className={`notice notice-warning ${styles.warning}`}>
+                      <span className={styles.alertIcon}>⚠️</span>
+                      <p className={styles.warningText}>{error}</p>
+                    </div>
+                  ) : null}
+
+                  <button
+                    className={`btn btn-primary ${styles.formSubmit}`}
+                    type="submit"
+                    disabled={isSending}
+                  >
+                    {isSending ? "Enviando..." : "Enviar mensaje"}
                   </button>
                 </form>
               )}

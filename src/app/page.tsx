@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import HomeNewsSection from "@/components/HomeNewsSection";
 
 const lines = [
   // {
@@ -50,7 +51,7 @@ export default function HomePage() {
           <div className="hero-grid">
             <div className="hero-content">
               <h1 className="hero-title">
-                Transformando realidades a través de la red.
+                Transformando realidades a través de tu red.
               </h1>
               <p className="hero-desc">
                 Sensibilización social, concienciación y creación de redes de apoyo
@@ -137,8 +138,11 @@ export default function HomePage() {
       </div>
       </section>
 
+      {/* ── Noticias ── */}
+      <HomeNewsSection />
+
       {/* ── Líneas de acción ── */}
-      <section style={{ background: "var(--bg)" }}>
+      <section style={{ background: "#f5f0e1" }}>
       <div className="container" style={{ paddingTop: 64, paddingBottom: 48 }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <h2 className="section-title" style={{ marginBottom: 10 }}>
@@ -182,7 +186,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Redes (introducción) ── */}
-      <section style={{ background: "#f5f0e1" }}>
+      <section style={{ background: "var(--bg)" }}>
       <div className="container" style={{ paddingTop: 56, paddingBottom: 56 }}>
         <div className="redes-intro-shell">
           <div className="redes-intro-heading">

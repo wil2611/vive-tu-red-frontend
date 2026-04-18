@@ -1,13 +1,57 @@
 import styles from "./page.module.css";
+import InstitutionsCards from "./InstitutionsCards";
 import {
   emergencyContacts,
+  type Institution,
   institutions,
   processSteps,
   quickSteps,
   whenToSeekHelp,
 } from "./rutas.data";
+import { listPublicSupportPaths, type SupportPath } from "@/lib/api";
 
-export default function RutasPage() {
+export const dynamic = "force-dynamic";
+
+function initialsFromInstitutionName(name: string): string {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
+function toInstitutionCard(path: SupportPath): Institution {
+  const fallbackType = "Atencion y orientacion";
+
+  return {
+    name: path.institutionName,
+    type: path.ubicacion || fallbackType,
+    desc:
+      path.description ||
+      "Institucion disponible para orientacion y acompanamiento.",
+    badge: "Atencion",
+    badgeColor: "#00555A",
+    icon: initialsFromInstitutionName(path.institutionName) || "IN",
+    phone: path.phone || undefined,
+    email: path.email || undefined,
+    ubicacion: path.ubicacion || undefined,
+    schedule: path.schedule || undefined,
+  };
+}
+
+async function getInstitutionCards(): Promise<Institution[]> {
+  try {
+    const supportPaths = await listPublicSupportPaths();
+    return supportPaths.map(toInstitutionCard);
+  } catch {
+    return institutions;
+  }
+}
+
+export default async function RutasPage() {
+  const dynamicInstitutions = await getInstitutionCards();
+
   return (
     <div>
       {/* Hero */}
@@ -122,37 +166,7 @@ export default function RutasPage() {
           <h3 className="rutas-step2-subtitle">
             Instituciones de atención
           </h3>
-          <div className="rutas-institutions-grid">
-            {institutions.map((inst) => (
-              <div
-                key={inst.name}
-                className="rutas-inst-card"
-              >
-                <div
-                  className="rutas-inst-icon"
-                  style={{ background: `${inst.badgeColor}14`, color: inst.badgeColor }}
-                >
-                  {inst.icon}
-                </div>
-                <div className="rutas-inst-content">
-                  <div className="rutas-inst-head">
-                    <h4 className="rutas-inst-title">
-                      {inst.name}
-                    </h4>
-                    <span className="badge rutas-inst-badge" style={{ background: `${inst.badgeColor}14`, color: inst.badgeColor }}>
-                      {inst.badge}
-                    </span>
-                  </div>
-                  <div className="rutas-inst-type">
-                    {inst.type}
-                  </div>
-                  <p className="rutas-inst-desc">
-                    {inst.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <InstitutionsCards institutions={dynamicInstitutions} />
         </div>
       </section>
 

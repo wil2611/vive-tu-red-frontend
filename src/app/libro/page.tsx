@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { episodes } from "./libro.data";
+import { recordInteraction } from "@/lib/analytics/tracker";
 
 interface BookPage {
   id: string;
@@ -72,6 +73,17 @@ export default function LibroPage() {
         window.clearTimeout(turnTimeoutRef.current);
       }
     };
+  }, []);
+
+  useEffect(() => {
+    void recordInteraction({
+      type: "book_read",
+      targetType: "story",
+      targetId: "libro-digital",
+      metadata: {
+        totalEpisodes: episodes.length,
+      },
+    });
   }, []);
 
   const leftPage = bookPages[spreadIndex * 2];

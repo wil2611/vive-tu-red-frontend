@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import styles from "./page.module.css";
 import {
   createInitialGeneralInfo,
@@ -17,10 +17,12 @@ import {
   type Person,
   type SupportFunctions,
 } from "./redes.data";
+import { recordInteraction } from "@/lib/analytics/tracker";
 
 export default function RedesPage() {
   const [step, setStep] = useState(1);
   const svgRef = useRef<SVGSVGElement>(null);
+  const hasTrackedNetworkCreatedRef = useRef(false);
 
   /* General Info */
   const [generalInfo, setGeneralInfo] = useState<GeneralInfo>(createInitialGeneralInfo);
@@ -238,6 +240,22 @@ export default function RedesPage() {
     if (adjacency.some((row) => row.some(Boolean))) s.add(4);
     return s;
   }, [generalInfo, people, adjacency]);
+
+  useEffect(() => {
+    if (hasTrackedNetworkCreatedRef.current) return;
+    if (step < 4) return;
+    if (graphPeople.length === 0) return;
+
+    hasTrackedNetworkCreatedRef.current = true;
+    void recordInteraction({
+      type: "network_created",
+      targetType: "network",
+      metadata: {
+        nodes: graphPeople.length + 1,
+        edges: graphPeople.length + interEdges,
+      },
+    });
+  }, [graphPeople.length, interEdges, step]);
 
   return (
     <div>

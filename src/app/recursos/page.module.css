@@ -222,7 +222,17 @@
 }
 
 .downloadIcon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
   margin-right: 4px;
+}
+
+.downloadIcon svg {
+  width: 100%;
+  height: 100%;
 }
 
 @media (max-width: 768px) {
