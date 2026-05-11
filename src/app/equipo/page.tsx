@@ -228,8 +228,10 @@ export default function EquipoPage() {
                         <Image
                           src={person.photo}
                           alt={`Foto de ${person.name}`}
-                          width={88}
-                          height={88}
+                          width={640}
+                          height={800}
+                          quality={95}
+                          sizes="(max-width: 768px) 100vw, 30vw"
                           className={styles.researcherPhoto}
                           unoptimized={isSharePointUrl(person.photo)}
                         />
@@ -239,14 +241,14 @@ export default function EquipoPage() {
                         </span>
                       )}
                     </div>
+                  </header>
 
+                  <div className={styles.researcherCardContent}>
                     <div className={styles.researcherHeadText}>
                       <h3 className={styles.researcherName}>{person.name}</h3>
                       <span className={styles.researcherHeadRole}>Equipo investigador</span>
                     </div>
-                  </header>
 
-                  <div className={styles.researcherCardContent}>
                     <p className={styles.researcherProfile}>{person.profile}</p>
 
                     <div className={styles.researcherMeta}>
