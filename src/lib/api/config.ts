@@ -1,16 +1,22 @@
 import { readStorage, removeStorage, writeStorage } from "./storage";
 
-const FALLBACK_API_BASE_URL = "https://vive-tu-red-backend.vercel.app/api";
 export const API_BASE_STORAGE_KEY = "api_base_url_v1";
 
 function trimTrailingSlashes(value: string): string {
   return value.replace(/\/+$/, "");
 }
 
-export const DEFAULT_API_BASE_URL = trimTrailingSlashes(
-  (process.env.NEXT_PUBLIC_API_URL ?? FALLBACK_API_BASE_URL).trim() ||
-    FALLBACK_API_BASE_URL,
-);
+function getDefaultApiBaseUrl(): string {
+  const configuredUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
+
+  if (!configuredUrl) {
+    throw new Error("NEXT_PUBLIC_API_URL must be defined in the frontend environment.");
+  }
+
+  return trimTrailingSlashes(configuredUrl);
+}
+
+export const DEFAULT_API_BASE_URL = getDefaultApiBaseUrl();
 
 export function normalizeApiBaseUrl(rawValue: string): string {
   const trimmed = rawValue.trim();
