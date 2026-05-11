@@ -13,17 +13,6 @@ const lines = [
   //   gradient: "linear-gradient(135deg, #C96A4A 0%, #d4836a 100%)",
   // },
   {
-    icon: "🛤️",
-    title: "Rutas de Atención",
-    desc: "Encuentra instituciones y contactos de emergencia si necesitas orientación o apoyo inmediato.",
-    href: "/rutas",
-    cta: "Ir a rutas",
-    color: "#00555A",
-    gradient: "linear-gradient(135deg, #00555A 0%, #007a80 100%)",
-    badge: "Atención inmediata",
-    badgeClass: "badge-teal",
-  },
-  {
     icon: "📚",
     title: "Recursos Educativos",
     desc: "Explora cartillas, guías e infografías para prevenir violencias y fortalecer redes de cuidado.",
@@ -38,7 +27,7 @@ const lines = [
 
 const bulletPoints = [
   { text: "Aprende a identificar señales de riesgo" },
-  { text: "Conoce rutas de apoyo confiables" },
+  { text: "Explora recursos de apoyo confiables" },
   { text: "Fortalece tu red de cuidado en la universidad" },
 ];
 
@@ -61,8 +50,8 @@ export default function HomePage() {
                 <Link className="btn btn-primary" href="/sobre">
                   Conoce el Proyecto →
                 </Link>
-                <Link className="btn btn-outline" href="/rutas">
-                  Rutas de Atención
+                <Link className="btn btn-outline" href="/recursos">
+                  Recursos educativos
                 </Link>
               </div>
               <div className="hero-trust">
@@ -109,7 +98,7 @@ export default function HomePage() {
               </div>
               <h3 className="mission-visual-title">Acompañamiento para actuar</h3>
               <p className="mission-visual-desc">
-                Información clara, rutas de atención y recursos prácticos para tomar decisiones con más seguridad.
+                Información clara y recursos prácticos para tomar decisiones con más seguridad.
               </p>
             </div>
           </div>
@@ -122,7 +111,7 @@ export default function HomePage() {
               violencia basada en género en el entorno universitario.
             </p>
             <p style={{ lineHeight: 1.8, color: "#5a7d66", marginBottom: 24 }}>
-              Aquí encontrarás rutas de atención, recursos educativos y espacios para
+              Aquí encontrarás recursos educativos y espacios para
               fortalecer tu red de apoyo personal e institucional.
             </p>
             <div className="mission-bullets">
@@ -173,15 +162,6 @@ export default function HomePage() {
           ))}
         </div>
 
-        <div className="notice notice-warning lines-urgent" style={{ maxWidth: 860, margin: "24px auto 0" }}>
-          <span style={{ fontSize: 18 }}>⚠️</span>
-          <div>
-            <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Si necesitas ayuda urgente</strong>
-            <p style={{ margin: "4px 0 0", fontSize: 14 }}>
-              Empieza por Rutas de Atención para encontrar contactos e instituciones de apoyo.
-            </p>
-          </div>
-        </div>
       </div>
       </section>
 

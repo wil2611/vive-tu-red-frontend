@@ -47,7 +47,7 @@ const SECTION_CONFIG: Record<
     pillLabel: "Orientacion",
     title: "Materiales de apoyo y orientacion",
     description:
-      "Guias e infografias para saber a donde acudir y como navegar las rutas de atencion disponibles.",
+      "Guias e infografias para reconocer opciones de apoyo y orientacion institucional.",
   },
   formacion: {
     sectionClassName: styles.sectionWarm,

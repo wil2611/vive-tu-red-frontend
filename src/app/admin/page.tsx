@@ -10,7 +10,6 @@ import { NewsTab } from "./tabs/NewsTab";
 import { ProfileTab } from "./tabs/ProfileTab";
 import { ResourcesTab } from "./tabs/ResourcesTab";
 import { SummaryTab } from "./tabs/SummaryTab";
-import { SupportPathsTab } from "./tabs/SupportPathsTab";
 import { TeamTab } from "./tabs/TeamTab";
 import { AlliesTab } from "./tabs/AlliesTab";
 import { UsersTab } from "./tabs/UsersTab";
@@ -26,9 +25,6 @@ export default function AdminPage() {
     users,
     userDrafts,
     setUserDrafts,
-    supportPaths,
-    supportPathDrafts,
-    setSupportPathDrafts,
     projectAllies,
     projectAllyDrafts,
     setProjectAllyDrafts,
@@ -75,14 +71,6 @@ export default function AdminPage() {
     setIsCreateUserFormOpen,
     openUserEditorId,
     setOpenUserEditorId,
-    createSupportForm,
-    setCreateSupportForm,
-    isCreateSupportFormOpen,
-    setIsCreateSupportFormOpen,
-    createSupportFormErrors,
-    setCreateSupportFormErrors,
-    openSupportEditorId,
-    setOpenSupportEditorId,
     createAllyForm,
     setCreateAllyForm,
     isCreateAllyFormOpen,
@@ -120,7 +108,6 @@ export default function AdminPage() {
     canAccessSummary,
     canAccessProfile,
     canAccessUsers,
-    canAccessSupportPaths,
     canAccessAllies,
     canAccessNews,
     canAccessTeam,
@@ -153,11 +140,6 @@ export default function AdminPage() {
     handleDeleteUser,
     handleToggleCreateUserForm,
     handleToggleUserEditor,
-    handleToggleCreateSupportForm,
-    handleToggleSupportEditor,
-    handleCreateSupportPath,
-    handleUpdateSupportPath,
-    handleDeleteSupportPath,
     handleToggleCreateAllyForm,
     handleToggleAllyEditor,
     handleCreateProjectAlly,
@@ -434,28 +416,6 @@ export default function AdminPage() {
                 onCreateUser={handleCreateUser}
                 onUpdateUser={handleUpdateUser}
                 onDeleteUser={handleDeleteUser}
-              />
-            ) : null}
-
-            {canAccessSupportPaths && activeTab === "support-paths" ? (
-              <SupportPathsTab
-                supportPaths={supportPaths}
-                createSupportForm={createSupportForm}
-                setCreateSupportForm={setCreateSupportForm}
-                createSupportFormErrors={createSupportFormErrors}
-                setCreateSupportFormErrors={setCreateSupportFormErrors}
-                isCreateSupportFormOpen={isCreateSupportFormOpen}
-                setIsCreateSupportFormOpen={setIsCreateSupportFormOpen}
-                supportPathDrafts={supportPathDrafts}
-                setSupportPathDrafts={setSupportPathDrafts}
-                openSupportEditorId={openSupportEditorId}
-                setOpenSupportEditorId={setOpenSupportEditorId}
-                busyAction={busyAction}
-                onToggleCreateSupportForm={handleToggleCreateSupportForm}
-                onToggleSupportEditor={handleToggleSupportEditor}
-                onCreateSupportPath={handleCreateSupportPath}
-                onUpdateSupportPath={handleUpdateSupportPath}
-                onDeleteSupportPath={handleDeleteSupportPath}
               />
             ) : null}
 

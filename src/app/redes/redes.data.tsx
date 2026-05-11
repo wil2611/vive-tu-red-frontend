@@ -93,7 +93,7 @@ export const heroNotes = [
   {
     tone: "care",
     title: "No es un diagnóstico",
-    desc: "Los resultados no constituyen una evaluación clínica ni psicológica. Si necesitas apoyo profesional, consulta las rutas de atención.",
+    desc: "Los resultados no constituyen una evaluación clínica ni psicológica. Si necesitas apoyo profesional, consulta canales institucionales de atención.",
   },
   {
     tone: "safe",
