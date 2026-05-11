@@ -69,7 +69,6 @@ function formatPageDisplayName(path: string): string {
 
   const knownLabels: Record<string, string> = {
     "/": "Inicio",
-    "/rutas": "Rutas de apoyo",
     "/redes": "Construye tu red",
     "/sobre": "Sobre el proyecto",
     "/equipo": "Equipo",

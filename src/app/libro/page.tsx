@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import styles from "./page.module.css";
 import { episodes } from "./libro.data";
 import { recordInteraction } from "@/lib/analytics/tracker";
@@ -218,10 +217,7 @@ export default function LibroPage() {
               <strong className={styles.noteTitle}>Sobre este libro</strong>
               <p className={styles.noteText}>
                 Este cuento de ficcion hace parte del proyecto de investigacion-creacion #ViveTuRed.
-                Si necesitas orientacion o apoyo, visita la seccion de{" "}
-                <Link href="/rutas" className={styles.noteLink}>
-                  Rutas de atencion
-                </Link>.
+                Si necesitas orientacion o apoyo, contacta a los canales institucionales de tu entorno.
               </p>
             </div>
           </div>

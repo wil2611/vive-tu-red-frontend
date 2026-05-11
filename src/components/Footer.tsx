@@ -5,7 +5,6 @@ const exploreLinks = [
   { label: "Inicio", href: "/" },
   { label: "Sobre el proyecto", href: "/sobre" },
   { label: "Libro digital", href: "/libro" },
-  { label: "Rutas de atención", href: "/rutas" },
 ];
 
 const resourceLinks = [

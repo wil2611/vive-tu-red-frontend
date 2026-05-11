@@ -2,13 +2,11 @@ import type {
   CreateNewsPayload,
   CreateProjectAllyPayload,
   CreateResourcePayload,
-  CreateSupportPathPayload,
   CreateTeamMemberPayload,
   NewsItem,
   ProjectAlly,
   ProjectAllyType,
   ResourceRecord,
-  SupportPath,
   TeamMember,
   UserRole,
 } from "@/lib/api";
@@ -21,16 +19,6 @@ import {
 export type UserDraft = {
   role: UserRole;
   isActive: boolean;
-};
-
-export type SupportPathDraft = {
-  institutionName: string;
-  ubicacion: string;
-  phone: string;
-  email: string;
-  schedule: string;
-  isActive: boolean;
-  description: string;
 };
 
 export type ResourceDraft = {
@@ -72,14 +60,6 @@ export type NewsDraft = {
   publishedAt: string;
 };
 
-export type SupportCreateFormErrors = {
-  institutionName?: string;
-  ubicacion?: string;
-  email?: string;
-  phone?: string;
-  schedule?: string;
-};
-
 export type ResourceCreateFormErrors = {
   title?: string;
   type?: string;
@@ -117,7 +97,6 @@ export type AdminSectionTab =
   | "summary"
   | "profile"
   | "users"
-  | "support-paths"
   | "allies"
   | "news"
   | "team"
@@ -130,23 +109,12 @@ export const ADMIN_SECTION_TABS: Array<{ id: AdminSectionTab; label: string }> =
   { id: "summary", label: "Resumen" },
   { id: "profile", label: "Mi perfil" },
   { id: "users", label: "Usuarios" },
-  { id: "support-paths", label: "Instituciones" },
   { id: "allies", label: "Aliados" },
   { id: "news", label: "Noticias" },
   { id: "team", label: "Equipo" },
   { id: "resources", label: "Recursos" },
   { id: "messages", label: "Mensajes" },
 ];
-
-export const INITIAL_SUPPORT_FORM: CreateSupportPathPayload = {
-  institutionName: "",
-  ubicacion: "",
-  phone: "",
-  email: "",
-  schedule: "",
-  description: "",
-  isActive: true,
-};
 
 export const INITIAL_RESOURCE_FORM: CreateResourcePayload = {
   title: "",
@@ -222,7 +190,6 @@ export function getAllowedTabsByRole(role: UserRole | null): AdminSectionTab[] {
       "summary",
       "profile",
       "users",
-      "support-paths",
       "allies",
       "news",
       "team",
@@ -235,7 +202,6 @@ export function getAllowedTabsByRole(role: UserRole | null): AdminSectionTab[] {
     return [
       "summary",
       "profile",
-      "support-paths",
       "allies",
       "news",
       "team",
@@ -287,18 +253,6 @@ export function isAllowedTeamPhotoUrl(value: string): boolean {
   } catch {
     return false;
   }
-}
-
-export function buildSupportDraft(path: SupportPath): SupportPathDraft {
-  return {
-    institutionName: path.institutionName,
-    ubicacion: textOrEmpty(path.ubicacion),
-    phone: textOrEmpty(path.phone),
-    email: textOrEmpty(path.email),
-    schedule: textOrEmpty(path.schedule),
-    isActive: path.isActive,
-    description: textOrEmpty(path.description),
-  };
 }
 
 export function buildResourceDraft(resource: ResourceRecord): ResourceDraft {
@@ -356,21 +310,6 @@ export function buildNewsDraft(newsItem: NewsItem): NewsDraft {
     authorName: textOrEmpty(newsItem.authorName),
     isPublished: newsItem.isPublished,
     publishedAt: toDateTimeLocalValue(newsItem.publishedAt),
-  };
-}
-
-export function normalizeSupportCreateForm(
-  form: CreateSupportPathPayload,
-): CreateSupportPathPayload {
-  return {
-    ...form,
-    institutionName: (form.institutionName ?? "").trim(),
-    description: (form.description ?? "").trim(),
-    ubicacion: (form.ubicacion ?? "").trim(),
-    phone: (form.phone ?? "").trim(),
-    email: (form.email ?? "").trim(),
-    schedule: (form.schedule ?? "").trim(),
-    isActive: form.isActive !== false,
   };
 }
 
@@ -441,39 +380,6 @@ export function normalizeNewsCreateForm(form: CreateNewsPayload): CreateNewsPayl
     publishedAt: (form.publishedAt ?? "").trim(),
     isPublished: form.isPublished !== false,
   };
-}
-
-export function validateSupportCreateForm(
-  form: CreateSupportPathPayload,
-): SupportCreateFormErrors {
-  const errors: SupportCreateFormErrors = {};
-  const institutionName = (form.institutionName ?? "").trim();
-  const ubicacion = (form.ubicacion ?? "").trim();
-  const email = (form.email ?? "").trim();
-  const phone = (form.phone ?? "").trim();
-  const schedule = (form.schedule ?? "").trim();
-
-  if (institutionName.length < 3) {
-    errors.institutionName = "El nombre debe tener al menos 3 caracteres.";
-  }
-
-  if (ubicacion.length < 2) {
-    errors.ubicacion = "La ubicacion es obligatoria.";
-  }
-
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errors.email = "Ingresa un email valido.";
-  }
-
-  if (phone && !/^[\d+\s()\-]{3,25}$/.test(phone)) {
-    errors.phone = "Telefono invalido. Usa solo numeros y simbolos basicos.";
-  }
-
-  if (schedule && schedule.length < 4) {
-    errors.schedule = "El horario debe ser mas descriptivo.";
-  }
-
-  return errors;
 }
 
 export function validateResourceCreateForm(

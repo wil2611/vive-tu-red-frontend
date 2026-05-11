@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import Link from "next/link";
 import styles from "./page.module.css";
 import { contactCards, createInitialContactForm, subjectOptions, type ContactFormState } from "./contacto.data";
 import { ApiClientError, createContactMessage } from "@/lib/api";
@@ -64,19 +63,6 @@ export default function ContactoPage() {
               Este es el canal institucional del proyecto #ViveTuRed para consultas generales,
               sugerencias y propuestas de colaboración.
             </p>
-            <div className={`notice notice-warning ${styles.heroAlert}`}>
-              <span className={styles.alertIcon}>⚠️</span>
-              <div>
-                <strong className={styles.alertTitle}>Si necesitas ayuda inmediata</strong>
-                <p className={styles.alertText}>
-                  Usa primero las{" "}
-                  <Link href="/rutas" className={styles.alertLink}>
-                    Rutas de atención
-                  </Link>{" "}
-                  para recibir orientación prioritaria.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -174,10 +160,8 @@ export default function ContactoPage() {
                     <span className={styles.alertIcon}>⚠️</span>
                     <p className={styles.warningText}>
                       No envíes datos sensibles ni información personal a través de este formulario.
-                      Si necesitas apoyo o atención, visita las{" "}
-                      <Link href="/rutas" className={styles.alertLink}>
-                        Rutas de atención
-                      </Link>.
+                      Si necesitas apoyo o atención, contacta directamente a los canales institucionales
+                      disponibles en tu entorno.
                     </p>
                   </div>
 
@@ -207,7 +191,7 @@ export default function ContactoPage() {
               </h2>
               <p className={styles.panelDesc}>
                 Escríbenos por correo o usa el formulario. Si se trata de una situación de riesgo,
-                prioriza las rutas de atención inmediata.
+                prioriza los canales institucionales de atención inmediata.
               </p>
 
               <div className={styles.metaList}>

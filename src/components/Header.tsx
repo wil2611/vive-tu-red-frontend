@@ -10,7 +10,6 @@ const nav = [
   { label: "Conoce el Proyecto", href: "/sobre" },
   { label: "Equipo", href: "/equipo" },
   // { label: "Libro digital", href: "/libro" },
-  { label: "Rutas de atención", href: "/rutas" },
   { label: "Recursos", href: "/recursos" },
   { label: "Visualiza tu red", href: "/redes" },
   { label: "Contáctanos", href: "/contacto" },
