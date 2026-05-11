@@ -13,6 +13,7 @@
 .shell {
   display: grid;
   gap: 16px;
+  min-width: 0;
 }
 
 .shellLoggedOut {
@@ -61,6 +62,7 @@
   border-radius: 16px;
   padding: 18px;
   box-shadow: 0 12px 28px rgba(17, 47, 31, 0.06);
+  min-width: 0;
 }
 
 .loginCard {
@@ -276,21 +278,25 @@
 .dashboardGrid {
   display: grid;
   gap: 16px;
+  min-width: 0;
 }
 
 .tabsSection {
   display: grid;
   gap: 8px;
+  min-width: 0;
 }
 
 .tabsHeaderRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
+  min-width: 0;
 }
 
 .tabsLogoutButton {
+  flex: 0 0 auto;
   min-width: 148px;
   min-height: 38px;
   border-radius: 999px;
@@ -298,6 +304,7 @@
   justify-content: center;
   text-align: center;
   white-space: nowrap;
+  align-self: stretch;
 }
 
 .panelActions {
@@ -317,19 +324,39 @@
 
 .tabsBar {
   display: flex;
+  flex: 0 1 auto;
   flex-wrap: nowrap;
   gap: 5px;
-  width: 100%;
+  width: max-content;
   max-width: 100%;
-  justify-self: stretch;
+  min-width: 0;
   padding: 5px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(29, 62, 42, 0.35) transparent;
   border-radius: 999px;
   border: 1px solid #d9d1b5;
   background: linear-gradient(180deg, #fcfaf1 0%, #f6f2e3 100%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
+.tabsBar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tabsBar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabsBar::-webkit-scrollbar-thumb {
+  background: rgba(29, 62, 42, 0.28);
+  border-radius: 999px;
+}
+
 .tabButton {
+  flex: 0 0 auto;
   border: 1px solid transparent;
   background: transparent;
   color: #365a45;
@@ -464,6 +491,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .emptyStatsHint {
@@ -521,6 +549,7 @@
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -528,6 +557,7 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  min-width: 0;
 }
 
 .presetButton {
@@ -581,10 +611,12 @@
   align-items: center;
   gap: 8px;
   flex-wrap: nowrap;
+  min-width: 0;
 }
 
 .customRangeRow input {
-  min-width: 150px;
+  min-width: 0;
+  width: 150px;
   max-width: 220px;
 }
 
@@ -717,6 +749,7 @@
 
 .tableWrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid #e7dfc6;
   border-radius: 12px;
   background: linear-gradient(180deg, #fff 0%, #fbf9f3 100%);
@@ -776,6 +809,7 @@
 }
 
 .supportListIdentity {
+  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -791,6 +825,7 @@
   color: #1d3e2a;
   font-size: 1.05rem;
   line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .supportListStatus {
@@ -819,11 +854,16 @@
 .supportListActions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
   flex-wrap: wrap;
+  flex: 0 0 auto;
 }
 
 .supportActionBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid transparent;
   border-radius: 10px;
   font-size: 0.86rem;
@@ -1334,6 +1374,17 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.createForm label {
+  display: inline-block;
+}
+
+.createForm input,
+.createForm select,
+.createForm textarea {
+  width: 100%;
+  min-width: 0;
+}
+
 .fullWidth {
   max-width: 240px;
 }
@@ -1343,6 +1394,7 @@
   flex-wrap: wrap;
   gap: 8px;
   margin: -2px 0 12px;
+  min-width: 0;
 }
 
 .messageSearchBar {
@@ -1351,6 +1403,7 @@
 
 .messageSearchBar input {
   width: min(760px, 100%);
+  min-width: 0;
 }
 
 .messageFilterButton {
@@ -1409,6 +1462,8 @@
 .messageSubject {
   margin: 0;
   color: #1d3e2a;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .messageHeaderMeta {
@@ -1427,6 +1482,7 @@
 .messageSender {
   margin: 0;
   color: #2f5f48;
+  overflow-wrap: anywhere;
 }
 
 .messageContentBox {
@@ -1442,6 +1498,7 @@
   color: #305241;
   line-height: 1.6;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .messageDate {
@@ -1497,6 +1554,7 @@
 .messageStatusEditor {
   display: grid;
   gap: 5px;
+  width: min(220px, 100%);
   max-width: 220px;
   margin: 0;
 }
@@ -1549,6 +1607,7 @@
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
 }
 
 @media (max-width: 700px) {
@@ -1694,14 +1753,13 @@
 }
 
 @media (max-width: 900px) {
-  .tabsHeaderRow {
-    grid-template-columns: 1fr;
-    align-items: stretch;
+  .page {
+    padding: 20px 0 32px;
   }
 
   .tabsLogoutButton {
     min-width: 0;
-    justify-self: end;
+    min-height: 40px;
   }
 
   .profileInfoGrid {
@@ -1763,6 +1821,10 @@
     width: 100%;
   }
 
+  .kpiPresets {
+    width: 100%;
+  }
+
   .applyButton {
     width: auto;
   }
@@ -1774,6 +1836,12 @@
 
   .customRangeRow {
     flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .customRangeRow input {
+    flex: 1 1 150px;
+    width: auto;
   }
 
   .rangeHelpWrap {
@@ -1792,13 +1860,31 @@
 }
 
 @media (max-width: 620px) {
+  .page {
+    padding: 14px 0 28px;
+  }
+
+  .shell {
+    gap: 12px;
+    padding-inline: 14px;
+  }
+
+  .panel {
+    border-radius: 14px;
+    padding: 14px;
+  }
+
   .tabsHeaderRow {
+    flex-direction: column;
+    align-items: stretch;
     width: 100%;
+    gap: 8px;
   }
 
   .tabsLogoutButton {
     width: 100%;
     justify-self: stretch;
+    align-self: auto;
   }
 
   .shellLoggedOut {
@@ -1824,17 +1910,70 @@
 
   .tabsBar {
     width: 100%;
-    justify-self: stretch;
-    flex-wrap: wrap;
-    row-gap: 6px;
+    border-radius: 14px;
   }
 
   .tabButton {
-    flex: 0 1 auto;
+    flex-basis: auto;
+    min-height: 34px;
+    padding: 7px 10px;
   }
 
   .metricGrid {
     grid-template-columns: 1fr;
+  }
+
+  .metricCard {
+    padding: 10px;
+  }
+
+  .metricValue {
+    font-size: 1.35rem;
+  }
+
+  .metricFooter {
+    align-items: flex-start;
+  }
+
+  .kpiPresets,
+  .messageFilters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .presetButton,
+  .messageFilterButton {
+    flex: 0 0 auto;
+  }
+
+  .filtersApplyWrap {
+    width: 100%;
+  }
+
+  .pendingFiltersBadge,
+  .applyButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .customRangeRow input {
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .chartCard {
+    padding: 10px;
+  }
+
+  .chartCanvas {
+    height: 190px;
+  }
+
+  .table {
+    min-width: 560px;
   }
 
   .supportRegistryFields {
@@ -1852,6 +1991,52 @@
 
   .supportListActions {
     width: 100%;
+    justify-content: stretch;
+  }
+
+  .supportActionBtn,
+  .supportCreateActions button,
+  .rowActions button {
+    flex: 1 1 140px;
+  }
+
+  .supportCreateActions {
+    justify-content: stretch;
+  }
+
+  .messageItem {
+    padding: 12px;
+  }
+
+  .messageHeaderRow,
+  .messageActionsGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .messageStatusEditor {
+    width: 100%;
+    max-width: none;
+  }
+
+  .rowActions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .messagesPagination {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .messagesPageInfo {
+    text-align: center;
+  }
+
+  .messagesPagination .messageFilterButton {
+    width: 100%;
+    justify-content: center;
   }
 
   .topPagesTable td:first-child,
