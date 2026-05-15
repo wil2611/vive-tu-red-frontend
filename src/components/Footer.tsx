@@ -22,11 +22,11 @@ export default function Footer() {
           <section className="footer-brand" aria-label="Información del proyecto">
             <div className="footer-cobranding" aria-label="Cobranding institucional">
               <Image
-                src="/icono_uninorte.png"
+                src="/logo_uninorte.png"
                 alt="Universidad del Norte"
-                width={64}
-                height={74}
-                className="footer-uninorte-icon"
+                width={284}
+                height={92}
+                className="footer-uninorte-logo"
               />
               <span className="footer-cobranding-divider" aria-hidden="true" />
               <Image
@@ -38,7 +38,8 @@ export default function Footer() {
               />
             </div>
             <p className="footer-brand-desc">
-              Proyecto de investigación-creación para la sensibilización y prevención de Violencia Basada en Género (VBG). Creando redes que protegen en entornos universitarios.
+              Proyecto de investigación-creación para la sensibilización y prevención de Violencia Basada en Género (VBG).
+              <strong> Creando redes que protegen en entornos universitarios.</strong>
             </p>
           </section>
 
@@ -72,7 +73,7 @@ export default function Footer() {
             <div className="footer-contact">
               <a href="mailto:contacto@vivetured.edu.co">contacto@vivetured.edu.co</a>
               <Link href="/contacto" className="footer-cta-link">
-                Formulario de contacto →
+                Formulario de contacto
               </Link>
             </div>
           </section>

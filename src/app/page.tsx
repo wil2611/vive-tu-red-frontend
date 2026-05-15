@@ -2,34 +2,26 @@ import Image from "next/image";
 import Link from "next/link";
 import HomeNewsSection from "@/components/HomeNewsSection";
 
-const lines = [
-  // {
-  //   icon: "📖",
-  //   title: "Libro Digital",
-  //   desc: "Lee el cuento de ficción #ViveTuRed, una herramienta de investigación y narrativa. Disponible en 3 episodios.",
-  //   href: "/libro",
-  //   cta: "Leer ahora",
-  //   color: "#C96A4A",
-  //   gradient: "linear-gradient(135deg, #C96A4A 0%, #d4836a 100%)",
-  // },
+const bulletPoints = [
   {
-    icon: "📚",
-    title: "Recursos Educativos",
-    desc: "Explora cartillas, guías e infografías para prevenir violencias y fortalecer redes de cuidado.",
-    href: "/recursos",
-    cta: "Ver recursos",
-    color: "#DCA15D",
-    gradient: "linear-gradient(135deg, #DCA15D 0%, #e4b87e 100%)",
-    badge: "Formación y prevención",
-    badgeClass: "badge-gold",
+    icon: "/engranaje.png",
+    title: "Aprende",
+    text: "a identificar señales de riesgo.",
+  },
+  {
+    icon: "/lupa.png",
+    iconClass: "mission-bullet-image-search",
+    title: "Explora",
+    text: "recursos de apoyo confiables.",
+  },
+  {
+    icon: "/escudo.png",
+    title: "Fortalece",
+    text: "tu red de cuidado en la universidad.",
   },
 ];
 
-const bulletPoints = [
-  { text: "Aprende a identificar señales de riesgo" },
-  { text: "Explora recursos de apoyo confiables" },
-  { text: "Fortalece tu red de cuidado en la universidad" },
-];
+const bodyTextGreen80 = "rgba(29, 62, 42, 0.8)";
 
 export default function HomePage() {
   return (
@@ -40,7 +32,8 @@ export default function HomePage() {
           <div className="hero-grid">
             <div className="hero-content">
               <h1 className="hero-title">
-                Transformando realidades a través de tu red.
+                <span className="hero-title-main">Transformando</span>
+                <span className="hero-title-sub">realidades a través de tu red</span>
               </h1>
               <p className="hero-desc">
                 Sensibilización social, concienciación y creación de redes de apoyo
@@ -48,19 +41,11 @@ export default function HomePage() {
               </p>
               <div className="hero-actions">
                 <Link className="btn btn-primary" href="/sobre">
-                  Conoce el Proyecto →
+                  Conoce el Proyecto 
                 </Link>
                 <Link className="btn btn-outline" href="/recursos">
                   Recursos educativos
                 </Link>
-              </div>
-              <div className="hero-trust">
-                <div className="hero-trust-avatars">
-                  <div className="hero-trust-avatar" style={{ background: "#C96A4A" }}>V</div>
-                  <div className="hero-trust-avatar" style={{ background: "#00555A" }}>T</div>
-                  <div className="hero-trust-avatar" style={{ background: "#DCA15D" }}>R</div>
-                </div>
-                <span className="hero-trust-text">Redes de Apoyo<br /><small>Comunidad universitaria</small></span>
               </div>
             </div>
 
@@ -71,7 +56,7 @@ export default function HomePage() {
                   <div style={{ fontSize: 28, fontWeight: 300, lineHeight: 1.3, marginTop: 12 }}>
                     #ViveTuRed
                   </div>
-                  <div style={{ fontSize: 13, opacity: 0.6, marginTop: 8 }}>redes que protegen</div>
+                  <div style={{ fontSize: 13, opacity: 0.8, marginTop: 8 }}>redes que protegen</div>
                 </div>
               </div>
             </div>
@@ -80,48 +65,56 @@ export default function HomePage() {
       </section>
 
       {/* ── Misión / About ── */}
-      <section style={{ background: "#f5f0e1" }}>
-      <div className="container" style={{ paddingTop: 72, paddingBottom: 48 }}>
-        <div className="mission-grid">
-          <div className="mission-visual">
-            <div className="mission-visual-card">
-              <div className="mission-visual-media" aria-hidden="true">
+      <section style={{ background: "#e2dcc2" }}>
+      <div className="container mission-section-container">
+        <div className="mission-shell">
+          <div className="mission-grid">
+            <div className="mission-visual">
+              <div className="mission-visual-card">
                 <span className="mission-visual-tag">#ViveTuRed</span>
                 <Image
-                  src="/Icono_Blanco.png"
-                  alt=""
-                  aria-hidden="true"
-                  width={170}
-                  height={170}
-                  className="mission-visual-logo"
+                  src="/logo_footer.png"
+                  alt="#ViveTuRed"
+                  width={360}
+                  height={144}
+                  className="mission-logo"
                 />
               </div>
-              <h3 className="mission-visual-title">Acompañamiento para actuar</h3>
-              <p className="mission-visual-desc">
-                Información clara y recursos prácticos para tomar decisiones con más seguridad.
+            </div>
+            <div className="mission-content">
+              <h2 className="mission-title">
+                ¿Qué es <span>#ViveTuRed</span><br />
+                y cómo te acompaña?
+              </h2>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: bodyTextGreen80, marginBottom: 10 }}>
+                #ViveTuRed conecta investigación y herramientas prácticas para prevenir la
+                violencia basada en género en el entorno universitario.
+              </p>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: bodyTextGreen80, marginBottom: 0 }}>
+                Aquí encontrarás recursos educativos y espacios para
+                fortalecer tu red de apoyo personal e institucional.
               </p>
             </div>
           </div>
-          <div className="mission-content">
-            <h2 className="section-title" style={{ fontSize: "1.75rem", marginBottom: 16 }}>
-              Qué es #ViveTuRed y cómo te acompaña
-            </h2>
-            <p style={{ lineHeight: 1.8, color: "#5a7d66", marginBottom: 24 }}>
-              #ViveTuRed conecta investigación y herramientas prácticas para prevenir la
-              violencia basada en género en el entorno universitario.
-            </p>
-            <p style={{ lineHeight: 1.8, color: "#5a7d66", marginBottom: 24 }}>
-              Aquí encontrarás recursos educativos y espacios para
-              fortalecer tu red de apoyo personal e institucional.
-            </p>
-            <div className="mission-bullets">
-              {bulletPoints.map((bp) => (
-                <div key={bp.text} className="mission-bullet">
-                  <div className="mission-bullet-icon">✓</div>
-                  <span>{bp.text}</span>
+
+          <div className="mission-bullets">
+            {bulletPoints.map((bp) => (
+              <div key={bp.title} className="mission-bullet">
+                <div className="mission-bullet-icon" aria-hidden="true">
+                  <Image
+                    src={bp.icon}
+                    alt=""
+                    width={32}
+                    height={32}
+                    className={bp.iconClass}
+                  />
                 </div>
-              ))}
-            </div>
+                <span>
+                  <strong>{bp.title}</strong>
+                  {bp.text}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -130,48 +123,13 @@ export default function HomePage() {
       {/* ── Noticias ── */}
       <HomeNewsSection />
 
-      {/* ── Líneas de acción ── */}
-      <section style={{ background: "#f5f0e1" }}>
-      <div className="container" style={{ paddingTop: 64, paddingBottom: 48 }}>
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <h2 className="section-title" style={{ marginBottom: 10 }}>
-            Elige por dónde empezar
-          </h2>
-          <p className="section-subtitle" style={{ margin: "0 auto" }}>
-            Cada recurso responde a una necesidad distinta: apoyo inmediato o
-            materiales para aprender y compartir.
-          </p>
-        </div>
-
-        <div className="lines-grid">
-          {lines.map((item) => (
-            <Link key={item.href} href={item.href} className="line-card">
-              <div className="line-card-image" style={{ background: item.gradient }}>
-                <h3 className="line-card-image-title">{item.title}</h3>
-              </div>
-              <div className="line-card-body">
-                <span className={`badge ${item.badgeClass}`} style={{ marginBottom: 10 }}>
-                  {item.badge}
-                </span>
-                <p className="line-card-desc">{item.desc}</p>
-                <span className="line-card-link" style={{ color: item.color }}>
-                  {item.cta} →
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-      </div>
-      </section>
-
       {/* ── Redes (introducción) ── */}
-      <section style={{ background: "var(--bg)" }}>
+      <section style={{ background: "#e2dcc2" }}>
       <div className="container" style={{ paddingTop: 56, paddingBottom: 56 }}>
         <div className="redes-intro-shell">
           <div className="redes-intro-heading">
             <h2 className="section-title" style={{ marginBottom: 12, fontSize: "1.85rem" }}>
-              Visualizador de redes personales
+              Visualizador de <span className="title-accent-terracotta">redes personales</span>
             </h2>
           </div>
 
@@ -262,7 +220,7 @@ export default function HomePage() {
               </div>
 
               <Link className="btn btn-primary" href="/redes" style={{ fontSize: 15, padding: "12px 32px" }}>
-                Entrar al visualizador →
+                Entrar al visualizador 
               </Link>
             </div>
           </div>
@@ -271,11 +229,11 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA final ── */}
-      <section style={{ background: "var(--bg)" }}>
+      <section style={{ background: "#f4f1e9" }}>
       <div className="container" style={{ paddingTop: 64, paddingBottom: 40 }}>
         <div className="cta-block">
           <h2 className="cta-title">
-            Tu bienestar es nuestra prioridad.
+            Tu bienestar es nuestra <span>prioridad.</span>
           </h2>
           <p className="cta-desc">
             Únete a nuestra red de investigación y sé parte del cambio. Juntos
@@ -283,17 +241,9 @@ export default function HomePage() {
             seguro.
           </p>
           <div className="cta-actions">
-            <Link className="btn btn-primary" href="/contacto">
-              Contáctanos
-            </Link>
             <Link
-              className="btn"
+              className="btn btn-primary"
               href="/sobre"
-              style={{
-                background: "rgba(255,255,255,0.15)",
-                color: "white",
-                border: "1px solid rgba(255,255,255,0.3)",
-              }}
             >
               Ver Investigación
             </Link>
