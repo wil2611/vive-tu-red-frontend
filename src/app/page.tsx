@@ -220,7 +220,7 @@ export default function HomePage() {
               </div>
 
               <Link className="btn btn-primary" href="/redes" style={{ fontSize: 15, padding: "12px 32px" }}>
-                Entrar al visualizador →
+                Entrar al visualizador 
               </Link>
             </div>
           </div>
