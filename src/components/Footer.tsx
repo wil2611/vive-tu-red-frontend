@@ -4,13 +4,11 @@ import Image from "next/image";
 const exploreLinks = [
   { label: "Inicio", href: "/" },
   { label: "Sobre el proyecto", href: "/sobre" },
-  { label: "Libro digital", href: "/libro" },
 ];
 
 const resourceLinks = [
   { label: "Recursos educativos", href: "/recursos" },
   { label: "Visualizador de redes", href: "/redes" },
-  { label: "Contacto", href: "/contacto" },
 ];
 
 export default function Footer() {
@@ -71,10 +69,7 @@ export default function Footer() {
           <section className="footer-col" aria-label="Canales de contacto">
             <h4 className="footer-title">Contacto</h4>
             <div className="footer-contact">
-              <a href="mailto:contacto@vivetured.edu.co">contacto@vivetured.edu.co</a>
-              <Link href="/contacto" className="footer-cta-link">
-                Formulario de contacto
-              </Link>
+              <a href="mailto:esanandres@uninorte.edu.co">esanandres@uninorte.edu.co</a>
             </div>
           </section>
         </div>
