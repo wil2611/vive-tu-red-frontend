@@ -12,9 +12,9 @@ import {
 } from "react";
 import { listPublishedNews, type NewsItem } from "@/lib/api";
 
-const MAX_NEWS_ITEMS = 7;
+const MAX_NEWS_ITEMS = 10;
 const FEATURED_SUMMARY_MAX_CHARS = 300;
-const CARD_SUMMARY_MAX_CHARS = 300;
+const CARD_SUMMARY_MAX_CHARS = 150;
 type NewsImageKind = "landscape" | "square" | "portrait" | "ultraPortrait";
 
 function safeExternalUrl(value: string | null | undefined): string | null {
@@ -80,11 +80,11 @@ export default function HomeNewsSection() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [imageKinds, setImageKinds] = useState<Record<string, NewsImageKind>>({});
-  const trackRef = useRef<HTMLDivElement | null>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
   const [activeNews, setActiveNews] = useState<NewsItem | null>(null);
   const [headerOffset, setHeaderOffset] = useState(0);
+  const carouselRef = useRef<HTMLDivElement | null>(null);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -117,7 +117,7 @@ export default function HomeNewsSection() {
     };
   }, []);
 
-  const [featuredItem, carouselItems] = useMemo(() => {
+  const [featuredItem, secondaryItems] = useMemo(() => {
     if (!items.length) return [null, []] as const;
     return [items[0], items.slice(1)] as const;
   }, [items]);
@@ -125,77 +125,24 @@ export default function HomeNewsSection() {
   const featuredImageKind = featuredItem ? (imageKinds[featuredItem.id] ?? "landscape") : "landscape";
 
   useEffect(() => {
-    const node = trackRef.current;
-    if (!node) return;
+    const carousel = carouselRef.current;
+    if (!carousel) return;
 
-    const updateScrollableState = () => {
-      const maxScrollLeft = node.scrollWidth - node.clientWidth;
-      setCanScrollLeft(node.scrollLeft > 4);
-      setCanScrollRight(node.scrollLeft < maxScrollLeft - 4);
+    const updateScrollState = () => {
+      const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+      setCanScrollPrev(carousel.scrollLeft > 2);
+      setCanScrollNext(carousel.scrollLeft < maxScrollLeft - 2);
     };
 
-    updateScrollableState();
-    node.addEventListener("scroll", updateScrollableState, { passive: true });
-    window.addEventListener("resize", updateScrollableState);
+    updateScrollState();
+    carousel.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
 
     return () => {
-      node.removeEventListener("scroll", updateScrollableState);
-      window.removeEventListener("resize", updateScrollableState);
+      carousel.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
     };
-  }, [carouselItems.length]);
-
-  useEffect(() => {
-    const node = trackRef.current;
-    if (!node) return;
-
-    let frameId = 0;
-
-    const getCards = () => Array.from(node.querySelectorAll<HTMLElement>(".home-news-card"));
-
-    const equalizeCardHeights = () => {
-      const cards = getCards();
-      if (!cards.length) return;
-
-      cards.forEach((card) => {
-        card.style.height = "auto";
-      });
-
-      const maxHeight = cards.reduce((max, card) => Math.max(max, card.offsetHeight), 0);
-      if (!maxHeight) return;
-
-      cards.forEach((card) => {
-        card.style.height = `${maxHeight}px`;
-      });
-    };
-
-    const scheduleEqualize = () => {
-      cancelAnimationFrame(frameId);
-      frameId = requestAnimationFrame(equalizeCardHeights);
-    };
-
-    const mediaImages = Array.from(
-      node.querySelectorAll<HTMLImageElement>(".home-news-card-media img"),
-    );
-    mediaImages.forEach((img) => {
-      if (!img.complete) {
-        img.addEventListener("load", scheduleEqualize);
-      }
-    });
-
-    window.addEventListener("resize", scheduleEqualize);
-    scheduleEqualize();
-
-    return () => {
-      cancelAnimationFrame(frameId);
-      mediaImages.forEach((img) => {
-        img.removeEventListener("load", scheduleEqualize);
-      });
-      window.removeEventListener("resize", scheduleEqualize);
-      getCards().forEach((card) => {
-        card.style.height = "";
-      });
-    };
-  }, [carouselItems]);
+  }, [secondaryItems.length]);
 
   useEffect(() => {
     if (!activeNews) return;
@@ -241,6 +188,16 @@ export default function HomeNewsSection() {
     openNews(item);
   };
 
+  const scrollSecondaryNews = (direction: "prev" | "next") => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    carousel.scrollBy({
+      left: direction === "next" ? carousel.clientWidth : -carousel.clientWidth,
+      behavior: "smooth",
+    });
+  };
+
   const dialogParagraphs = activeNews
     ? activeNews.body
         .split(/\n{2,}/)
@@ -252,23 +209,12 @@ export default function HomeNewsSection() {
     "--home-news-header-offset": `${headerOffset}px`,
   } as CSSProperties;
 
-  const scrollCarousel = (direction: "left" | "right") => {
-    const node = trackRef.current;
-    if (!node) return;
-
-    const firstCard = node.querySelector<HTMLElement>(".home-news-card");
-    const cardWidth = firstCard?.getBoundingClientRect().width ?? 300;
-    const gap = 16;
-    const amount = direction === "right" ? cardWidth + gap : -(cardWidth + gap);
-    node.scrollBy({ left: amount, behavior: "smooth" });
-  };
-
   return (
     <section className="home-news-section" aria-labelledby="home-news-title">
       <div className="container">
         <div className="home-news-head">
           <h2 id="home-news-title" className="section-title home-news-title">
-            Noticias de #ViveTuRed
+            Noticias de <span>#ViveTuRed</span>
           </h2>
           <p className="home-news-lead">
             Actualizaciones del proyecto, actividades y publicaciones para mantener a la comunidad
@@ -292,12 +238,7 @@ export default function HomeNewsSection() {
         {!isLoading && !loadError && featuredItem ? (
           <div className="home-news-layout">
             <article
-              className={`home-news-featured home-news-featured-${featuredImageKind} home-news-item-clickable`}
-              role="button"
-              tabIndex={0}
-              onClick={() => openNews(featuredItem)}
-              onKeyDown={(event) => handleNewsKeyDown(event, featuredItem)}
-              aria-label={`Abrir noticia: ${featuredItem.title}`}
+              className={`home-news-featured home-news-featured-${featuredImageKind}`}
             >
               {safeExternalUrl(featuredItem.coverImageUrl) ? (
                 <div className={`home-news-featured-media home-news-media-${featuredImageKind}`}>
@@ -327,35 +268,41 @@ export default function HomeNewsSection() {
                 <p className="home-news-featured-summary">
                   {getSummary(featuredItem, FEATURED_SUMMARY_MAX_CHARS)}
                 </p>
+                <button
+                  type="button"
+                  className="home-news-read-more"
+                  onClick={() => openNews(featuredItem)}
+                >
+                  Ver más
+                </button>
               </div>
             </article>
 
-            {carouselItems.length ? (
+            {secondaryItems.length ? (
               <div className="home-news-carousel-wrap">
                 <div className="home-news-carousel-header">
-                  <h3>Mas noticias recientes</h3>
-                  <div className="home-news-carousel-controls">
+                  <h3>Más noticias</h3>
+                  <div className="home-news-carousel-controls" aria-label="Explorar más noticias">
                     <button
                       type="button"
-                      onClick={() => scrollCarousel("left")}
-                      disabled={!canScrollLeft}
+                      onClick={() => scrollSecondaryNews("prev")}
+                      disabled={!canScrollPrev}
                       aria-label="Ver noticias anteriores"
                     >
                       &lt;
                     </button>
                     <button
                       type="button"
-                      onClick={() => scrollCarousel("right")}
-                      disabled={!canScrollRight}
+                      onClick={() => scrollSecondaryNews("next")}
+                      disabled={!canScrollNext}
                       aria-label="Ver noticias siguientes"
                     >
                       &gt;
                     </button>
                   </div>
                 </div>
-
-                <div className="home-news-carousel" ref={trackRef}>
-                  {carouselItems.map((item) => (
+                <div className="home-news-carousel" ref={carouselRef}>
+                  {secondaryItems.map((item) => (
                     <article
                       key={item.id}
                       className="home-news-card home-news-item-clickable"
