@@ -1404,78 +1404,103 @@ a { color: inherit; text-decoration: none; }
 
 /* ── Footer ── */
 .footer {
-  background: #1D3E2A;
-  color: #E2DCC2;
+  background: #183e28;
+  color: #e6dfc7;
   margin-top: 64px;
 }
 .footer-inner {
-  padding: 52px 0 24px;
+  max-width: 1120px;
+  padding: 42px 24px 28px;
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: minmax(260px, 1.45fr) repeat(3, minmax(150px, 1fr));
-  gap: 28px 34px;
+  grid-template-columns: minmax(430px, 1.75fr) minmax(140px, 0.55fr) minmax(170px, 0.6fr) minmax(230px, 0.72fr);
+  gap: 28px 18px;
   align-items: start;
 }
 .footer-brand {
-  max-width: 520px;
+  max-width: 450px;
 }
 .footer-cobranding {
   display: inline-flex;
   align-items: center;
   flex-wrap: nowrap;
-  gap: 16px;
+  gap: 18px;
   width: fit-content;
   max-width: 100%;
   white-space: nowrap;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .footer-cobranding > * {
   flex-shrink: 0;
 }
-.footer-uninorte-icon {
+.footer-uninorte-logo {
   display: block;
   width: auto;
-  height: 56px;
+  height: 90px;
 }
 .footer-cobranding-divider {
   width: 1px;
-  height: 52px;
-  background: #000;
+  height: 64px;
+  background: rgba(226, 220, 194, 0.35);
 }
 .footer-logo {
   height: auto;
 }
 .footer-logo-cobrand {
   display: block;
-  height: 50px;
+  height: 45px;
   width: auto;
 }
 .footer-brand-desc {
   margin: 0;
-  color: rgba(238, 231, 206, 0.92);
+  max-width: 430px;
+  color: rgba(230, 223, 199, 0.96);
+  font-size: 15px;
   line-height: 1.55;
+  font-weight: 400;
+}
+.footer-brand-desc strong {
+  color: #f1ead3;
+  font-weight: 700;
 }
 .footer-col {
   min-width: 0;
+  padding-top: 16px;
 }
 .footer-title {
-  margin: 0 0 12px;
-  font-size: 0.92rem;
-  letter-spacing: 0.04em;
+  margin: 0 0 20px;
+  color: #e0a155;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   font-family: ui-sans-serif, system-ui, sans-serif;
-  color: #F4E7C8;
+  position: relative;
+}
+.footer-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -7px;
+  width: 136px;
+  height: 1px;
+  background: rgba(224, 161, 85, 0.78);
 }
 .footer-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 8px;
+  gap: 10px;
 }
 .footer-list a {
   text-decoration: none;
+}
+.footer-list a,
+.footer-contact a {
+  font-size: 15px;
+  line-height: 1.5;
 }
 .footer-contact {
   display: grid;
@@ -1485,26 +1510,26 @@ a { color: inherit; text-decoration: none; }
   text-decoration: none;
 }
 .footer-cta-link {
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  font-weight: 700;
+  font-weight: 400;
 }
 .footer-bottom {
-  margin-top: 28px;
-  padding-top: 14px;
+  margin-top: 40px;
+  padding-top: 16px;
   border-top: 1px solid rgba(226, 220, 194, 0.26);
   display: flex;
   flex-wrap: wrap;
   gap: 10px 24px;
   justify-content: space-between;
-  color: rgba(238, 231, 206, 0.85);
-  font-size: 0.93rem;
+  color: #e0a155;
+  font-size: 15px;
+  line-height: 1.35;
 }
 .footer a {
-  color: #DCA15D;
+  color: rgba(230, 223, 199, 0.92);
   transition: color 0.2s;
 }
 .footer a:hover {
-  color: #e4b87e;
+  color: #e0a155;
 }
 .footer a:focus-visible {
   outline: 2px solid #DCA15D;
@@ -1521,7 +1546,7 @@ a { color: inherit; text-decoration: none; }
 
 @media (max-width: 700px) {
   .footer-inner {
-    padding: 38px 0 20px;
+    padding: 34px 16px 24px;
   }
   .footer-grid {
     grid-template-columns: 1fr;
@@ -1531,22 +1556,40 @@ a { color: inherit; text-decoration: none; }
     max-width: none;
   }
   .footer-title {
-    margin-bottom: 10px;
+    margin-bottom: 16px;
   }
   .footer-cobranding {
     gap: 12px;
   }
-  .footer-uninorte-icon {
-    height: 48px;
+  .footer-uninorte-logo {
+    height: 56px;
   }
   .footer-cobranding-divider {
-    height: 44px;
+    height: 50px;
   }
   .footer-logo-cobrand {
     height: 42px;
   }
+  .footer-col {
+    padding-top: 0;
+  }
+  .footer-brand-desc {
+    font-size: 15.5px;
+  }
+  .footer-title {
+    font-size: 1.06rem;
+  }
+  .footer-title::after {
+    bottom: -6px;
+    width: 138px;
+  }
+  .footer-list a,
+  .footer-contact a {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
   .footer-bottom {
-    margin-top: 20px;
+    margin-top: 26px;
     font-size: 0.88rem;
     gap: 8px;
   }
