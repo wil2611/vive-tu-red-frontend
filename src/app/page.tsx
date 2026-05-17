@@ -21,8 +21,6 @@ const bulletPoints = [
   },
 ];
 
-const bodyTextGreen80 = "rgba(29, 62, 42, 0.8)";
-
 export default function HomePage() {
   return (
     <div>
@@ -41,7 +39,7 @@ export default function HomePage() {
               </p>
               <div className="hero-actions">
                 <Link className="btn btn-primary" href="/sobre">
-                  Conoce el Proyecto 
+                  Conoce el proyecto 
                 </Link>
                 <Link className="btn btn-outline" href="/recursos">
                   Recursos educativos
@@ -53,10 +51,10 @@ export default function HomePage() {
               <div className="hero-card-main">
                 <div className="hero-card-watermark" aria-hidden="true" />
                 <div className="hero-card-inner">
-                  <div style={{ fontSize: 28, fontWeight: 300, lineHeight: 1.3, marginTop: 12 }}>
+                  <div className="hero-card-title">
                     #ViveTuRed
                   </div>
-                  <div style={{ fontSize: 13, opacity: 0.8, marginTop: 8 }}>redes que protegen</div>
+                  <div className="hero-card-tagline">redes que protegen</div>
                 </div>
               </div>
             </div>
@@ -65,7 +63,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Misión / About ── */}
-      <section style={{ background: "#e2dcc2" }}>
+      <section className="section-cream">
       <div className="container mission-section-container">
         <div className="mission-shell">
           <div className="mission-grid">
@@ -86,11 +84,11 @@ export default function HomePage() {
                 ¿Qué es <span>#ViveTuRed</span><br />
                 y cómo te acompaña?
               </h2>
-              <p style={{ fontSize: 15, lineHeight: 1.8, color: bodyTextGreen80, marginBottom: 10 }}>
+              <p className="mission-text">
                 #ViveTuRed conecta investigación y herramientas prácticas para prevenir la
                 violencia basada en género en el entorno universitario.
               </p>
-              <p style={{ fontSize: 15, lineHeight: 1.8, color: bodyTextGreen80, marginBottom: 0 }}>
+              <p className="mission-text mission-text-last">
                 Aquí encontrarás recursos educativos y espacios para
                 fortalecer tu red de apoyo personal e institucional.
               </p>
@@ -124,11 +122,11 @@ export default function HomePage() {
       <HomeNewsSection />
 
       {/* ── Redes (introducción) ── */}
-      <section style={{ background: "#e2dcc2" }}>
-      <div className="container" style={{ paddingTop: 56, paddingBottom: 56 }}>
+      <section className="section-cream">
+      <div className="container redes-section-container">
         <div className="redes-intro-shell">
           <div className="redes-intro-heading">
-            <h2 className="section-title" style={{ marginBottom: 12, fontSize: "1.85rem" }}>
+            <h2 className="section-title redes-intro-title">
               Visualizador de <span className="title-accent-terracotta">redes personales</span>
             </h2>
           </div>
@@ -201,25 +199,25 @@ export default function HomePage() {
             </div>
 
             <div className="redes-intro-content">
-              <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", margin: "0 0 14px" }}>
+              <p className="redes-intro-text">
                 Esta herramienta te ayuda a reconocer las personas e instituciones con las que puedes contar
                 en momentos importantes.
               </p>
-              <p style={{ fontSize: 15, lineHeight: 1.8, color: "#5a7d66", margin: "0 0 18px" }}>
+              <p className="redes-intro-text redes-intro-text-last">
                 No necesitas experiencia previa: encontrarás una guía simple para empezar paso a paso.
               </p>
 
-              <div className="notice notice-info redes-intro-notice" style={{ marginBottom: 22 }}>
-                <span style={{ fontSize: 20 }}>🔒</span>
+              <div className="notice notice-info redes-intro-notice">
+                <span className="redes-intro-notice-icon">🔒</span>
                 <div>
-                  <strong style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}>Privado y anónimo</strong>
-                  <p style={{ margin: "4px 0 0", fontSize: 14 }}>
+                  <strong className="redes-intro-notice-title">Privado y anónimo</strong>
+                  <p className="redes-intro-notice-text">
                     Tu información se procesa solo en tu navegador. No guardamos ni enviamos datos personales.
                   </p>
                 </div>
               </div>
 
-              <Link className="btn btn-primary" href="/redes" style={{ fontSize: 15, padding: "12px 32px" }}>
+              <Link className="btn btn-primary redes-intro-button" href="/redes">
                 Entrar al visualizador 
               </Link>
             </div>
@@ -229,8 +227,8 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA final ── */}
-      <section style={{ background: "#f4f1e9" }}>
-      <div className="container" style={{ paddingTop: 64, paddingBottom: 40 }}>
+      <section className="section-soft">
+      <div className="container cta-section-container">
         <div className="cta-block">
           <h2 className="cta-title">
             Tu bienestar es nuestra <span>prioridad.</span>
@@ -245,7 +243,7 @@ export default function HomePage() {
               className="btn btn-primary"
               href="/sobre"
             >
-              Ver Investigación
+              Ver investigación
             </Link>
           </div>
         </div>
