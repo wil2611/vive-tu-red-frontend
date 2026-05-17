@@ -341,7 +341,7 @@ export default function HomeNewsSection() {
         ) : null}
 
         {!isLoading && !loadError && !featuredItem ? (
-          <p className="home-news-empty">Aun no hay noticias publicadas. Vuelve pronto.</p>
+          <p className="home-news-empty">Aún no hay noticias publicadas. Vuelve pronto.</p>
         ) : null}
       </div>
 

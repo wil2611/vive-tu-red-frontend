@@ -20,7 +20,7 @@ export default function Footer() {
           <section className="footer-brand" aria-label="Información del proyecto">
             <div className="footer-cobranding" aria-label="Cobranding institucional">
               <Image
-                src="/logo_uninorte.png"
+                src="/Logo uninorte blanco-05.png"
                 alt="Universidad del Norte"
                 width={284}
                 height={92}
@@ -28,7 +28,7 @@ export default function Footer() {
               />
               <span className="footer-cobranding-divider" aria-hidden="true" />
               <Image
-                src="/logo_footer.png"
+                src="/Vive Tu Red Negativo.png"
                 alt="Vive Tu Red"
                 width={160}
                 height={50}
