@@ -138,7 +138,9 @@ export default function SobrePage() {
       <section className={styles.heroSection}>
         <div className="container">
           <div className={styles.heroShell}>
-            <h1 className={styles.heroTitle}>Conoce el proyecto</h1>
+            <h1 className={styles.heroTitle}>
+              Conoce el <span>proyecto</span>
+            </h1>
             <p className={styles.heroDesc}>
               #ViveTuRed es una propuesta de investigacion-creacion que busca fortalecer redes de
               apoyo y prevenir la Violencia Basada en Genero (VBG) en la Educacion Superior en
@@ -149,10 +151,12 @@ export default function SobrePage() {
         </div>
       </section>
 
-      <section className={styles.sectionWarm}>
+      <section className="section-cream">
         <div className={`container ${styles.sectionContainer}`}>
           <div className="accent-bar" />
-          <h2 className={styles.sectionTitlePrimary}>Naturaleza del proyecto</h2>
+          <h2 className={styles.sectionTitlePrimary}>
+            Naturaleza del <span>proyecto</span>
+          </h2>
           <div className={styles.projectText}>
             <p>
               El proyecto articula investigacion formativa, narrativa y diseno de herramientas
@@ -166,36 +170,32 @@ export default function SobrePage() {
             </p>
           </div>
 
-          <div className={`notice notice-info ${styles.objectiveNotice}`}>
-            <span className={styles.objectiveIcon}>Objetivo</span>
-            <div>
-              <strong className={styles.objectiveStrong}>Objetivo general</strong>
-              <p className={styles.objectiveNoticeText}>
+        </div>
+      </section>
+
+      <section className="section-soft">
+        <div className={`container ${styles.sectionContainer}`}>
+          <div className="accent-bar" />
+          <h2 className={`${styles.sectionTitle} ${styles.sectionTitleObjectives}`}>
+            Objetivos
+          </h2>
+
+          <div className={styles.objectiveGrid}>
+            <article className={styles.objectiveGeneralCard}>
+              <h3>Objetivo general</h3>
+              <div className={styles.objectiveGeneralDivider} aria-hidden="true" />
+              <p>
                 Desarrollar una serie narrativa multimedia para fomentar las redes de apoyo y la
                 prevencion de la Violencia Basada en Genero (VBG) en la Educacion Superior en
                 Barranquilla.
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
+            </article>
 
-      <section className={styles.sectionNeutral}>
-        <div className={`container ${styles.sectionContainer}`}>
-          <div className="accent-bar" />
-          <h2 className={`${styles.sectionTitle} ${styles.sectionTitleObjectives}`}>
-            Objetivos especificos
-          </h2>
-
-          <div className={styles.objectiveGrid}>
             {specificObjectives.map((obj) => (
-              <article key={obj.num} className={styles.objectiveCard} style={{ borderTop: `3px solid ${obj.color}` }}>
-                <span className={styles.objectiveNum} style={{ color: obj.color }}>
-                  {obj.num}
-                </span>
-                <h3 className={styles.objectiveTitle} style={{ color: obj.color }}>
-                  {obj.title}
-                </h3>
+              <article key={obj.num} className={styles.objectiveCard}>
+                <span className={styles.objectiveNum}>{obj.num}</span>
+                <h3 className={styles.objectiveTitle}>{obj.title}</h3>
+                <div className={styles.objectiveCardDivider} aria-hidden="true" />
                 <p className={styles.objectiveDesc}>{obj.desc}</p>
               </article>
             ))}
@@ -203,10 +203,10 @@ export default function SobrePage() {
         </div>
       </section>
 
-      <section className={styles.sectionWarm}>
+      <section className="section-cream">
         <div className={`container ${styles.sectionContainer}`}>
           <div className="accent-bar" />
-          <h2 className={styles.sectionTitle}>Aliados y participantes</h2>
+          <h2 className={styles.sectionTitle}><span>Aliados</span> y participantes</h2>
           <p className={styles.alliesLead}>
             La propuesta se desarrolla con aliados estrategicos que fortalecen la coordinacion, la
             difusion y la reflexion colectiva alrededor de la prevencion de la VBG en Educacion
@@ -221,12 +221,14 @@ export default function SobrePage() {
                 <header className={styles.allyCardHead}>
                   <span className={`badge ${ally.roleClass}`}>{ally.roleLabel}</span>
                   <h3 className={styles.allyCardTitle}>{ally.institutionName}</h3>
+                  <div className={styles.allyCardTitleDivider} aria-hidden="true" />
                 </header>
 
-                <section className={styles.allyCardSection}>
+                <section className={`${styles.allyCardSection} ${styles.allyCardSectionRole}`}>
                   <h4>Rol en el proyecto</h4>
                   <p>{ally.summary}</p>
-                  <div className={styles.allyCardDivider} aria-hidden="true" />
+                </section>
+                <section className={`${styles.allyCardSection} ${styles.allyCardSectionScope}`}>
                   <h4>Alcance de participacion</h4>
                   <p>{ally.participationScope}</p>
                 </section>
@@ -239,7 +241,7 @@ export default function SobrePage() {
         </div>
       </section>
 
-      <section className={styles.sectionNeutral}>
+      <section className="section-soft">
         <div className={`container ${styles.sectionContainer} ${styles.sectionContainerLast}`}>
           <div className="accent-bar" />
           <h2 className={styles.sectionTitle}>Equipo investigador</h2>

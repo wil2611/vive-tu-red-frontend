@@ -5,12 +5,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { listPublicTeamMembers, type TeamMember } from "@/lib/api";
 import styles from "./page.module.css";
-import {
-  expertiseLines,
-  getInitials,
-  researcherCardGradients,
-  type Researcher,
-} from "./equipo.data";
+import { expertiseLines, getInitials, type Researcher } from "./equipo.data";
 
 const TEAM_IMAGE_ALLOWED_HOSTS = new Set([
   "plus.unsplash.com",
@@ -18,6 +13,13 @@ const TEAM_IMAGE_ALLOWED_HOSTS = new Set([
   "drive.google.com",
   "lh3.googleusercontent.com",
 ]);
+
+const expertiseIcons = [
+  "/nodo.png",
+  "/birrete.png",
+  "/lupa-investigacion.png",
+  "/portatil_blanco.png",
+];
 
 function extractGoogleDriveFileId(rawUrl: string): string | null {
   const fallbackPathMatch = rawUrl.match(/\/file\/d\/([^/?#]+)/);
@@ -173,7 +175,9 @@ export default function EquipoPage() {
       <section className={styles.heroSection}>
         <div className="container">
           <div className={styles.heroShell}>
-            <h1 className={styles.heroTitle}>Equipo investigador</h1>
+            <h1 className={styles.heroTitle}>
+              Equipo <span>investigador</span>
+            </h1>
             <p className={styles.heroDesc}>
               Conoce a las investigadoras e investigadores que integran #ViveTuRed. El equipo
               reune perfiles de ciencias sociales, educacion, derecho, diseno, ciencias basicas
@@ -204,7 +208,7 @@ export default function EquipoPage() {
         </div>
       </section>
 
-      <section className={styles.researchersSection}>
+      <section className="section-cream">
         <div className={`container ${styles.containerTight}`}>
           <div className="accent-bar" />
           <h2 className={styles.sectionTitle}>Investigadoras e investigadores</h2>
@@ -216,13 +220,13 @@ export default function EquipoPage() {
           {researchers.length ? (
             <div className={styles.researchersGrid}>
               {researchers.map((person, index) => (
-                <article key={`${person.name}-${index}`} className={styles.researcherCard}>
-                  <header
-                    className={styles.researcherCardHead}
-                    style={{
-                      background: researcherCardGradients[index % researcherCardGradients.length],
-                    }}
-                  >
+                <article
+                  key={`${person.name}-${index}`}
+                  className={`${styles.researcherCard} ${
+                    index % 2 === 0 ? styles.researcherCardWarm : styles.researcherCardForest
+                  }`}
+                >
+                  <header className={styles.researcherCardHead}>
                     <div className={styles.researcherPhotoFrame}>
                       {person.photo && isAllowedTeamImageHost(person.photo) ? (
                         <Image
@@ -275,7 +279,7 @@ export default function EquipoPage() {
         </div>
       </section>
 
-      <section className={styles.neutralSection}>
+      <section className="section-soft">
         <div className={`container ${styles.containerTight}`}>
           <div className="accent-bar" />
           <h2 className={styles.sectionTitle}>Capacidades del equipo</h2>
@@ -286,30 +290,43 @@ export default function EquipoPage() {
           </p>
 
           <div className={styles.linesGrid}>
-            {expertiseLines.map((line) => (
+            {expertiseLines.map((line, index) => {
+              const iconSrc = expertiseIcons[index % expertiseIcons.length];
+
+              return (
               <div key={line.title} className={styles.lineCard}>
+                <span className={styles.lineCardIconWrap} data-tone={index} aria-hidden="true">
+                  <Image
+                    src={iconSrc}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className={styles.lineCardIcon}
+                  />
+                </span>
                 <h3>{line.title}</h3>
                 <p>{line.desc}</p>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
-      <section className={styles.ctaSection}>
-        <div className={`container ${styles.containerCta}`}>
+      <section className="section-soft">
+        <div className="container cta-section-container">
           <div className="cta-block">
-            <h2 className="cta-title">Quieres conocer mas del trabajo del equipo?</h2>
+            <h2 className="cta-title">¿Quieres conocer mas del <span>trabajo del equipo?</span></h2>
             <p className="cta-desc">
-              Te invitamos a explorar el proyecto completo y sus herramientas para la prevencion
-              de la VBG en Educacion Superior.
+              Te invitamos a explorar el proyecto completo y sus herramientas 
+              para la prevencion de la VBG en Educacion Superior.
             </p>
             <div className="cta-actions">
               <Link className="btn btn-primary" href="/sobre">
-                Conoce el proyecto
+                Ver Recursos
               </Link>
-              <Link className={`btn ${styles.ctaSecondaryButton}`} href="/contacto">
-                Contactanos
+              <Link className="btn cta-secondary-btn" href="/contacto">
+                Visualizador de redes
               </Link>
             </div>
           </div>

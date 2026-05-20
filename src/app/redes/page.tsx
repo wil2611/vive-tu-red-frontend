@@ -282,7 +282,7 @@ export default function RedesPage() {
       </section>
 
       {/* Main layout */}
-      <section className={styles.mainSection}>
+      <section className="section-cream">
         <div className={`container ${styles.mainContainer}`}>
           <div className="redes-layout">
             <div className="redes-layout-steps">

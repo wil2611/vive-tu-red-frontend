@@ -139,7 +139,7 @@ export default function LibroPage() {
       </section>
 
       {/* Lector */}
-      <section className={styles.readerSection}>
+      <section className="section-cream">
         <div className={`container ${styles.readerContainer}`}>
           <div className={styles.episodeTabs}>
             {episodes.map((episode) => (
@@ -209,7 +209,7 @@ export default function LibroPage() {
       </section>
 
       {/* Nota */}
-      <section className={styles.noteSection}>
+      <section className="section-soft">
         <div className={`container ${styles.noteContainer}`}>
           <div className={`notice notice-info ${styles.noteBox}`}>
             <span className={styles.noteIcon}>i</span>
