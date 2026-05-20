@@ -67,7 +67,7 @@ export default function ContactoPage() {
         </div>
       </section>
 
-      <section className={styles.mainSection}>
+      <section className="section-cream">
         <div className={`container ${styles.mainContainer}`}>
           <div className={styles.grid}>
             {/* Formulario */}

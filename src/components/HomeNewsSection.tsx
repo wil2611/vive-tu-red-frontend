@@ -210,7 +210,7 @@ export default function HomeNewsSection() {
   } as CSSProperties;
 
   return (
-    <section className="home-news-section" aria-labelledby="home-news-title">
+    <section className="section-soft home-news-section" aria-labelledby="home-news-title">
       <div className="container">
         <div className="home-news-head">
           <h2 id="home-news-title" className="section-title home-news-title">

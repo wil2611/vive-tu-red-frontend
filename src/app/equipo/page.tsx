@@ -204,7 +204,7 @@ export default function EquipoPage() {
         </div>
       </section>
 
-      <section className={styles.researchersSection}>
+      <section className="section-cream">
         <div className={`container ${styles.containerTight}`}>
           <div className="accent-bar" />
           <h2 className={styles.sectionTitle}>Investigadoras e investigadores</h2>
@@ -275,7 +275,7 @@ export default function EquipoPage() {
         </div>
       </section>
 
-      <section className={styles.neutralSection}>
+      <section className="section-soft">
         <div className={`container ${styles.containerTight}`}>
           <div className="accent-bar" />
           <h2 className={styles.sectionTitle}>Capacidades del equipo</h2>
@@ -296,7 +296,7 @@ export default function EquipoPage() {
         </div>
       </section>
 
-      <section className={styles.ctaSection}>
+      <section className="section-cream">
         <div className={`container ${styles.containerCta}`}>
           <div className="cta-block">
             <h2 className="cta-title">Quieres conocer mas del trabajo del equipo?</h2>

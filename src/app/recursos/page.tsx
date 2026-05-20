@@ -32,7 +32,7 @@ const SECTION_CONFIG: Record<
   }
 > = {
   prevencion: {
-    sectionClassName: styles.sectionWarm,
+    sectionClassName: "section-cream",
     containerClassName: styles.sectionContainer,
     pillClassName: `${styles.pill} ${styles.pillPrevencion}`,
     pillLabel: "Prevencion",
@@ -41,7 +41,7 @@ const SECTION_CONFIG: Record<
       "Materiales para reconocer la VBG, identificar senales de alerta y fortalecer la cultura de prevencion.",
   },
   orientacion: {
-    sectionClassName: styles.sectionNeutral,
+    sectionClassName: "section-soft",
     containerClassName: styles.sectionContainer,
     pillClassName: `${styles.pill} ${styles.pillOrientacion}`,
     pillLabel: "Orientacion",
@@ -50,7 +50,7 @@ const SECTION_CONFIG: Record<
       "Guias e infografias para reconocer opciones de apoyo y orientacion institucional.",
   },
   formacion: {
-    sectionClassName: styles.sectionWarm,
+    sectionClassName: "section-cream",
     containerClassName: `${styles.sectionContainer} ${styles.sectionContainerLast}`,
     pillClassName: `${styles.pill} ${styles.pillFormacion}`,
     pillLabel: "Formacion",
