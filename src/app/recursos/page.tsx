@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { listPublishedResources, trackResourceOpen, type ResourceRecord } from "@/lib/api";
 import styles from "./page.module.css";
@@ -25,8 +26,6 @@ const SECTION_CONFIG: Record<
   {
     sectionClassName: string;
     containerClassName: string;
-    pillClassName: string;
-    pillLabel: string;
     title: string;
     description: string;
   }
@@ -34,8 +33,6 @@ const SECTION_CONFIG: Record<
   prevencion: {
     sectionClassName: "section-cream",
     containerClassName: styles.sectionContainer,
-    pillClassName: `${styles.pill} ${styles.pillPrevencion}`,
-    pillLabel: "Prevencion",
     title: "Herramientas para la prevencion",
     description:
       "Materiales para reconocer la VBG, identificar senales de alerta y fortalecer la cultura de prevencion.",
@@ -43,8 +40,6 @@ const SECTION_CONFIG: Record<
   orientacion: {
     sectionClassName: "section-soft",
     containerClassName: styles.sectionContainer,
-    pillClassName: `${styles.pill} ${styles.pillOrientacion}`,
-    pillLabel: "Orientacion",
     title: "Materiales de apoyo y orientacion",
     description:
       "Guias e infografias para reconocer opciones de apoyo y orientacion institucional.",
@@ -52,12 +47,16 @@ const SECTION_CONFIG: Record<
   formacion: {
     sectionClassName: "section-cream",
     containerClassName: `${styles.sectionContainer} ${styles.sectionContainerLast}`,
-    pillClassName: `${styles.pill} ${styles.pillFormacion}`,
-    pillLabel: "Formacion",
     title: "Recursos para la formacion",
     description:
       "Manuales, guias metodologicas e instrumentos para docentes, facilitadores/as e investigadores/as.",
   },
+};
+
+const CATEGORY_ICONS: Record<ResourceCategoryId, string> = {
+  prevencion: "/prevencion.png",
+  orientacion: "/orientacion.png",
+  formacion: "/formacion.png",
 };
 
 export default function RecursosPage() {
@@ -109,7 +108,9 @@ export default function RecursosPage() {
       <section className={styles.heroSection}>
         <div className="container">
           <div className={styles.heroShell}>
-            <h1 className={styles.heroTitle}>Recursos y materiales de apoyo</h1>
+            <h1 className={styles.heroTitle}>
+              Recursos y materiales <span>de apoyo</span>
+            </h1>
             <p className={styles.heroDesc}>
               Herramientas para la prevencion, orientacion y formacion en Violencia Basada en
               Genero (VBG). Todos los materiales son de acceso libre mediante enlace externo.
@@ -118,6 +119,19 @@ export default function RecursosPage() {
             <div className={styles.quickNav} aria-label="Accesos rapidos por categoria">
               {categories.map((cat) => (
                 <a key={cat.id} href={`#${cat.id}`} className={styles.quickLink}>
+                  <span
+                    className={styles.quickIconWrap}
+                    data-category={cat.id}
+                    aria-hidden="true"
+                  >
+                    <Image
+                      src={CATEGORY_ICONS[cat.id]}
+                      alt=""
+                      width={34}
+                      height={34}
+                      className={styles.quickIcon}
+                    />
+                  </span>
                   <span className={styles.quickCopy}>
                     <strong>{cat.label}</strong>
                     <small>{cat.hint}</small>
@@ -144,8 +158,6 @@ export default function RecursosPage() {
             id={categoryId}
             sectionClassName={config.sectionClassName}
             containerClassName={config.containerClassName}
-            pillClassName={config.pillClassName}
-            pillLabel={config.pillLabel}
             title={config.title}
             description={config.description}
             docs={docs}
@@ -160,8 +172,6 @@ interface ResourceSectionProps {
   id: ResourceCategoryId;
   sectionClassName: string;
   containerClassName: string;
-  pillClassName: string;
-  pillLabel: string;
   title: string;
   description: string;
   docs: ResourceRecord[];
@@ -171,17 +181,14 @@ function ResourceSection({
   id,
   sectionClassName,
   containerClassName,
-  pillClassName,
-  pillLabel,
   title,
   description,
   docs,
 }: ResourceSectionProps) {
   return (
-    <section id={id} className={sectionClassName}>
+    <section id={id} className={`${sectionClassName} ${styles[`section-${id}`]}`}>
       <div className={`container ${containerClassName}`}>
-        <div className={pillClassName}>{pillLabel}</div>
-        <div className="accent-bar" />
+        <div className={`accent-bar ${styles.sectionAccentBar}`} />
         <h2 className={styles.sectionTitle}>{title}</h2>
         <p className={styles.sectionDesc}>{description}</p>
 
@@ -192,7 +199,9 @@ function ResourceSection({
             ))}
           </div>
         ) : (
-          <p className={styles.sectionDesc}>Aun no hay recursos publicados en esta categoria.</p>
+          <div className={`card ${styles.emptyResourceCard}`}>
+            <p>Aun no hay recursos publicados en esta categoria.</p>
+          </div>
         )}
       </div>
     </section>
@@ -228,7 +237,7 @@ function ResourceCard({ doc }: { doc: ResourceRecord }) {
   };
 
   return (
-    <article className={`card ${styles.resourceCard}`}>
+    <article className={`card ${styles.resourceCard} ${styles[`resourceCard-${category}`]}`}>
       <div className={styles.resourceCardMain}>
         <div className={styles.resourceCardHead}>
           <h3 className={styles.resourceCardTitle}>{doc.title}</h3>

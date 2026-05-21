@@ -211,7 +211,7 @@ export default function EquipoPage() {
       <section className="section-cream">
         <div className={`container ${styles.containerTight}`}>
           <div className="accent-bar" />
-          <h2 className={styles.sectionTitle}>Investigadoras e investigadores</h2>
+          <h2 className={styles.sectionTitle}>Investigadores</h2>
           <p className={styles.sectionDesc}>
             A continuacion, se presenta el perfil academico y profesional del equipo, con su
             vinculacion departamental y division academica cuando corresponde.
@@ -282,7 +282,9 @@ export default function EquipoPage() {
       <section className="section-soft">
         <div className={`container ${styles.containerTight}`}>
           <div className="accent-bar" />
-          <h2 className={styles.sectionTitle}>Capacidades del equipo</h2>
+          <h2 className={styles.sectionTitle}>
+            Capacidades del <span>equipo</span>
+          </h2>
           <p className={`${styles.sectionDesc} ${styles.sectionDescShort}`}>
             El trabajo conjunto integra enfoques metodologicos, juridicos, pedagogicos,
             tecnologicos y de investigacion-creacion para producir resultados aplicables en
