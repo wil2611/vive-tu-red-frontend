@@ -47,7 +47,7 @@ const SECTION_CONFIG: Record<
   formacion: {
     sectionClassName: "section-cream",
     containerClassName: `${styles.sectionContainer} ${styles.sectionContainerLast}`,
-    title: "Recursos para la formacion",
+    title: "Recursos para la formación",
     description:
       "Manuales, guías metodológicas e instrumentos para docentes, facilitadores/as e investigadores/as.",
   },

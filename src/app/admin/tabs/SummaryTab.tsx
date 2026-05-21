@@ -477,7 +477,7 @@ export function SummaryTab({
                 </button>
                 <span className={styles.rangeHelpTooltip}>
                   El valor &quot;Anterior&quot; compara contra el bloque inmediatamente previo
-                  del mismo tamano.
+                  del mismo tamaño.
                 </span>
               </span>
             </div>
@@ -485,8 +485,8 @@ export function SummaryTab({
 
           {hasNoStatsData ? (
             <p className={styles.emptyStatsHint}>
-              No hay datos en este periodo. Navega por el sitio publico y vuelve a pulsar
-              <strong> Aplicar</strong> para refrescar las metricas.
+              No hay datos en este periodo. Navega por el sitio público y vuelve a pulsar
+              <strong> Aplicar</strong> para refrescar las métricas.
             </p>
           ) : null}
 

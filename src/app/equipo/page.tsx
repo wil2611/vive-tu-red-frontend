@@ -213,7 +213,7 @@ export default function EquipoPage() {
           <div className="accent-bar" />
           <h2 className={styles.sectionTitle}>Investigadores</h2>
           <p className={styles.sectionDesc}>
-            A continuacion, se presenta el perfil academico y profesional del equipo, con su
+            A continuación, se presenta el perfil académico y profesional del equipo, con su
             vinculacion departamental y division academica cuando corresponde.
           </p>
 

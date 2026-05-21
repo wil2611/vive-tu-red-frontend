@@ -21,7 +21,7 @@ export const episodes: Episode[] = [
       {
         heading: "Capítulo 1: La llegada",
         content:
-          "El contenido del primer capítulo se cargará aquí. Este espacio esta reservado para el texto narrativo del cuento de ficción #ViveTuRed, diseñado para sensibilizar a la comunidad universitaria sobre la importancia de las redes de apoyo.",
+          "El contenido del primer capítulo se cargará aquí. Este espacio está reservado para el texto narrativo del cuento de ficción #ViveTuRed, diseñado para sensibilizar a la comunidad universitaria sobre la importancia de las redes de apoyo.",
       },
       {
         heading: "Capítulo 2: Primeros lazos",

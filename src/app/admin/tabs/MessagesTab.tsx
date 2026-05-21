@@ -203,7 +203,7 @@ export function MessagesTab({
                         onClick={() => void onMarkMessageRead(msg.id)}
                         disabled={reading || deleting || changingStatus}
                       >
-                        {reading ? "Actualizando..." : "Marcar leido"}
+                        {reading ? "Actualizando..." : "Marcar leído"}
                       </button>
                     ) : null}
                     {canDeleteMessages ? (

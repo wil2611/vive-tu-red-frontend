@@ -417,7 +417,7 @@ export function validateResourceCreateForm(
   }
 
   if (form.isPublished !== false && !fileUrl) {
-    errors.fileUrl = "Si el recurso esta publicado, debes agregar el enlace del archivo.";
+    errors.fileUrl = "Si el recurso está publicado, debes agregar el enlace del archivo.";
   }
 
   if (normalizedTags.length > RESOURCE_TAGS_MAX_COUNT) {
@@ -439,10 +439,10 @@ export function validateProjectAllyCreateForm(
   const participationScope = (form.participationScope ?? "").trim();
 
   if (institutionName.length < 3) {
-    errors.institutionName = "La institucion debe tener al menos 3 caracteres.";
+    errors.institutionName = "La institución debe tener al menos 3 caracteres.";
   } else if (institutionName.length > ALLY_INSTITUTION_NAME_MAX_LENGTH) {
     errors.institutionName =
-      `La institucion no puede superar ${ALLY_INSTITUTION_NAME_MAX_LENGTH} caracteres.`;
+      `La institución no puede superar ${ALLY_INSTITUTION_NAME_MAX_LENGTH} caracteres.`;
   }
 
   if (roleLabel.length < 3) {

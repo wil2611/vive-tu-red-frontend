@@ -124,13 +124,13 @@ export function useAdminAlliesHandlers({
       const participationScope = draft.participationScope.trim();
 
       if (institutionName.length < 3) {
-        setError("La institucion debe tener al menos 3 caracteres.");
+        setError("La institución debe tener al menos 3 caracteres.");
         setSuccess(null);
         return;
       }
       if (institutionName.length > ALLY_INSTITUTION_NAME_MAX_LENGTH) {
         setError(
-          `La institucion no puede superar ${ALLY_INSTITUTION_NAME_MAX_LENGTH} caracteres.`,
+          `La institución no puede superar ${ALLY_INSTITUTION_NAME_MAX_LENGTH} caracteres.`,
         );
         setSuccess(null);
         return;

@@ -247,7 +247,7 @@ export function AlliesTab({
               const isUpdating = busyAction === `update-project-ally-${projectAlly.id}`;
               const isDeleting = busyAction === `delete-project-ally-${projectAlly.id}`;
               const isEditorOpen = openAllyEditorId === projectAlly.id;
-              const displayInstitutionName = projectAlly.institutionName.trim() || "Sin institucion";
+              const displayInstitutionName = projectAlly.institutionName.trim() || "Sin institución";
               const displayRoleLabel = projectAlly.roleLabel.trim() || "Sin rol visible";
 
               const resetDraftFromSource = () => {

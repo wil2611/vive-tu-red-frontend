@@ -35,10 +35,10 @@ export function useAdminMessageHandlers({
         );
         const refreshed = await loadMessagesData({ suppressGlobalError: true });
         if (!refreshed) {
-          setError("Se marco el mensaje como leido, pero no se pudo refrescar la lista.");
+          setError("Se marcó el mensaje como leído, pero no se pudo refrescar la lista.");
           return;
         }
-        setSuccess("Mensaje marcado como leido");
+        setSuccess("Mensaje marcado como leído");
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo actualizar el mensaje"));
       } finally {

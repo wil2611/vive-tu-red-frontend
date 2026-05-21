@@ -34,7 +34,7 @@ export function useAdminStatsHandlers({
       setStats(statsData);
       onStatsApplied?.(query);
     } catch (errorValue) {
-      setError(getErrorText(errorValue, "No se pudieron actualizar las metricas"));
+      setError(getErrorText(errorValue, "No se pudieron actualizar las métricas"));
     } finally {
       setBusyAction(null);
     }
