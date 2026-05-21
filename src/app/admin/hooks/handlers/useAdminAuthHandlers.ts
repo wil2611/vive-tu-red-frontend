@@ -52,11 +52,11 @@ export function useAdminAuthHandlers({
         const loaded = await loadDashboardData();
         setSuccess(
           loaded
-            ? "Sesion iniciada"
-            : "Sesion iniciada. No se pudieron cargar todos los datos del panel.",
+            ? "Sesión iniciada"
+            : "Sesión iniciada. No se pudieron cargar todos los datos del panel.",
         );
       } catch (errorValue) {
-        setLoginError(getErrorText(errorValue, "Error al iniciar sesion"));
+        setLoginError(getErrorText(errorValue, "Error al iniciar sesión"));
       } finally {
         setBusyAction(null);
       }
@@ -75,7 +75,7 @@ export function useAdminAuthHandlers({
       setSession(null);
       clearDashboardState();
       setBusyAction(null);
-      setSuccess("Sesion cerrada");
+      setSuccess("Sesión cerrada");
     }
   }, [clearDashboardState, setBusyAction, setError, setSession, setSuccess]);
 

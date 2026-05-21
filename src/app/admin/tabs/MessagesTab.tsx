@@ -203,7 +203,7 @@ export function MessagesTab({
                         onClick={() => void onMarkMessageRead(msg.id)}
                         disabled={reading || deleting || changingStatus}
                       >
-                        {reading ? "Actualizando..." : "Marcar leido"}
+                        {reading ? "Actualizando..." : "Marcar leído"}
                       </button>
                     ) : null}
                     {canDeleteMessages ? (
@@ -236,7 +236,7 @@ export function MessagesTab({
           Anterior
         </button>
         <p className={styles.messagesPageInfo}>
-          Pagina {messagesPage} de {messagesTotalPages}
+          Página {messagesPage} de {messagesTotalPages}
         </p>
         <button
           type="button"

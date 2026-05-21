@@ -81,7 +81,7 @@ export function ResourcesTab({
       <div className={styles.panelHeader}>
         <h2 className={`${styles.panelTitle} ${styles.profileTitle}`}>Recursos</h2>
         <p className={styles.panelHint}>
-          Administra los materiales que podras publicar en la pagina de recursos.
+          Administra los materiales que podrás publicar en la página de recursos.
         </p>
         <div className={styles.supportMetaRow}>
           <span className={`${styles.supportMetaBadge} ${styles.supportMetaBadgeTotal}`}>
@@ -125,7 +125,7 @@ export function ResourcesTab({
           <form className={styles.createForm} onSubmit={onCreateResource}>
             <div className={styles.formGrid}>
               <div>
-                <label htmlFor="resource-title">Titulo</label>
+                <label htmlFor="resource-title">Título</label>
                 <input
                   id="resource-title"
                   className={createResourceFormErrors.title ? styles.fieldError : ""}
@@ -171,7 +171,7 @@ export function ResourcesTab({
                 ) : null}
               </div>
               <div>
-                <label htmlFor="resource-category">Categoria</label>
+                <label htmlFor="resource-category">Categoría</label>
                 <select
                   id="resource-category"
                   className={createResourceFormErrors.category ? styles.fieldError : ""}
@@ -255,7 +255,7 @@ export function ResourcesTab({
             </div>
 
             <div>
-              <label htmlFor="resource-description">Descripcion</label>
+              <label htmlFor="resource-description">Descripción</label>
               <textarea
                 id="resource-description"
                 value={createResourceForm.description ?? ""}
@@ -318,7 +318,7 @@ export function ResourcesTab({
                     <div className={styles.supportListIdentity}>
                       <div className={styles.supportListNameRow}>
                         <h4 className={styles.supportListName}>
-                          {draftTitle.trim() || "Recurso sin titulo"}
+                          {draftTitle.trim() || "Recurso sin título"}
                         </h4>
                         <span className={`${styles.supportMetaBadge} ${styles.userRoleBadge}`}>
                           {draftType.trim() || "Tipo"}
@@ -331,7 +331,7 @@ export function ResourcesTab({
                         </span>
                       </div>
                       <p className={styles.panelHint}>
-                        {draftCategory.trim() || "Sin categoria"} - Aperturas:{" "}
+                        {draftCategory.trim() || "Sin categoría"} - Aperturas:{" "}
                         {resource.openCount}
                       </p>
                     </div>
@@ -359,7 +359,7 @@ export function ResourcesTab({
                     <div className={styles.supportEditorInner}>
                       <div className={styles.supportRegistryFields}>
                         <div className={`${styles.supportField} ${styles.supportFieldWide}`}>
-                          <label>Titulo</label>
+                          <label>Título</label>
                           <input
                             value={draftTitle}
                             maxLength={RESOURCE_TITLE_MAX_LENGTH}
@@ -393,7 +393,7 @@ export function ResourcesTab({
                         </div>
 
                         <div className={styles.supportField}>
-                          <label>Categoria</label>
+                          <label>Categoría</label>
                           <select
                             value={draftCategory || RESOURCE_CATEGORY_OPTIONS[0].id}
                             onChange={(event) =>
@@ -468,7 +468,7 @@ export function ResourcesTab({
                         </div>
 
                         <div className={`${styles.supportField} ${styles.supportFieldWide}`}>
-                          <label>Descripcion</label>
+                          <label>Descripción</label>
                           <textarea
                             value={draftDescription}
                             maxLength={RESOURCE_DESCRIPTION_MAX_LENGTH}

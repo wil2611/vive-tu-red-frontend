@@ -193,7 +193,7 @@ export default function AdminPage() {
       <div className={`container ${styles.shell} ${!session ? styles.shellLoggedOut : ""}`}>
         {isBootstrapping ? (
           <article className={styles.panel}>
-            <h2 className={styles.panelTitle}>Verificando sesion...</h2>
+            <h2 className={styles.panelTitle}>Verificando sesión...</h2>
           </article>
         ) : !session ? (
           <article className={`${styles.panel} ${styles.loginCard}`}>
@@ -226,7 +226,7 @@ export default function AdminPage() {
               </div>
 
               <div className={styles.loginField}>
-                <label htmlFor="login-password">Contrasena</label>
+                <label htmlFor="login-password">Contraseña</label>
                 <div className={styles.passwordControl}>
                   <input
                     id="login-password"
@@ -244,8 +244,8 @@ export default function AdminPage() {
                     type="button"
                     className={styles.passwordToggle}
                     onClick={() => setShowPassword((prev) => !prev)}
-                    aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
-                    title={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                    title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                   >
                     {showPassword ? (
                       <svg
@@ -312,7 +312,7 @@ export default function AdminPage() {
                     Ingresando...
                   </>
                 ) : (
-                  "Iniciar sesion"
+                  "Iniciar sesión"
                 )}
               </button>
             </form>
@@ -328,7 +328,7 @@ export default function AdminPage() {
                 onClick={handleLogout}
                 disabled={busyAction === "logout"}
               >
-                {busyAction === "logout" ? "Cerrando..." : "Cerrar sesion"}
+                {busyAction === "logout" ? "Cerrando..." : "Cerrar sesión"}
               </button>
             </div>
             <h2 className={styles.panelTitle}>Acceso restringido</h2>
@@ -341,7 +341,7 @@ export default function AdminPage() {
           <div className={styles.dashboardGrid}>
             <div className={styles.tabsSection}>
               <div className={styles.tabsHeaderRow}>
-                <nav className={styles.tabsBar} aria-label="Secciones del panel de administracion">
+                <nav className={styles.tabsBar} aria-label="Secciones del panel de administración">
                   {visibleTabs.map((tab) => (
                     <button
                       key={tab.id}
@@ -361,7 +361,7 @@ export default function AdminPage() {
                   onClick={handleLogout}
                   disabled={busyAction === "logout"}
                 >
-                  {busyAction === "logout" ? "Cerrando..." : "Cerrar sesion"}
+                  {busyAction === "logout" ? "Cerrando..." : "Cerrar sesión"}
                 </button>
               </div>
             </div>

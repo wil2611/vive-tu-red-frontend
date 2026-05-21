@@ -142,9 +142,9 @@ export default function SobrePage() {
               Conoce el <span>proyecto</span>
             </h1>
             <p className={styles.heroDesc}>
-              #ViveTuRed es una propuesta de investigacion-creacion que busca fortalecer redes de
-              apoyo y prevenir la Violencia Basada en Genero (VBG) en la Educacion Superior en
-              Barranquilla, mediante una serie narrativa multimedia y herramientas de apropiacion
+              #ViveTuRed es una propuesta de investigación-creación que busca fortalecer redes de
+              apoyo y prevenir la Violencia Basada en Género (VBG) en la Educación Superior en
+              Barranquilla, mediante una serie narrativa multimedia y herramientas de apropiación
               social del conocimiento.
             </p>
           </div>
@@ -159,14 +159,14 @@ export default function SobrePage() {
           </h2>
           <div className={styles.projectText}>
             <p>
-              El proyecto articula investigacion formativa, narrativa y diseno de herramientas
-              pedagogicas para comprender las experiencias de VBG y activar rutas de cuidado en
+              El proyecto articula investigación formativa, narrativa y diseño de herramientas
+              pedagógicas para comprender las experiencias de VBG y activar rutas de cuidado en
               contextos universitarios.
             </p>
             <p>
-              Su enfoque combina produccion de contenidos, espacios de socializacion y trabajo
-              colaborativo con instituciones aliadas para fortalecer capacidades de prevencion,
-              orientacion y proteccion.
+              Su enfoque combina producción de contenidos, espacios de socialización y trabajo
+              colaborativo con instituciones aliadas para fortalecer capacidades de prevención,
+              orientación y protección.
             </p>
           </div>
 
@@ -186,7 +186,7 @@ export default function SobrePage() {
               <div className={styles.objectiveGeneralDivider} aria-hidden="true" />
               <p>
                 Desarrollar una serie narrativa multimedia para fomentar las redes de apoyo y la
-                prevencion de la Violencia Basada en Genero (VBG) en la Educacion Superior en
+                prevención de la Violencia Basada en Género (VBG) en la Educación Superior en
                 Barranquilla.
               </p>
             </article>
@@ -208,8 +208,8 @@ export default function SobrePage() {
           <div className="accent-bar" />
           <h2 className={styles.sectionTitle}><span>Aliados</span> y participantes</h2>
           <p className={styles.alliesLead}>
-            La propuesta se desarrolla con aliados estrategicos que fortalecen la coordinacion, la
-            difusion y la reflexion colectiva alrededor de la prevencion de la VBG en Educacion
+            La propuesta se desarrolla con aliados estratégicos que fortalecen la coordinación, la
+            difusión y la reflexión colectiva alrededor de la prevención de la VBG en Educación
             Superior.
           </p>
           {isAlliesLoading ? <p className={styles.alliesLead}>Cargando aliados...</p> : null}
@@ -229,14 +229,14 @@ export default function SobrePage() {
                   <p>{ally.summary}</p>
                 </section>
                 <section className={`${styles.allyCardSection} ${styles.allyCardSectionScope}`}>
-                  <h4>Alcance de participacion</h4>
+                  <h4>Alcance de participación</h4>
                   <p>{ally.participationScope}</p>
                 </section>
               </article>
             ))}
           </div>
           {!isAlliesLoading && !alliesLoadError && !alliesCards.length ? (
-            <p className={styles.alliesLead}>Aun no hay aliados o participantes activos.</p>
+            <p className={styles.alliesLead}>Aún no hay aliados o participantes activos.</p>
           ) : null}
         </div>
       </section>
@@ -246,9 +246,9 @@ export default function SobrePage() {
           <div className="accent-bar" />
           <h2 className={styles.sectionTitle}>Equipo investigador</h2>
           <p className={styles.teamLead}>
-            Esta seccion resume el equipo real del proyecto: {teamRoles.length} integrantes con
-            trayectorias complementarias en ciencias sociales, educacion, derecho, diseno,
-            ciencias basicas e ingenieria.
+            Esta sección resume el equipo real del proyecto: {teamRoles.length} integrantes con
+            trayectorias complementarias en ciencias sociales, educación, derecho, diseño,
+            ciencias básicas e ingeniería.
           </p>
 
           {isTeamLoading ? <p className={styles.teamLead}>Cargando equipo...</p> : null}
@@ -277,12 +277,12 @@ export default function SobrePage() {
               ))}
             </div>
           ) : !isTeamLoading && !teamLoadError ? (
-            <p className={styles.teamLead}>Aun no hay integrantes activos en el equipo.</p>
+            <p className={styles.teamLead}>Aún no hay integrantes activos en el equipo.</p>
           ) : null}
 
           <div className={styles.teamCta}>
             <Link className="btn btn-primary" href="/equipo">
-              Conoce mas sobre el equipo &rarr;
+              Conoce más sobre el equipo &rarr;
             </Link>
           </div>
         </div>

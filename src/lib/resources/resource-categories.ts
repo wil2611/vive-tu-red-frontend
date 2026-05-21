@@ -10,9 +10,9 @@ export type ResourceCategoryMeta = {
 };
 
 export const RESOURCE_CATEGORIES: ResourceCategoryMeta[] = [
-  { id: "prevencion", label: "Prevencion", color: "#C96A4A", hint: "Senales y prevencion" },
-  { id: "orientacion", label: "Orientacion", color: "#00555A", hint: "Rutas y acompanamiento" },
-  { id: "formacion", label: "Formacion", color: "#1D3E2A", hint: "Guias y metodologia" },
+  { id: "prevencion", label: "Prevención", color: "#C96A4A", hint: "Señales y prevención" },
+  { id: "orientacion", label: "Orientación", color: "#00555A", hint: "Rutas y acompañamiento" },
+  { id: "formacion", label: "Formación", color: "#1D3E2A", hint: "Guías y metodología" },
 ];
 
 function stripAccents(input: string): string {

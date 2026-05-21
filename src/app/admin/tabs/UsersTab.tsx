@@ -125,7 +125,7 @@ export function UsersTab({
                 />
               </div>
               <div>
-                <label htmlFor="create-password">Contrasena</label>
+                <label htmlFor="create-password">Contraseña</label>
                 <input
                   id="create-password"
                   type="password"

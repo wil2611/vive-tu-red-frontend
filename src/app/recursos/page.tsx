@@ -33,23 +33,23 @@ const SECTION_CONFIG: Record<
   prevencion: {
     sectionClassName: "section-cream",
     containerClassName: styles.sectionContainer,
-    title: "Herramientas para la prevencion",
+    title: "Herramientas para la prevención",
     description:
-      "Materiales para reconocer la VBG, identificar senales de alerta y fortalecer la cultura de prevencion.",
+      "Materiales para reconocer la VBG, identificar señales de alerta y fortalecer la cultura de prevención.",
   },
   orientacion: {
     sectionClassName: "section-soft",
     containerClassName: styles.sectionContainer,
-    title: "Materiales de apoyo y orientacion",
+    title: "Materiales de apoyo y orientación",
     description:
-      "Guias e infografias para reconocer opciones de apoyo y orientacion institucional.",
+      "Guías e infografías para reconocer opciones de apoyo y orientación institucional.",
   },
   formacion: {
     sectionClassName: "section-cream",
     containerClassName: `${styles.sectionContainer} ${styles.sectionContainerLast}`,
-    title: "Recursos para la formacion",
+    title: "Recursos para la formación",
     description:
-      "Manuales, guias metodologicas e instrumentos para docentes, facilitadores/as e investigadores/as.",
+      "Manuales, guías metodológicas e instrumentos para docentes, facilitadores/as e investigadores/as.",
   },
 };
 
@@ -112,11 +112,11 @@ export default function RecursosPage() {
               Recursos y materiales <span>de apoyo</span>
             </h1>
             <p className={styles.heroDesc}>
-              Herramientas para la prevencion, orientacion y formacion en Violencia Basada en
-              Genero (VBG). Todos los materiales son de acceso libre mediante enlace externo.
+              Herramientas para la prevención, orientación y formación en Violencia Basada en
+              Género (VBG). Todos los materiales son de acceso libre mediante enlace externo.
             </p>
 
-            <div className={styles.quickNav} aria-label="Accesos rapidos por categoria">
+            <div className={styles.quickNav} aria-label="Accesos rápidos por categoría">
               {categories.map((cat) => (
                 <a key={cat.id} href={`#${cat.id}`} className={styles.quickLink}>
                   <span
@@ -200,7 +200,7 @@ function ResourceSection({
           </div>
         ) : (
           <div className={`card ${styles.emptyResourceCard}`}>
-            <p>Aun no hay recursos publicados en esta categoria.</p>
+            <p>Aún no hay recursos publicados en esta categoría.</p>
           </div>
         )}
       </div>
@@ -249,8 +249,8 @@ function ResourceCard({ doc }: { doc: ResourceRecord }) {
         </div>
 
         <dl className={styles.resourceCardMeta}>
-          <dt>Descripcion</dt>
-          <dd>{doc.description?.trim() || "Sin descripcion disponible."}</dd>
+          <dt>Descripción</dt>
+          <dd>{doc.description?.trim() || "Sin descripción disponible."}</dd>
           <dt>Tags</dt>
           <dd>{tags.length ? tags.join(", ") : "Sin tags"}</dd>
         </dl>

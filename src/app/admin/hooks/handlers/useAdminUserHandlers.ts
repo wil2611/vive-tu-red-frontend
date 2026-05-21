@@ -64,7 +64,7 @@ export function useAdminUserHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            "Usuario creado correctamente. No se pudo refrescar la lista automaticamente.",
+            "Usuario creado correctamente. No se pudo refrescar la lista automáticamente.",
           );
         }
       } catch (errorValue) {
@@ -102,7 +102,7 @@ export function useAdminUserHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            `Usuario ${user.email} actualizado. No se pudo refrescar la lista automaticamente.`,
+            `Usuario ${user.email} actualizado. No se pudo refrescar la lista automáticamente.`,
           );
         }
       } catch (errorValue) {
@@ -122,7 +122,7 @@ export function useAdminUserHandlers({
       }
 
       const confirmed = window.confirm(
-        `Vas a eliminar al usuario ${user.email}. Esta accion no se puede deshacer.`,
+        `Vas a eliminar al usuario ${user.email}. Esta acción no se puede deshacer.`,
       );
       if (!confirmed) return;
 
@@ -142,7 +142,7 @@ export function useAdminUserHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            `Usuario ${user.email} eliminado. No se pudo refrescar la lista automaticamente.`,
+            `Usuario ${user.email} eliminado. No se pudo refrescar la lista automáticamente.`,
           );
         }
       } catch (errorValue) {

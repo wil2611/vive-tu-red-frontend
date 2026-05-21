@@ -85,7 +85,7 @@ export function useAdminProfileHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            "Perfil actualizado correctamente. No se pudo refrescar el panel automaticamente.",
+            "Perfil actualizado correctamente. No se pudo refrescar el panel automáticamente.",
           );
         }
       } catch (errorValue) {
@@ -104,17 +104,17 @@ export function useAdminProfileHandlers({
       setSuccess(null);
 
       if (passwordForm.newPassword.length < 6) {
-        setError("La nueva contrasena debe tener al menos 6 caracteres.");
+        setError("La nueva contraseña debe tener al menos 6 caracteres.");
         return;
       }
 
       if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-        setError("La confirmacion no coincide con la nueva contrasena.");
+        setError("La confirmación no coincide con la nueva contraseña.");
         return;
       }
 
       if (passwordForm.currentPassword === passwordForm.newPassword) {
-        setError("La nueva contrasena debe ser diferente a la actual.");
+        setError("La nueva contraseña debe ser diferente a la actual.");
         return;
       }
 
@@ -131,9 +131,9 @@ export function useAdminProfileHandlers({
           confirmPassword: "",
         });
         clearSessionState();
-        setSuccess("Contrasena actualizada. Inicia sesion nuevamente.");
+        setSuccess("Contraseña actualizada. Inicia sesión nuevamente.");
       } catch (errorValue) {
-        setError(getErrorText(errorValue, "No se pudo cambiar la contrasena"));
+        setError(getErrorText(errorValue, "No se pudo cambiar la contraseña"));
       } finally {
         setBusyAction(null);
       }

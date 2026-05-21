@@ -187,7 +187,7 @@ function StatsLineChart({
   const tooltipPlacement =
     activePoint && activePoint.x <= geometry.width - 210 ? "right" : "left";
   const valueLabel =
-    title === "Visitas por dia"
+    title === "Visitas por día"
       ? `${formatNumber(activePoint?.value ?? 0)} visitas`
       : `${formatNumber(activePoint?.value ?? 0)} interacciones`;
 
@@ -319,7 +319,7 @@ export function SummaryTab({
       id: "pageViews",
       title: "Visitas",
       description:
-        "Total de paginas vistas en el periodo seleccionado (incluye repeticiones).",
+        "Total de páginas vistas en el periodo seleccionado (incluye repeticiones).",
       metric: stats?.kpis.pageViews ?? null,
       formatter: formatNumber,
     },
@@ -333,7 +333,7 @@ export function SummaryTab({
     },
     {
       id: "uniqueSessions",
-      title: "Sesiones unicas",
+      title: "Sesiones únicas",
       description:
         "Cantidad de sesiones distintas detectadas en el periodo para estimar usuarios activos.",
       metric: stats?.kpis.uniqueSessions ?? null,
@@ -342,14 +342,14 @@ export function SummaryTab({
     {
       id: "resourceOpens",
       title: "Aperturas de recursos",
-      description: "Numero de eventos de apertura de recursos registrados en el periodo.",
+      description: "Número de eventos de apertura de recursos registrados en el periodo.",
       metric: stats?.kpis.resourceOpens ?? null,
       formatter: formatNumber,
     },
     {
       id: "bookReads",
       title: "Lecturas del libro",
-      description: "Cantidad de veces que se registro la interaccion de lectura de libro.",
+      description: "Cantidad de veces que se registró la interacción de lectura de libro.",
       metric: stats?.kpis.bookReads ?? null,
       formatter: formatNumber,
     },
@@ -397,7 +397,7 @@ export function SummaryTab({
                     data-active={statsRangePreset === "7d"}
                     onClick={() => setStatsRangePreset("7d")}
                   >
-                    7 dias
+                    7 días
                   </button>
                   <button
                     type="button"
@@ -405,7 +405,7 @@ export function SummaryTab({
                     data-active={statsRangePreset === "30d"}
                     onClick={() => setStatsRangePreset("30d")}
                   >
-                    30 dias
+                    30 días
                   </button>
                   <button
                     type="button"
@@ -413,7 +413,7 @@ export function SummaryTab({
                     data-active={statsRangePreset === "90d"}
                     onClick={() => setStatsRangePreset("90d")}
                   >
-                    90 dias
+                    90 días
                   </button>
                   <button
                     type="button"
@@ -477,7 +477,7 @@ export function SummaryTab({
                 </button>
                 <span className={styles.rangeHelpTooltip}>
                   El valor &quot;Anterior&quot; compara contra el bloque inmediatamente previo
-                  del mismo tamano.
+                  del mismo tamaño.
                 </span>
               </span>
             </div>
@@ -485,8 +485,8 @@ export function SummaryTab({
 
           {hasNoStatsData ? (
             <p className={styles.emptyStatsHint}>
-              No hay datos en este periodo. Navega por el sitio publico y vuelve a pulsar
-              <strong> Aplicar</strong> para refrescar las metricas.
+              No hay datos en este periodo. Navega por el sitio público y vuelve a pulsar
+              <strong> Aplicar</strong> para refrescar las métricas.
             </p>
           ) : null}
 
@@ -530,12 +530,12 @@ export function SummaryTab({
 
           <div className={styles.chartGrid}>
             <StatsLineChart
-              title="Visitas por dia"
+              title="Visitas por día"
               points={pageViewsSeries}
               colorClassName={styles.chartPrimary}
             />
             <StatsLineChart
-              title="Interacciones por dia"
+              title="Interacciones por día"
               points={interactionsSeries}
               colorClassName={styles.chartSecondary}
             />
@@ -551,7 +551,7 @@ export function SummaryTab({
               </colgroup>
               <thead>
                 <tr>
-                  <th>Seccion visitada</th>
+                  <th>Sección visitada</th>
                   <th>Visitas totales</th>
                 </tr>
               </thead>
@@ -570,7 +570,7 @@ export function SummaryTab({
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={2}>Sin datos de paginas en este periodo.</td>
+                    <td colSpan={2}>Sin datos de páginas en este periodo.</td>
                   </tr>
                 )}
               </tbody>
@@ -589,7 +589,7 @@ export function SummaryTab({
               </colgroup>
               <thead>
                 <tr>
-                  <th>Tipo de interaccion</th>
+                  <th>Tipo de interacción</th>
                   <th>Total</th>
                 </tr>
               </thead>

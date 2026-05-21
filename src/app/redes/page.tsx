@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import styles from "./page.module.css";
 import {
@@ -214,7 +215,7 @@ export default function RedesPage() {
     const svgStr = serializer.serializeToString(svgClone);
     const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
     const url = URL.createObjectURL(blob);
-    const img = new Image();
+    const img = new window.Image();
     img.onload = () => {
       const scale = 2;
       const canvas = document.createElement("canvas");
@@ -331,7 +332,7 @@ export default function RedesPage() {
 
                   <div className="redes-field">
                     <label>Sexo</label>
-                    <div className="redes-chips">
+                    <div className="redes-chips redes-choice-chips">
                       {["Masculino", "Femenino", "Otro"].map((opt) => (
                         <button
                           key={opt}
@@ -446,7 +447,7 @@ export default function RedesPage() {
                   {/* Relation type */}
                   <div className="redes-field">
                     <label>Tipo de relación</label>
-                    <div className="redes-chips">
+                    <div className="redes-chips redes-relation-chips">
                       {relationTypes.map((rt) => {
                         const isActive = formRelationType === rt.value;
                         const color = getRelationColor(rt.value);
@@ -455,10 +456,29 @@ export default function RedesPage() {
                             key={rt.value}
                             type="button"
                             className={`redes-chip ${isActive ? "redes-chip-active" : ""}`}
-                            style={isActive ? { background: color, borderColor: color, color: "#fff" } : undefined}
+                            style={
+                              isActive
+                                ? { background: color, borderColor: color, color: "#fff" }
+                                : { borderColor: color, color }
+                            }
                             onClick={() => setFormRelationType(rt.value)}
                           >
-                            <span>{rt.icon}</span> {rt.value}
+                            <span
+                              className="redes-chip-icon-wrap"
+                              style={{ background: color }}
+                              aria-hidden="true"
+                            >
+                              <Image
+                                src={rt.icon}
+                                alt=""
+                                width={29}
+                                height={29}
+                                className={`redes-chip-icon ${
+                                  rt.value === "Otra" ? "redes-chip-icon-other" : ""
+                                }`}
+                              />
+                            </span>
+                            {rt.value}
                           </button>
                         );
                       })}
@@ -477,12 +497,12 @@ export default function RedesPage() {
                   {/* Residence */}
                   <div className="redes-field">
                     <label>Lugar de residencia</label>
-                    <div className="redes-chips">
+                    <div className="redes-chips redes-choice-chips redes-residence-chips">
                       {["Barranquilla", "Otra ciudad", "Otro país"].map((opt) => (
                         <button
                           key={opt}
                           type="button"
-                          className={`redes-chip ${formResidence === opt ? "redes-chip-active" : ""}`}
+                          className={`redes-chip redes-choice-chip ${formResidence === opt ? "redes-choice-chip-active" : ""}`}
                           onClick={() => setFormResidence(opt)}
                         >
                           {opt}
@@ -494,17 +514,17 @@ export default function RedesPage() {
                   {/* University context */}
                   <div className="redes-field">
                     <label>¿El contacto ocurre en contexto universitario?</label>
-                    <div className="redes-chips">
+                    <div className="redes-chips redes-choice-chips redes-choice-chips-compact">
                       <button
                         type="button"
-                        className={`redes-chip ${formUniversityContext ? "redes-chip-active" : ""}`}
+                        className={`redes-chip redes-choice-chip ${formUniversityContext ? "redes-choice-chip-active" : ""}`}
                         onClick={() => setFormUniversityContext(true)}
                       >
                         Sí
                       </button>
                       <button
                         type="button"
-                        className={`redes-chip ${!formUniversityContext ? "redes-chip-active" : ""}`}
+                        className={`redes-chip redes-choice-chip ${!formUniversityContext ? "redes-choice-chip-active" : ""}`}
                         onClick={() => setFormUniversityContext(false)}
                       >
                         No
@@ -944,12 +964,11 @@ export default function RedesPage() {
               {people.length > 0 && (
                 <div className="redes-graph-actions">
                   <button
-                    className="btn btn-outline"
+                    className="btn btn-outline redes-download-btn"
                     onClick={downloadGraph}
-                    style={{ fontSize: 13, padding: "10px 20px" }}
                     disabled={graphPeople.length === 0}
                   >
-                    📥 Descargar imagen
+                    Descargar imagen
                   </button>
                   <button
                     className="btn btn-outline"
@@ -961,7 +980,7 @@ export default function RedesPage() {
                     }}
                     style={{ fontSize: 13, padding: "10px 20px" }}
                   >
-                    🔄 Reiniciar todo
+                    Reiniciar todo
                   </button>
                 </div>
               )}
