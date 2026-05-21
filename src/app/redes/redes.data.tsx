@@ -40,16 +40,16 @@ export const supportLabels: { key: keyof SupportFunctions; short: string; label:
 ];
 
 export const relationTypes = [
-  { value: "Pareja", icon: "💛" },
-  { value: "Pariente", icon: "🏠" },
-  { value: "Amigo", icon: "👫" },
-  { value: "Conocido", icon: "👤" },
-  { value: "Otra", icon: "✦" },
+  { value: "Pareja", icon: "/pareja.png" },
+  { value: "Familia", icon: "/familia.png" },
+  { value: "Amigo", icon: "/amigos.png" },
+  { value: "Conocido", icon: "/conocidos.png" },
+  { value: "Otra", icon: "/otro.png" },
 ];
 
 const relationColorMap: Record<string, string> = {
   Pareja: "#DCA15D",
-  Pariente: "#1D3E2A",
+  Familia: "#1D3E2A",
   Amigo: "#00555A",
   Conocido: "#C96A4A",
   Otra: "#9C8D70",
@@ -114,7 +114,7 @@ export function NodeIcon({ relation, x, y }: NodeIconProps) {
   const dy = y - size / 2;
 
   switch (relation) {
-    case "Pariente":
+    case "Familia":
       return (
         <g transform={`translate(${dx},${dy})`}>
           <path d="M7 1L1 6h2v6h3V9h2v3h3V6h2L7 1z" fill="white" />
