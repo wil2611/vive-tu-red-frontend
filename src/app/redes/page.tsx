@@ -332,12 +332,14 @@ export default function RedesPage() {
 
                   <div className="redes-field">
                     <label>Sexo</label>
-                    <div className="redes-chips redes-choice-chips">
+                    <div className="redes-chips redes-choice-chips redes-sex-chips">
                       {["Masculino", "Femenino", "Otro"].map((opt) => (
                         <button
                           key={opt}
                           type="button"
-                          className={`redes-chip ${generalInfo.sex === opt ? "redes-chip-active" : ""}`}
+                          className={`redes-chip redes-choice-chip ${
+                            generalInfo.sex === opt ? "redes-choice-chip-active" : ""
+                          }`}
                           onClick={() => setGeneralInfo({ ...generalInfo, sex: opt })}
                         >
                           {opt}
