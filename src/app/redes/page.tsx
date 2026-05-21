@@ -215,7 +215,7 @@ export default function RedesPage() {
     const svgStr = serializer.serializeToString(svgClone);
     const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
     const url = URL.createObjectURL(blob);
-    const img = new Image();
+    const img = new window.Image();
     img.onload = () => {
       const scale = 2;
       const canvas = document.createElement("canvas");
