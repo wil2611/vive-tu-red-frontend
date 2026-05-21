@@ -139,6 +139,10 @@
   font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
+.sectionTitle span {
+  color: #c96a4a;
+}
+
 .sectionDesc {
   color: #5a7d66;
   line-height: 1.75;
