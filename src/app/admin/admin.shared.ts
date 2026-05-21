@@ -395,9 +395,9 @@ export function validateResourceCreateForm(
     .filter((tag) => tag.length > 0);
 
   if (title.length < 3) {
-    errors.title = "El titulo debe tener al menos 3 caracteres.";
+    errors.title = "El título debe tener al menos 3 caracteres.";
   } else if (title.length > RESOURCE_TITLE_MAX_LENGTH) {
-    errors.title = `El titulo no puede superar ${RESOURCE_TITLE_MAX_LENGTH} caracteres.`;
+    errors.title = `El título no puede superar ${RESOURCE_TITLE_MAX_LENGTH} caracteres.`;
   }
 
   if (type.length < 2) {
@@ -407,7 +407,7 @@ export function validateResourceCreateForm(
   }
 
   if (!category) {
-    errors.category = "Selecciona una categoria valida.";
+    errors.category = "Selecciona una categoría válida.";
   }
 
   if (fileUrl && !isSafeHttpUrl(fileUrl)) {
@@ -421,7 +421,7 @@ export function validateResourceCreateForm(
   }
 
   if (normalizedTags.length > RESOURCE_TAGS_MAX_COUNT) {
-    errors.tags = `No puedes usar mas de ${RESOURCE_TAGS_MAX_COUNT} tags en un recurso.`;
+    errors.tags = `No puedes usar más de ${RESOURCE_TAGS_MAX_COUNT} tags en un recurso.`;
   } else if (normalizedTags.some((tag) => tag.length > RESOURCE_TAG_MAX_LENGTH)) {
     errors.tags = `Cada tag debe tener maximo ${RESOURCE_TAG_MAX_LENGTH} caracteres.`;
   }
@@ -458,7 +458,7 @@ export function validateProjectAllyCreateForm(
   }
 
   if (participationScope.length < 10) {
-    errors.participationScope = "El alcance de participacion debe tener al menos 10 caracteres.";
+    errors.participationScope = "El alcance de participación debe tener al menos 10 caracteres.";
   } else if (participationScope.length > ALLY_PARTICIPATION_SCOPE_MAX_LENGTH) {
     errors.participationScope =
       `El alcance no puede superar ${ALLY_PARTICIPATION_SCOPE_MAX_LENGTH} caracteres.`;
@@ -510,9 +510,9 @@ export function validateNewsCreateForm(form: CreateNewsPayload): NewsCreateFormE
   const publishedAt = (form.publishedAt ?? "").trim();
 
   if (title.length < 3) {
-    errors.title = "El titulo debe tener al menos 3 caracteres.";
+    errors.title = "El título debe tener al menos 3 caracteres.";
   } else if (title.length > NEWS_TITLE_MAX_LENGTH) {
-    errors.title = `El titulo no puede superar ${NEWS_TITLE_MAX_LENGTH} caracteres.`;
+    errors.title = `El título no puede superar ${NEWS_TITLE_MAX_LENGTH} caracteres.`;
   }
 
   if (excerpt.length > NEWS_EXCERPT_MAX_LENGTH) {
@@ -547,7 +547,7 @@ export function validateNewsCreateForm(form: CreateNewsPayload): NewsCreateFormE
   if (publishedAt) {
     const parsed = new Date(publishedAt);
     if (Number.isNaN(parsed.getTime())) {
-      errors.publishedAt = "La fecha de publicacion no es valida.";
+      errors.publishedAt = "La fecha de publicación no es válida.";
     }
   }
 

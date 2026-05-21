@@ -106,7 +106,7 @@ export function useAdminNewsHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            "Noticia creada correctamente. No se pudo refrescar la lista automaticamente.",
+            "Noticia creada correctamente. No se pudo refrescar la lista automáticamente.",
           );
         }
       } catch (errorValue) {
@@ -178,14 +178,14 @@ export function useAdminNewsHandlers({
           publishedAt: publishedAtIso ?? null,
         });
         setOpenNewsEditorId(null);
-        setSuccess(`Noticia ${normalizedPayload.title || "sin titulo"} actualizada`);
+        setSuccess(`Noticia ${normalizedPayload.title || "sin título"} actualizada`);
 
         const refreshed = await loadDashboardData(false, {
           suppressGlobalError: true,
         });
         if (!refreshed) {
           setSuccess(
-            `Noticia ${normalizedPayload.title || "sin titulo"} actualizada. No se pudo refrescar la lista automaticamente.`,
+            `Noticia ${normalizedPayload.title || "sin título"} actualizada. No se pudo refrescar la lista automáticamente.`,
           );
         }
       } catch (errorValue) {
@@ -200,7 +200,7 @@ export function useAdminNewsHandlers({
   const handleDeleteNews = useCallback(
     async (newsItem: NewsItem) => {
       const confirmed = window.confirm(
-        `Vas a eliminar la noticia ${newsItem.title}. Esta accion no se puede deshacer.`,
+        `Vas a eliminar la noticia ${newsItem.title}. Esta acción no se puede deshacer.`,
       );
       if (!confirmed) return;
 
@@ -220,7 +220,7 @@ export function useAdminNewsHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            `Noticia ${newsItem.title} eliminada. No se pudo refrescar la lista automaticamente.`,
+            `Noticia ${newsItem.title} eliminada. No se pudo refrescar la lista automáticamente.`,
           );
         }
       } catch (errorValue) {

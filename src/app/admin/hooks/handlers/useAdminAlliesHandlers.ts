@@ -91,7 +91,7 @@ export function useAdminAlliesHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            "Aliado/participante creado correctamente. No se pudo refrescar la lista automaticamente.",
+            "Aliado/participante creado correctamente. No se pudo refrescar la lista automáticamente.",
           );
         }
       } catch (errorValue) {
@@ -156,13 +156,13 @@ export function useAdminAlliesHandlers({
         return;
       }
       if (participationScope.length < 10) {
-        setError("El alcance de participacion debe tener al menos 10 caracteres.");
+        setError("El alcance de participación debe tener al menos 10 caracteres.");
         setSuccess(null);
         return;
       }
       if (participationScope.length > ALLY_PARTICIPATION_SCOPE_MAX_LENGTH) {
         setError(
-          `El alcance de participacion no puede superar ${ALLY_PARTICIPATION_SCOPE_MAX_LENGTH} caracteres.`,
+          `El alcance de participación no puede superar ${ALLY_PARTICIPATION_SCOPE_MAX_LENGTH} caracteres.`,
         );
         setSuccess(null);
         return;
@@ -188,7 +188,7 @@ export function useAdminAlliesHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            `Aliado/participante ${institutionName} actualizado. No se pudo refrescar la lista automaticamente.`,
+            `Aliado/participante ${institutionName} actualizado. No se pudo refrescar la lista automáticamente.`,
           );
         }
       } catch (errorValue) {
@@ -203,7 +203,7 @@ export function useAdminAlliesHandlers({
   const handleDeleteProjectAlly = useCallback(
     async (projectAlly: ProjectAlly) => {
       const confirmed = window.confirm(
-        `Vas a eliminar ${projectAlly.institutionName}. Esta accion no se puede deshacer.`,
+        `Vas a eliminar ${projectAlly.institutionName}. Esta acción no se puede deshacer.`,
       );
       if (!confirmed) return;
 
@@ -223,7 +223,7 @@ export function useAdminAlliesHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            `Aliado/participante ${projectAlly.institutionName} eliminado. No se pudo refrescar la lista automaticamente.`,
+            `Aliado/participante ${projectAlly.institutionName} eliminado. No se pudo refrescar la lista automáticamente.`,
           );
         }
       } catch (errorValue) {

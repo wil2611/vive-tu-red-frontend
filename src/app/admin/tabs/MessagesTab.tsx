@@ -236,7 +236,7 @@ export function MessagesTab({
           Anterior
         </button>
         <p className={styles.messagesPageInfo}>
-          Pagina {messagesPage} de {messagesTotalPages}
+          Página {messagesPage} de {messagesTotalPages}
         </p>
         <button
           type="button"

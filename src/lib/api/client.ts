@@ -114,7 +114,7 @@ class ApiClient {
     );
 
     if (!response.ok) {
-      throw await this.buildError(response, "No se pudo refrescar la sesion");
+      throw await this.buildError(response, "No se pudo refrescar la sesión");
     }
 
     const payload = await parseJson<RefreshTokenResponse>(response);
@@ -151,7 +151,7 @@ class ApiClient {
 
     let currentSession = auth ? getStoredAuthSession() : null;
     if (auth && !currentSession) {
-      throw new ApiClientError("No hay una sesion activa", 401);
+      throw new ApiClientError("No hay una sesión activa", 401);
     }
 
     let response = await requestWithFallback();

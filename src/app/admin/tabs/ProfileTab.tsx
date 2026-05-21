@@ -60,13 +60,13 @@ export function ProfileTab({
       <div className={styles.panelHeader}>
         <h2 className={`${styles.panelTitle} ${styles.profileTitle}`}>Mi perfil</h2>
         <p className={styles.panelHint}>
-          Consulta tus datos de acceso y actualiza tu informacion personal o tu contrasena.
+          Consulta tus datos de acceso y actualiza tu información personal o tu contraseña.
         </p>
       </div>
 
       <div className={styles.profileGrid}>
         <section className={styles.profileCard}>
-          <h3 className={styles.profileCardTitle}>Mi informacion</h3>
+          <h3 className={styles.profileCardTitle}>Mi información</h3>
           <dl className={styles.profileInfoGrid}>
             <div className={styles.profileInfoItem}>
               <dt className={styles.profileInfoLabel}>Nombre</dt>
@@ -100,7 +100,7 @@ export function ProfileTab({
                 disabled={busyAction === "update-profile"}
               >
                 <span>
-                  {isProfileFormOpen ? "Ocultar edicion de perfil" : "Editar mi informacion"}
+                  {isProfileFormOpen ? "Ocultar edición de perfil" : "Editar mi información"}
                 </span>
                 <span
                   className={styles.supportCreateToggleIcon}
@@ -120,7 +120,7 @@ export function ProfileTab({
                 disabled={busyAction === "change-my-password"}
               >
                 <span>
-                  {isPasswordFormOpen ? "Ocultar edicion de contrasena" : "Editar mi contrasena"}
+                  {isPasswordFormOpen ? "Ocultar edición de contraseña" : "Editar mi contraseña"}
                 </span>
                 <span
                   className={styles.supportCreateToggleIcon}
@@ -198,7 +198,7 @@ export function ProfileTab({
                 <form className={styles.createForm} onSubmit={onChangePassword}>
                   <div className={styles.createForm}>
                     <div>
-                      <label htmlFor="profile-current-password">Contrasena actual</label>
+                      <label htmlFor="profile-current-password">Contraseña actual</label>
                       <input
                         id="profile-current-password"
                         type="password"
@@ -215,7 +215,7 @@ export function ProfileTab({
                     </div>
 
                     <div>
-                      <label htmlFor="profile-new-password">Nueva contrasena</label>
+                      <label htmlFor="profile-new-password">Nueva contraseña</label>
                       <input
                         id="profile-new-password"
                         type="password"
@@ -232,7 +232,7 @@ export function ProfileTab({
                     </div>
 
                     <div>
-                      <label htmlFor="profile-confirm-password">Confirmar nueva contrasena</label>
+                      <label htmlFor="profile-confirm-password">Confirmar nueva contraseña</label>
                       <input
                         id="profile-confirm-password"
                         type="password"
@@ -257,7 +257,7 @@ export function ProfileTab({
                     >
                       {busyAction === "change-my-password"
                         ? "Actualizando..."
-                        : "Actualizar contrasena"}
+                        : "Actualizar contraseña"}
                     </button>
                   </div>
                 </form>

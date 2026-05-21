@@ -96,7 +96,7 @@ export function useAdminResourceHandlers({
           suppressGlobalError: true,
         });
         if (!refreshed) {
-          setSuccess("Recurso creado correctamente. No se pudo refrescar la lista automaticamente.");
+          setSuccess("Recurso creado correctamente. No se pudo refrescar la lista automáticamente.");
         }
       } catch (errorValue) {
         setError(getErrorText(errorValue, "No se pudo crear el recurso"));
@@ -160,14 +160,14 @@ export function useAdminResourceHandlers({
           isPublished: normalizedPayload.isPublished,
         });
         setOpenResourceEditorId(null);
-        setSuccess(`Recurso ${normalizedPayload.title || "sin titulo"} actualizado`);
+        setSuccess(`Recurso ${normalizedPayload.title || "sin título"} actualizado`);
 
         const refreshed = await loadDashboardData(false, {
           suppressGlobalError: true,
         });
         if (!refreshed) {
           setSuccess(
-            `Recurso ${normalizedPayload.title || "sin titulo"} actualizado. No se pudo refrescar la lista automaticamente.`,
+            `Recurso ${normalizedPayload.title || "sin título"} actualizado. No se pudo refrescar la lista automáticamente.`,
           );
         }
       } catch (errorValue) {
@@ -182,7 +182,7 @@ export function useAdminResourceHandlers({
   const handleDeleteResource = useCallback(
     async (resource: ResourceRecord) => {
       const confirmed = window.confirm(
-        `Vas a eliminar el recurso ${resource.title}. Esta accion no se puede deshacer.`,
+        `Vas a eliminar el recurso ${resource.title}. Esta acción no se puede deshacer.`,
       );
       if (!confirmed) return;
 
@@ -202,7 +202,7 @@ export function useAdminResourceHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            `Recurso ${resource.title} eliminado. No se pudo refrescar la lista automaticamente.`,
+            `Recurso ${resource.title} eliminado. No se pudo refrescar la lista automáticamente.`,
           );
         }
       } catch (errorValue) {

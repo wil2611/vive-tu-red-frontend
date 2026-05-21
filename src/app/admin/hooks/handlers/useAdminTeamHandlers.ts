@@ -102,7 +102,7 @@ export function useAdminTeamHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            "Integrante creado correctamente. No se pudo refrescar la lista automaticamente.",
+            "Integrante creado correctamente. No se pudo refrescar la lista automáticamente.",
           );
         }
       } catch (errorValue) {
@@ -212,7 +212,7 @@ export function useAdminTeamHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            `Integrante ${name} actualizado. No se pudo refrescar la lista automaticamente.`,
+            `Integrante ${name} actualizado. No se pudo refrescar la lista automáticamente.`,
           );
         }
       } catch (errorValue) {
@@ -227,7 +227,7 @@ export function useAdminTeamHandlers({
   const handleDeleteTeamMember = useCallback(
     async (teamMember: TeamMember) => {
       const confirmed = window.confirm(
-        `Vas a eliminar a ${teamMember.name}. Esta accion no se puede deshacer.`,
+        `Vas a eliminar a ${teamMember.name}. Esta acción no se puede deshacer.`,
       );
       if (!confirmed) return;
 
@@ -247,7 +247,7 @@ export function useAdminTeamHandlers({
         });
         if (!refreshed) {
           setSuccess(
-            `Integrante ${teamMember.name} eliminado. No se pudo refrescar la lista automaticamente.`,
+            `Integrante ${teamMember.name} eliminado. No se pudo refrescar la lista automáticamente.`,
           );
         }
       } catch (errorValue) {

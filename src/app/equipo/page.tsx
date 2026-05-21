@@ -180,8 +180,8 @@ export default function EquipoPage() {
             </h1>
             <p className={styles.heroDesc}>
               Conoce a las investigadoras e investigadores que integran #ViveTuRed. El equipo
-              reune perfiles de ciencias sociales, educacion, derecho, diseno, ciencias basicas
-              e ingenieria para abordar la prevencion de la VBG desde una perspectiva
+              reúne perfiles de ciencias sociales, educación, derecho, diseño, ciencias básicas
+              e ingeniería para abordar la prevención de la VBG desde una perspectiva
               interdisciplinaria.
             </p>
 
@@ -259,13 +259,13 @@ export default function EquipoPage() {
                       <div className={styles.researcherMetaItem}>
                         <span className={styles.researcherMetaLabel}>Departamento</span>
                         <span className={styles.researcherMetaValue}>
-                          {person.department || "Informacion en actualizacion"}
+                          {person.department || "Información en actualización"}
                         </span>
                       </div>
                       <div className={styles.researcherMetaItem}>
                         <span className={styles.researcherMetaLabel}>Division academica</span>
                         <span className={styles.researcherMetaValue}>
-                          {person.division || "Informacion en actualizacion"}
+                          {person.division || "Información en actualización"}
                         </span>
                       </div>
                     </div>
@@ -274,7 +274,7 @@ export default function EquipoPage() {
               ))}
             </div>
           ) : !isLoading && !loadError ? (
-            <p className={styles.sectionDesc}>Aun no hay integrantes activos en el equipo.</p>
+            <p className={styles.sectionDesc}>Aún no hay integrantes activos en el equipo.</p>
           ) : null}
         </div>
       </section>
@@ -286,8 +286,8 @@ export default function EquipoPage() {
             Capacidades del <span>equipo</span>
           </h2>
           <p className={`${styles.sectionDesc} ${styles.sectionDescShort}`}>
-            El trabajo conjunto integra enfoques metodologicos, juridicos, pedagogicos,
-            tecnologicos y de investigacion-creacion para producir resultados aplicables en
+            El trabajo conjunto integra enfoques metodológicos, jurídicos, pedagógicos,
+            tecnológicos y de investigación-creación para producir resultados aplicables en
             contextos universitarios.
           </p>
 
@@ -318,10 +318,10 @@ export default function EquipoPage() {
       <section className="section-soft">
         <div className="container cta-section-container">
           <div className="cta-block">
-            <h2 className="cta-title">¿Quieres conocer mas del <span>trabajo del equipo?</span></h2>
+            <h2 className="cta-title">¿Quieres conocer más del <span>trabajo del equipo?</span></h2>
             <p className="cta-desc">
               Te invitamos a explorar el proyecto completo y sus herramientas 
-              para la prevencion de la VBG en Educacion Superior.
+              para la prevención de la VBG en Educación Superior.
             </p>
             <div className="cta-actions">
               <Link className="btn btn-primary" href="/sobre">

@@ -60,7 +60,7 @@ export function TeamTab({
       <div className={styles.panelHeader}>
         <h2 className={`${styles.panelTitle} ${styles.profileTitle}`}>Equipo investigador</h2>
         <p className={styles.panelHint}>
-          Administra las personas que aparecen en la seccion de investigadoras e investigadores.
+          Administra las personas que aparecen en la sección de investigadoras e investigadores.
         </p>
         <div className={styles.supportMetaRow}>
           <span className={`${styles.supportMetaBadge} ${styles.supportMetaBadgeTotal}`}>

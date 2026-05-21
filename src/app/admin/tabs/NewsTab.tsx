@@ -67,7 +67,7 @@ function CharacterCounter({
       aria-live="polite"
     >
       {currentLength}/{limit} caracteres
-      {isAtLimit ? " | Limite alcanzado" : ""}
+      {isAtLimit ? " | Límite alcanzado" : ""}
     </p>
   );
 }
@@ -98,7 +98,7 @@ export function NewsTab({
       <div className={styles.panelHeader}>
         <h2 className={`${styles.panelTitle} ${styles.profileTitle}`}>Noticias</h2>
         <p className={styles.panelHint}>
-          Publica novedades para la pagina de inicio: titulares, portada, resumen y cuerpo.
+          Publica novedades para la página de inicio: titulares, portada, resumen y cuerpo.
         </p>
         <div className={styles.supportMetaRow}>
           <span className={`${styles.supportMetaBadge} ${styles.supportMetaBadgeTotal}`}>
@@ -138,7 +138,7 @@ export function NewsTab({
           <form className={styles.createForm} onSubmit={onCreateNews}>
             <div className={styles.formGrid}>
               <div>
-                <label htmlFor="news-title">Titulo</label>
+                <label htmlFor="news-title">Título</label>
                 <input
                   id="news-title"
                   className={createNewsFormErrors.title ? styles.fieldError : ""}
@@ -223,7 +223,7 @@ export function NewsTab({
               </div>
 
               <div>
-                <label htmlFor="news-published-at">Fecha de publicacion (opcional)</label>
+                <label htmlFor="news-published-at">Fecha de publicación (opcional)</label>
                 <input
                   id="news-published-at"
                   type="datetime-local"
@@ -353,7 +353,7 @@ export function NewsTab({
                   <div className={styles.supportListSummary}>
                     <div className={styles.supportListIdentity}>
                       <div className={styles.supportListNameRow}>
-                        <h4 className={styles.supportListName}>{draftTitle.trim() || "Noticia sin titulo"}</h4>
+                        <h4 className={styles.supportListName}>{draftTitle.trim() || "Noticia sin título"}</h4>
                         <span
                           className={styles.supportListStatus}
                           data-active={draft.isPublished ? "true" : "false"}
@@ -391,7 +391,7 @@ export function NewsTab({
                     <div className={styles.supportEditorInner}>
                       <div className={styles.supportRegistryFields}>
                         <div className={`${styles.supportField} ${styles.supportFieldWide}`}>
-                          <label>Titulo</label>
+                          <label>Título</label>
                           <input
                             value={draftTitle}
                             maxLength={NEWS_TITLE_MAX_LENGTH}
@@ -445,7 +445,7 @@ export function NewsTab({
                         </div>
 
                         <div className={styles.supportField}>
-                          <label>Fecha de publicacion</label>
+                          <label>Fecha de publicación</label>
                           <input
                             type="datetime-local"
                             value={draftPublishedAt}

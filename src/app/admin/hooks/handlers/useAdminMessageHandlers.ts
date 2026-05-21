@@ -77,7 +77,7 @@ export function useAdminMessageHandlers({
   const handleDeleteMessage = useCallback(
     async (id: string) => {
       const confirmed = window.confirm(
-        "Vas a eliminar este mensaje de contacto. Esta accion no se puede deshacer.",
+        "Vas a eliminar este mensaje de contacto. Esta acción no se puede deshacer.",
       );
       if (!confirmed) return;
 

@@ -59,7 +59,7 @@ export function AlliesTab({
       <div className={styles.panelHeader}>
         <h2 className={`${styles.panelTitle} ${styles.profileTitle}`}>Aliados y participantes</h2>
         <p className={styles.panelHint}>
-          Administra las organizaciones que aparecen en la seccion de conoce el proyecto.
+          Administra las organizaciones que aparecen en la sección de conoce el proyecto.
         </p>
         <div className={styles.supportMetaRow}>
           <span className={`${styles.supportMetaBadge} ${styles.supportMetaBadgeTotal}`}>
@@ -194,7 +194,7 @@ export function AlliesTab({
             </div>
 
             <div>
-              <label htmlFor="ally-participation-scope">Alcance de participacion</label>
+              <label htmlFor="ally-participation-scope">Alcance de participación</label>
               <textarea
                 id="ally-participation-scope"
                 className={createAllyFormErrors.participationScope ? styles.fieldError : ""}
@@ -396,7 +396,7 @@ export function AlliesTab({
                         </div>
 
                         <div className={`${styles.supportField} ${styles.supportFieldWide}`}>
-                          <label>Alcance de participacion</label>
+                          <label>Alcance de participación</label>
                           <textarea
                             value={draft.participationScope}
                             rows={4}

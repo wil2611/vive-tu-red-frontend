@@ -125,13 +125,13 @@ export default function LibroPage() {
           <div className={styles.heroShell}>
             <h1 className={styles.heroTitle}>Libro digital #ViveTuRed</h1>
             <p className={styles.heroDesc}>
-              Un cuento de ficcion en formato interactivo para leer como un libro:
-              cambia paginas, explora episodios y recorre cada capitulo en orden.
+              Un cuento de ficción en formato interactivo para leer como un libro:
+              cambia páginas, explora episodios y recorre cada capítulo en orden.
             </p>
 
             <div className={styles.heroPills}>
               <span className="badge badge-terracotta">3 episodios</span>
-              <span className="badge badge-teal">6 capitulos</span>
+              <span className="badge badge-teal">6 capítulos</span>
               <span className="badge badge-gold">Modo lectura</span>
             </div>
           </div>
@@ -164,7 +164,7 @@ export default function LibroPage() {
               Pliego {spreadIndex + 1} de {totalSpreads}
             </span>
             <span>
-              Paginas {leftPage?.pageNumber ?? "-"}{rightPage ? ` - ${rightPage.pageNumber}` : ""}
+              Páginas {leftPage?.pageNumber ?? "-"}{rightPage ? ` - ${rightPage.pageNumber}` : ""}
             </span>
           </div>
 
@@ -189,11 +189,11 @@ export default function LibroPage() {
               className={`btn btn-outline ${styles.navButton}`}
               disabled={!canGoPrev || isTurning}
             >
-              &larr; Paginas anteriores
+              &larr; Páginas anteriores
             </button>
 
             <div className={styles.navHint}>
-              {isTurning ? "Pasando pagina..." : "Usa los botones para pasar paginas"}
+              {isTurning ? "Pasando página..." : "Usa los botones para pasar páginas"}
             </div>
 
             <button
@@ -202,7 +202,7 @@ export default function LibroPage() {
               className={`btn btn-primary ${styles.navButton}`}
               disabled={!canGoNext || isTurning}
             >
-              Paginas siguientes &rarr;
+              Páginas siguientes &rarr;
             </button>
           </div>
         </div>
@@ -216,8 +216,8 @@ export default function LibroPage() {
             <div>
               <strong className={styles.noteTitle}>Sobre este libro</strong>
               <p className={styles.noteText}>
-                Este cuento de ficcion hace parte del proyecto de investigacion-creacion #ViveTuRed.
-                Si necesitas orientacion o apoyo, contacta a los canales institucionales de tu entorno.
+                Este cuento de ficción hace parte del proyecto de investigación-creación #ViveTuRed.
+                Si necesitas orientación o apoyo, contacta a los canales institucionales de tu entorno.
               </p>
             </div>
           </div>
