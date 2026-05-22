@@ -12,6 +12,10 @@ type ApiErrorPayload = {
   statusCode?: number;
 };
 
+type CsrfTokenResponse = {
+  csrfToken?: string;
+};
+
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 export type ApiRequestOptions = {
@@ -92,6 +96,10 @@ async function sendRequest(
   });
 }
 
+function isMutatingMethod(method: HttpMethod | undefined): boolean {
+  return method === "POST" || method === "PUT" || method === "PATCH" || method === "DELETE";
+}
+
 class ApiClient {
   private async buildError(response: Response, fallbackMessage: string): Promise<ApiClientError> {
     const payload = await parseJson<ApiErrorPayload>(response);
@@ -125,15 +133,58 @@ class ApiClient {
     return nextSession;
   }
 
+  private async getCsrfToken(baseUrl: string): Promise<string> {
+    const response = await sendRequest(baseUrl, "/auth/csrf", {
+      method: "GET",
+      auth: false,
+      retryOnUnauthorized: false,
+    });
+
+    if (!response.ok) {
+      throw await this.buildError(response, "No se pudo preparar la solicitud segura");
+    }
+
+    const payload = await parseJson<CsrfTokenResponse>(response);
+    const csrfToken = payload?.csrfToken?.trim();
+    if (!csrfToken) {
+      throw new ApiClientError("No se pudo obtener el token de seguridad", 403);
+    }
+
+    return csrfToken;
+  }
+
+  private async withCsrfHeader(
+    baseUrl: string,
+    options: ApiRequestOptions,
+  ): Promise<ApiRequestOptions> {
+    if (!options.auth || !isMutatingMethod(options.method)) {
+      return options;
+    }
+
+    const headers = new Headers(options.headers);
+    headers.set("X-CSRF-Token", await this.getCsrfToken(baseUrl));
+    return {
+      ...options,
+      headers,
+    };
+  }
+
   async request<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
     const auth = options.auth ?? true;
     const retryOnUnauthorized = options.retryOnUnauthorized ?? true;
     let activeBaseUrl = getApiBaseUrl();
     let retriedWithDefaultBase = false;
 
+    let requestOptions: ApiRequestOptions = {
+      ...options,
+      auth,
+      retryOnUnauthorized,
+    };
+
     const requestWithFallback = async (): Promise<Response> => {
       try {
-        return await sendRequest(activeBaseUrl, path, options);
+        requestOptions = await this.withCsrfHeader(activeBaseUrl, requestOptions);
+        return await sendRequest(activeBaseUrl, path, requestOptions);
       } catch (error) {
         const shouldRetryWithDefault =
           !retriedWithDefaultBase && activeBaseUrl !== DEFAULT_API_BASE_URL;
@@ -145,7 +196,8 @@ class ApiClient {
         retriedWithDefaultBase = true;
         activeBaseUrl = DEFAULT_API_BASE_URL;
         resetApiBaseUrl();
-        return sendRequest(activeBaseUrl, path, options);
+        requestOptions = await this.withCsrfHeader(activeBaseUrl, requestOptions);
+        return sendRequest(activeBaseUrl, path, requestOptions);
       }
     };
 
