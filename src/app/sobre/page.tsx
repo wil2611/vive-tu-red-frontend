@@ -38,13 +38,9 @@ function getInitials(name: string): string {
 }
 
 function toTeamRole(member: TeamMember): TeamRole {
-  const role = [member.department, member.division]
-    .filter((value): value is string => Boolean(value && value.trim()))
-    .join(" - ");
-
   return {
     name: member.name,
-    role: role || "Equipo investigador",
+    role: member.roleLabel || "Equipo investigador",
     initials: getInitials(member.name),
   };
 }

@@ -7,6 +7,7 @@ import {
   TEAM_NAME_MAX_LENGTH,
   TEAM_PHOTO_MAX_LENGTH,
   TEAM_PROFILE_MAX_LENGTH,
+  TEAM_ROLE_LABEL_MAX_LENGTH,
   type TeamCreateFormErrors,
   type TeamMemberDraft,
 } from "../admin.shared";
@@ -117,6 +118,27 @@ export function TeamTab({
                 />
                 {createTeamFormErrors.name ? (
                   <p className={styles.fieldErrorText}>{createTeamFormErrors.name}</p>
+                ) : null}
+              </div>
+
+              <div>
+                <label htmlFor="team-role-label">Rol visible</label>
+                <input
+                  id="team-role-label"
+                  className={createTeamFormErrors.roleLabel ? styles.fieldError : ""}
+                  value={createTeamForm.roleLabel ?? ""}
+                  onChange={(event) => {
+                    setCreateTeamForm((prev) => ({
+                      ...prev,
+                      roleLabel: event.target.value,
+                    }));
+                    setCreateTeamFormErrors((prev) => ({ ...prev, roleLabel: undefined }));
+                  }}
+                  maxLength={TEAM_ROLE_LABEL_MAX_LENGTH}
+                  required
+                />
+                {createTeamFormErrors.roleLabel ? (
+                  <p className={styles.fieldErrorText}>{createTeamFormErrors.roleLabel}</p>
                 ) : null}
               </div>
 
@@ -258,7 +280,8 @@ export function TeamTab({
                         </span>
                       </div>
                       <p className={styles.panelHint}>
-                        {draft.department.trim() || "Sin departamento"} -{" "}{draft.division.trim() || "Sin division"}
+                        {draft.roleLabel.trim() || "Sin rol visible"} -{" "}
+                        {draft.department.trim() || "Sin departamento"}
                       </p>
                     </div>
 
@@ -319,6 +342,23 @@ export function TeamTab({
                             <option value="active">Activo</option>
                             <option value="inactive">Inactivo</option>
                           </select>
+                        </div>
+
+                        <div className={styles.supportField}>
+                          <label>Rol visible</label>
+                          <input
+                            value={draft.roleLabel}
+                            maxLength={TEAM_ROLE_LABEL_MAX_LENGTH}
+                            onChange={(event) =>
+                              setTeamMemberDrafts((prev) => ({
+                                ...prev,
+                                [teamMember.id]: {
+                                  ...draft,
+                                  roleLabel: event.target.value,
+                                },
+                              }))
+                            }
+                          />
                         </div>
 
                         <div className={styles.supportField}>

@@ -1,5 +1,6 @@
 export interface Researcher {
   name: string;
+  roleLabel?: string;
   profile: string;
   department?: string;
   division?: string;

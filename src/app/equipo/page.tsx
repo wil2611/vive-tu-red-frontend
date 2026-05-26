@@ -21,6 +21,16 @@ const expertiseIcons = [
   "/portatil_blanco.png",
 ];
 
+const TEAM_ROLE_GROUPS = [
+  "Investigadora principal",
+  "Co-investigadora",
+  "Co-investigador",
+  "Asistente de investigación",
+  "Diseño / tecnología / coordinación",
+] as const;
+
+const FALLBACK_ROLE_GROUP = "Otros perfiles";
+
 function extractGoogleDriveFileId(rawUrl: string): string | null {
   const fallbackPathMatch = rawUrl.match(/\/file\/d\/([^/?#]+)/);
   if (fallbackPathMatch?.[1]) {
@@ -117,11 +127,24 @@ function isAllowedTeamImageHost(url?: string | null): boolean {
 function toResearcher(teamMember: TeamMember): Researcher {
   return {
     name: teamMember.name,
+    roleLabel: teamMember.roleLabel,
     profile: teamMember.profile,
     department: teamMember.department ?? undefined,
     division: teamMember.division ?? undefined,
     photo: normalizeTeamPhotoUrl(teamMember.photo),
   };
+}
+
+function hasCompleteAcademicInfo(researcher: Researcher): boolean {
+  return Boolean(researcher.department?.trim() && researcher.division?.trim());
+}
+
+function normalizeRoleGroup(value?: string): string {
+  return (value ?? "")
+    .trim()
+    .toLocaleLowerCase("es-CO")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 export default function EquipoPage() {
@@ -160,15 +183,40 @@ export default function EquipoPage() {
     };
   }, []);
 
-  const departmentCount = useMemo(
-    () => new Set(researchers.map((researcher) => researcher.department).filter(Boolean)).size,
-    [researchers],
-  );
+  const departmentCount = useMemo(() => {
+    const researchersWithAcademicInfo = researchers.filter(hasCompleteAcademicInfo);
+    return new Set(researchersWithAcademicInfo.map((researcher) => researcher.department)).size;
+  }, [researchers]);
 
-  const divisionCount = useMemo(
-    () => new Set(researchers.map((researcher) => researcher.division).filter(Boolean)).size,
-    [researchers],
-  );
+  const divisionCount = useMemo(() => {
+    const researchersWithAcademicInfo = researchers.filter(hasCompleteAcademicInfo);
+    return new Set(researchersWithAcademicInfo.map((researcher) => researcher.division)).size;
+  }, [researchers]);
+
+  const groupedResearchers = useMemo(() => {
+    const groups = TEAM_ROLE_GROUPS.map((title) => ({
+      title,
+      researchers: [] as Researcher[],
+    }));
+    const fallbackGroup = {
+      title: FALLBACK_ROLE_GROUP,
+      researchers: [] as Researcher[],
+    };
+
+    for (const researcher of researchers) {
+      const roleGroup = groups.find(
+        (group) => normalizeRoleGroup(group.title) === normalizeRoleGroup(researcher.roleLabel),
+      );
+
+      if (roleGroup) {
+        roleGroup.researchers.push(researcher);
+      } else {
+        fallbackGroup.researchers.push(researcher);
+      }
+    }
+
+    return [...groups, fallbackGroup].filter((group) => group.researchers.length > 0);
+  }, [researchers]);
 
   return (
     <div>
@@ -218,12 +266,15 @@ export default function EquipoPage() {
           </p>
 
           {researchers.length ? (
-            <div className={styles.researchersGrid}>
-              {researchers.map((person, index) => (
+            <div className={styles.researcherGroups}>
+              {groupedResearchers.map((group, groupIndex) => (
+                <div key={group.title} className={styles.researcherGroup}>
+                  <div className={styles.researchersGrid}>
+                    {group.researchers.map((person, index) => (
                 <article
-                  key={`${person.name}-${index}`}
+                  key={`${group.title}-${person.name}-${index}`}
                   className={`${styles.researcherCard} ${
-                    index % 2 === 0 ? styles.researcherCardWarm : styles.researcherCardForest
+                    (groupIndex + index) % 2 === 0 ? styles.researcherCardWarm : styles.researcherCardForest
                   }`}
                 >
                   <header className={styles.researcherCardHead}>
@@ -250,11 +301,14 @@ export default function EquipoPage() {
                   <div className={styles.researcherCardContent}>
                     <div className={styles.researcherHeadText}>
                       <h3 className={styles.researcherName}>{person.name}</h3>
-                      <span className={styles.researcherHeadRole}>Equipo investigador</span>
+                      <span className={styles.researcherHeadRole}>
+                        {person.roleLabel || "Equipo investigador"}
+                      </span>
                     </div>
 
                     <p className={styles.researcherProfile}>{person.profile}</p>
 
+                    {hasCompleteAcademicInfo(person) ? (
                     <div className={styles.researcherMeta}>
                       <div className={styles.researcherMetaItem}>
                         <span className={styles.researcherMetaLabel}>Departamento</span>
@@ -269,8 +323,12 @@ export default function EquipoPage() {
                         </span>
                       </div>
                     </div>
+                    ) : null}
                   </div>
                 </article>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           ) : !isLoading && !loadError ? (

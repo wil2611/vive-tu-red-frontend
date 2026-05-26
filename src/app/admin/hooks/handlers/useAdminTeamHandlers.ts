@@ -13,6 +13,7 @@ import {
   TEAM_NAME_MAX_LENGTH,
   TEAM_PHOTO_MAX_LENGTH,
   TEAM_PROFILE_MAX_LENGTH,
+  TEAM_ROLE_LABEL_MAX_LENGTH,
   isAllowedTeamPhotoUrl,
   normalizeTeamCreateForm,
   validateTeamCreateForm,
@@ -130,6 +131,7 @@ export function useAdminTeamHandlers({
       if (!draft) return;
 
       const name = draft.name.trim();
+      const roleLabel = draft.roleLabel.trim();
       const profile = draft.profile.trim();
       const photo = draft.photo.trim();
       const department = draft.department.trim();
@@ -143,6 +145,18 @@ export function useAdminTeamHandlers({
 
       if (name.length > TEAM_NAME_MAX_LENGTH) {
         setError(`El nombre no puede superar ${TEAM_NAME_MAX_LENGTH} caracteres.`);
+        setSuccess(null);
+        return;
+      }
+
+      if (roleLabel.length < 3) {
+        setError("El rol visible debe tener al menos 3 caracteres.");
+        setSuccess(null);
+        return;
+      }
+
+      if (roleLabel.length > TEAM_ROLE_LABEL_MAX_LENGTH) {
+        setError(`El rol visible no puede superar ${TEAM_ROLE_LABEL_MAX_LENGTH} caracteres.`);
         setSuccess(null);
         return;
       }
@@ -198,6 +212,7 @@ export function useAdminTeamHandlers({
       try {
         await updateTeamMemberById(teamMember.id, {
           name,
+          roleLabel,
           profile,
           department,
           division,

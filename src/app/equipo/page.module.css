@@ -154,6 +154,16 @@
   max-width: 840px;
 }
 
+.researcherGroups {
+  display: grid;
+  gap: 34px;
+}
+
+.researcherGroup {
+  display: grid;
+  gap: 14px;
+}
+
 .researchersGrid {
   display: grid;
   grid-template-columns: 1fr;
