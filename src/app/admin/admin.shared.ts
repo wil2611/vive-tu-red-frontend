@@ -33,6 +33,7 @@ export type ResourceDraft = {
 
 export type TeamMemberDraft = {
   name: string;
+  roleLabel: string;
   profile: string;
   department: string;
   division: string;
@@ -70,6 +71,7 @@ export type ResourceCreateFormErrors = {
 
 export type TeamCreateFormErrors = {
   name?: string;
+  roleLabel?: string;
   profile?: string;
   photo?: string;
 };
@@ -128,6 +130,7 @@ export const INITIAL_RESOURCE_FORM: CreateResourcePayload = {
 
 export const INITIAL_TEAM_FORM: CreateTeamMemberPayload = {
   name: "",
+  roleLabel: "Equipo investigador",
   profile: "",
   department: "",
   division: "",
@@ -163,6 +166,7 @@ export const RESOURCE_DESCRIPTION_MAX_LENGTH = 5000;
 export const RESOURCE_TAG_MAX_LENGTH = 80;
 export const RESOURCE_TAGS_MAX_COUNT = 30;
 export const TEAM_NAME_MAX_LENGTH = 255;
+export const TEAM_ROLE_LABEL_MAX_LENGTH = 120;
 export const TEAM_PROFILE_MAX_LENGTH = 5000;
 export const TEAM_DEPARTMENT_MAX_LENGTH = 255;
 export const TEAM_DIVISION_MAX_LENGTH = 255;
@@ -271,6 +275,7 @@ export function buildResourceDraft(resource: ResourceRecord): ResourceDraft {
 export function buildTeamMemberDraft(teamMember: TeamMember): TeamMemberDraft {
   return {
     name: teamMember.name,
+    roleLabel: teamMember.roleLabel || "Equipo investigador",
     profile: teamMember.profile,
     department: textOrEmpty(teamMember.department),
     division: textOrEmpty(teamMember.division),
@@ -347,6 +352,7 @@ export function normalizeTeamCreateForm(
   return {
     ...form,
     name: (form.name ?? "").trim(),
+    roleLabel: (form.roleLabel ?? "").trim(),
     profile: (form.profile ?? "").trim(),
     department: (form.department ?? "").trim(),
     division: (form.division ?? "").trim(),
@@ -472,6 +478,7 @@ export function validateTeamCreateForm(
 ): TeamCreateFormErrors {
   const errors: TeamCreateFormErrors = {};
   const name = (form.name ?? "").trim();
+  const roleLabel = (form.roleLabel ?? "").trim();
   const profile = (form.profile ?? "").trim();
   const photo = (form.photo ?? "").trim();
 
@@ -479,6 +486,12 @@ export function validateTeamCreateForm(
     errors.name = "El nombre debe tener al menos 3 caracteres.";
   } else if (name.length > TEAM_NAME_MAX_LENGTH) {
     errors.name = `El nombre no puede superar ${TEAM_NAME_MAX_LENGTH} caracteres.`;
+  }
+
+  if (roleLabel.length < 3) {
+    errors.roleLabel = "El rol visible debe tener al menos 3 caracteres.";
+  } else if (roleLabel.length > TEAM_ROLE_LABEL_MAX_LENGTH) {
+    errors.roleLabel = `El rol visible no puede superar ${TEAM_ROLE_LABEL_MAX_LENGTH} caracteres.`;
   }
 
   if (profile.length < 20) {

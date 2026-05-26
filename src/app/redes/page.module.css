@@ -54,17 +54,23 @@
   backdrop-filter: blur(3px);
 }
 :global(.redes-hero-title) {
-  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-size: var(--type-hero-title);
   font-weight: 800;
   color: #1D3E2A;
   margin: 0 0 12px;
   line-height: 1.15;
   font-family: Georgia, "Times New Roman", serif;
 }
+:global(.redes-hero-title span) {
+  color: #c96a4a;
+  font: inherit;
+  font-size: calc(1em - 4px);
+  line-height: inherit;
+}
 :global(.redes-hero-desc) {
-  font-size: 1.03rem;
+  font-size: var(--type-hero-desc);
   line-height: 1.75;
-  color: #5a7d66;
+  color: #1D3E2A;
   max-width: 860px;
   margin: 0 0 22px;
 }
@@ -103,7 +109,7 @@
 :global(.redes-hero-note p) {
   margin: 0;
   font-size: 12.5px;
-  color: #5a7d66;
+  color: #1D3E2A;
   line-height: 1.62;
 }
 :global(.redes-steps) {
@@ -217,20 +223,20 @@
 :global(.redes-progress-label) {
   font-size: 12px;
   font-weight: 600;
-  color: #5a7d66;
+  color: #1D3E2A;
   font-family: ui-sans-serif, system-ui, sans-serif;
   white-space: nowrap;
 }
 :global(.redes-form-title) {
-  font-size: 1.35rem;
+  font-size: var(--type-section-title);
   font-weight: 800;
   color: #1D3E2A;
   margin: 0 0 8px;
   font-family: Georgia, serif;
 }
 :global(.redes-form-desc) {
-  font-size: 14px;
-  color: #5a7d66;
+  font-size: var(--type-body);
+  color: #1D3E2A;
   line-height: 1.65;
   margin: 0 0 24px;
 }
@@ -265,7 +271,7 @@
   font-size: 13px;
   font-weight: 600;
   font-family: ui-sans-serif, system-ui, sans-serif;
-  color: #5a7d66;
+  color: #1D3E2A;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -292,6 +298,10 @@
   object-fit: contain;
   display: block;
 }
+:global(.redes-chip-icon-small) {
+  width: 23px;
+  height: 23px;
+}
 :global(.redes-chip-icon-other) {
   width: 35px;
   height: 35px;
@@ -313,7 +323,7 @@
   padding: 8px 24px;
   border-color: #d4cdaf;
   border-radius: 14px;
-  color: #496858;
+  color: #1D3E2A;
   font-size: 13px;
   font-weight: 600;
 }
@@ -366,7 +376,7 @@
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1px;
-  color: #5a7d66;
+  color: #1D3E2A;
   font-family: ui-sans-serif, system-ui, sans-serif;
   margin-bottom: 12px;
 }
@@ -407,7 +417,7 @@
 }
 :global(.redes-node-rel) {
   font-size: 11px;
-  color: #5a7d66;
+  color: #1D3E2A;
 }
 :global(.redes-node-badge) {
   font-size: 11px;
@@ -461,7 +471,7 @@
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1px;
-  color: #5a7d66;
+  color: #1D3E2A;
   font-family: ui-sans-serif, system-ui, sans-serif;
   margin-bottom: 6px;
   width: 100%;
@@ -475,7 +485,7 @@
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.05em;
-  color: #5a7d66;
+  color: #1D3E2A;
   font-family: ui-sans-serif, system-ui, sans-serif;
   margin-bottom: 4px;
   border-bottom: 1px solid #e0dcc8;
@@ -508,7 +518,7 @@
 }
 :global(.redes-graph-empty) {
   text-align: center;
-  color: #5a7d66;
+  color: #1D3E2A;
   font-family: ui-sans-serif, system-ui, sans-serif;
 }
 :global(.redes-graph-empty p) {
@@ -599,7 +609,7 @@
   gap: 4px;
   font-size: 11px;
   font-family: ui-sans-serif, system-ui, sans-serif;
-  color: #5a7d66;
+  color: #1D3E2A;
   background: rgba(29, 62, 42, 0.05);
   padding: 4px 8px;
   border-radius: 6px;
@@ -834,3 +844,5 @@
     padding-bottom: 8px;
   }
 }
+
+

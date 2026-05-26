@@ -18,11 +18,16 @@
   --color-teal-light: #007a80;
   --color-teal-dark: #003d40;
   --text: #1D3E2A;
-  --text-light: #2a5a3d;
-  --muted: #5a7d66;
+  --text-light: #1D3E2A;
+  --muted: #1D3E2A;
   --border: #d4cdaf;
   --bg: #faf9f5;
   --soft: #E2DCC2;
+  --type-hero-title: clamp(2rem, 4vw, 2.6rem);
+  --type-section-title: 1.4rem;
+  --type-hero-desc: 1.03rem;
+  --type-body: 15px;
+  --type-small: 13px;
   --font-title: "Aptos Display", "Segoe UI Variable Display", "Segoe UI", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   --font-body: "Poppins", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
 }
@@ -196,7 +201,7 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 8px;
 }
 .section-subtitle {
-  font-size: 1.1rem;
+  font-size: var(--type-hero-desc);
   color: var(--muted);
   line-height: 1.7;
   max-width: 680px;
@@ -313,7 +318,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 1;
 }
 .hero-desc {
-  font-size: 1.05rem;
+  font-size: var(--type-hero-desc);
   line-height: 1.75;
   color: rgba(244, 241, 233, 0.92);
   margin-bottom: 28px;
@@ -369,7 +374,7 @@ a { color: inherit; text-decoration: none; }
 }
 .hero-trust-text small {
   font-weight: 400;
-  color: #5a7d66;
+  color: #1D3E2A;
   font-size: 12px;
 }
 .hero-visual {
@@ -487,8 +492,8 @@ a { color: inherit; text-decoration: none; }
   max-width: none;
 }
 .mission-text {
-  color: rgba(29, 62, 42, 0.8);
-  font-size: 15px;
+  color: #1D3E2A;
+  font-size: var(--type-body);
   line-height: 1.8;
   margin: 0 0 10px;
 }
@@ -502,13 +507,16 @@ a { color: inherit; text-decoration: none; }
 }
 .mission-title {
   margin: 0 0 20px;
-  color: #17362b;
+  color: #1D3E2A;
   font-size: 2rem;
   font-weight: 800;
   line-height: 1.12;
 }
 .mission-title span {
   color: #C96A4A;
+  font: inherit;
+  font-size: calc(1em - 4px);
+  line-height: inherit;
 }
 .mission-bullets {
   display: grid;
@@ -611,19 +619,22 @@ a { color: inherit; text-decoration: none; }
 
 .home-news-title {
   margin: 0;
-  font-size: clamp(1.8rem, 3vw, 2.35rem);
+  font-size: 2rem;
   line-height: 1.1;
 }
 
 .home-news-title span {
   color: #C96A4A;
+  font: inherit;
+  font-size: calc(1em - 4px);
+  line-height: inherit;
 }
 
 .home-news-lead {
   margin: 12px auto 0;
   max-width: 860px;
   color: #1D3E2A;
-  font-size: 1rem;
+  font-size: var(--type-body);
   line-height: 1.65;
 }
 
@@ -727,7 +738,7 @@ a { color: inherit; text-decoration: none; }
   border-radius: 999px;
   border: 1px solid rgba(29, 62, 42, 0.18);
   background: rgba(29, 62, 42, 0.06);
-  color: #2f5b48;
+  color: #1D3E2A;
   padding: 4px 9px;
   font-size: 0.74rem;
   font-weight: 700;
@@ -738,7 +749,7 @@ a { color: inherit; text-decoration: none; }
 
 .home-news-featured-body h3 {
   margin: 0;
-  font-size: clamp(1.45rem, 2.4vw, 2rem);
+  font-size: 1.45rem;
   font-weight: 600;
   line-height: 1.08;
   color: #F4F1E9;
@@ -920,9 +931,9 @@ a { color: inherit; text-decoration: none; }
 
 .home-news-card-summary {
   margin: 0;
-  color: rgba(29, 62, 42, 0.78);
+  color: #1D3E2A;
   line-height: 1.62;
-  font-size: 15px;
+  font-size: var(--type-body);
 }
 
 .home-news-item-clickable {
@@ -1007,14 +1018,14 @@ a { color: inherit; text-decoration: none; }
 
 .home-news-dialog-date {
   margin: 0;
-  color: #5a7d66;
+  color: #1D3E2A;
   font-size: 0.85rem;
   font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
 .home-news-dialog-body h3 {
   margin: 10px 0 12px;
-  color: #17362b;
+  color: #1D3E2A;
   font-size: clamp(1.3rem, 2.2vw, 1.85rem);
   line-height: 1.22;
   font-family: ui-sans-serif, system-ui, sans-serif;
@@ -1022,7 +1033,7 @@ a { color: inherit; text-decoration: none; }
 
 .home-news-dialog-excerpt {
   margin: 0 0 14px;
-  color: #355a48;
+  color: #1D3E2A;
   font-size: 1rem;
   line-height: 1.72;
   font-weight: 700;
@@ -1035,7 +1046,7 @@ a { color: inherit; text-decoration: none; }
 
 .home-news-dialog-content p {
   margin: 0;
-  color: #3d5f4d;
+  color: #1D3E2A;
   line-height: 1.9;
 }
 
@@ -1171,7 +1182,7 @@ a { color: inherit; text-decoration: none; }
 .line-card-desc {
   font-size: 14px;
   line-height: 1.7;
-  color: #5a7d66;
+  color: #1D3E2A;
   margin: 0 0 16px;
   flex: 1;
 }
@@ -1208,7 +1219,7 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 28px;
 }
 .redes-intro-title {
-  font-size: 1.85rem;
+  font-size: 2rem;
   margin-bottom: 12px;
 }
 .redes-intro-layout {
@@ -1338,8 +1349,8 @@ a { color: inherit; text-decoration: none; }
   text-align: left;
 }
 .redes-intro-text {
-  color: #5a7d66;
-  font-size: 15px;
+  color: #1D3E2A;
+  font-size: var(--type-body);
   line-height: 1.8;
   margin: 0 0 14px;
 }
@@ -1407,7 +1418,7 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .cta-title {
-  font-size: 1.4rem;
+  font-size: 2rem;
   font-weight: 800;
   margin: 0 0 14px;
   font-family: ui-sans-serif, system-ui, sans-serif;
@@ -1417,13 +1428,16 @@ a { color: inherit; text-decoration: none; }
 }
 .cta-title span {
   color: #C96A4A;
+  font: inherit;
+  font-size: calc(1em - 4px);
+  line-height: inherit;
 }
 .cta-desc {
   color: rgba(244, 241, 233, 0.9);
   max-width: 760px;
   margin: 0 auto 28px;
   line-height: 1.65;
-  font-size: 0.8rem;
+  font-size: var(--type-hero-desc);
   position: relative;
   z-index: 1;
 }
@@ -1842,7 +1856,7 @@ label {
     font-size: 1.45rem;
   }
   .hero-desc {
-    font-size: 1.06rem;
+    font-size: var(--type-hero-desc);
   }
   .mission-grid {
     grid-template-columns: 1fr;
@@ -1943,7 +1957,7 @@ label {
     padding: 36px 24px;
   }
   .cta-title {
-    font-size: clamp(1.55rem, 6vw, 2rem);
+    font-size: 2rem;
   }
   .page-header {
     padding: 28px 24px;
@@ -2127,7 +2141,7 @@ label {
 .team-approach-desc {
   font-size: 14px;
   line-height: 1.75;
-  color: #5a7d66;
+  color: #1D3E2A;
   margin: 0;
 }
 
@@ -2139,3 +2153,4 @@ label {
     grid-template-columns: 1fr;
   }
 }
+

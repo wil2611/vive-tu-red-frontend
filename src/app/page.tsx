@@ -71,7 +71,7 @@ export default function HomePage() {
               <div className="mission-visual-card">
                 <span className="mission-visual-tag">#ViveTuRed</span>
                 <Image
-                  src="/logo_footer.png"
+                  src="/Vive Tu Red Negativo.png"
                   alt="#ViveTuRed"
                   width={360}
                   height={144}

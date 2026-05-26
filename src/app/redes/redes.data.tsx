@@ -112,17 +112,18 @@ export function NodeIcon({ relation, x, y }: NodeIconProps) {
   const size = 14;
   const dx = x - size / 2;
   const dy = y - size / 2;
+  const smallIconTransform = `translate(${x},${y}) scale(0.82) translate(${-size / 2},${-size / 2})`;
 
   switch (relation) {
     case "Familia":
       return (
-        <g transform={`translate(${dx},${dy})`}>
+        <g transform={smallIconTransform}>
           <path d="M7 1L1 6h2v6h3V9h2v3h3V6h2L7 1z" fill="white" />
         </g>
       );
     case "Amigo":
       return (
-        <g transform={`translate(${dx},${dy})`}>
+        <g transform={smallIconTransform}>
           <circle cx="4.5" cy="4" r="2.5" fill="white" />
           <circle cx="9.5" cy="4" r="2.5" fill="white" />
           <path d="M1 12c0-2.5 2-4 3.5-4s2.5.8 2.5.8S8.5 8 10.5 8 14 9.5 14 12H1z" fill="white" />
@@ -130,7 +131,7 @@ export function NodeIcon({ relation, x, y }: NodeIconProps) {
       );
     case "Pareja":
       return (
-        <g transform={`translate(${dx},${dy})`}>
+        <g transform={smallIconTransform}>
           <path d="M7 13l-5.5-5.5a3.2 3.2 0 010-4.5 3.2 3.2 0 014.5 0L7 4.1l1-1.1a3.2 3.2 0 014.5 0 3.2 3.2 0 010 4.5L7 13z" fill="white" />
         </g>
       );

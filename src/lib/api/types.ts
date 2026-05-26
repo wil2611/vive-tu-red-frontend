@@ -185,6 +185,7 @@ export type UpdateNewsPayload = Partial<CreateNewsPayload>;
 export type TeamMember = {
   id: string;
   name: string;
+  roleLabel: string;
   profile: string;
   department: string | null;
   division: string | null;
@@ -196,6 +197,7 @@ export type TeamMember = {
 
 export type CreateTeamMemberPayload = {
   name: string;
+  roleLabel?: string;
   profile: string;
   department?: string;
   division?: string;
