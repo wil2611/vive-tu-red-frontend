@@ -264,7 +264,9 @@ export default function RedesPage() {
       <section className={styles.heroSection}>
         <div className="container">
           <div className="redes-hero-shell">
-            <h1 className="redes-hero-title">Visualiza tu red de apoyo</h1>
+            <h1 className="redes-hero-title">
+              Visualiza tu <span>red de apoyo</span>
+            </h1>
             <p className="redes-hero-desc">
               Identifica y mapea las personas con las que cuentas para tratar tus asuntos personales.
               Completa cada paso para construir una representación visual de tu red de apoyo.
@@ -477,6 +479,12 @@ export default function RedesPage() {
                                 height={29}
                                 className={`redes-chip-icon ${
                                   rt.value === "Otra" ? "redes-chip-icon-other" : ""
+                                } ${
+                                  rt.value === "Pareja" ||
+                                  rt.value === "Familia" ||
+                                  rt.value === "Amigo"
+                                    ? "redes-chip-icon-small"
+                                    : ""
                                 }`}
                               />
                             </span>

@@ -46,7 +46,7 @@
 }
 
 .heroTitle {
-  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-size: var(--type-hero-title);
   font-weight: 800;
   color: #1d3e2a;
   margin: 0 0 12px;
@@ -56,12 +56,15 @@
 
 .heroTitle span {
   color: #c96a4a;
+  font: inherit;
+  font-size: calc(1em - 4px);
+  line-height: inherit;
 }
 
 .heroDesc {
-  font-size: 1.03rem;
+  font-size: var(--type-hero-desc);
   line-height: 1.75;
-  color: #5a7d66;
+  color: #1D3E2A;
   max-width: 760px;
   margin: 0;
 }
@@ -98,7 +101,7 @@
 .statItem strong {
   font-size: 1.5rem;
   line-height: 1;
-  color: #1f4b37;
+  color: #1D3E2A;
   font-family: ui-sans-serif, system-ui, sans-serif;
   font-weight: 800;
 }
@@ -132,7 +135,7 @@
 }
 
 .sectionTitle {
-  font-size: 1.4rem;
+  font-size: var(--type-section-title);
   font-weight: 800;
   color: #1d3e2a;
   margin: 0 0 10px;
@@ -141,10 +144,14 @@
 
 .sectionTitle span {
   color: #c96a4a;
+  font: inherit;
+  font-size: calc(1em - 4px);
+  line-height: inherit;
 }
 
 .sectionDesc {
-  color: #5a7d66;
+  color: #1D3E2A;
+  font-size: var(--type-body);
   line-height: 1.75;
   margin: 0 0 24px;
   max-width: 860px;
@@ -298,9 +305,9 @@
 
 .researcherProfile {
   margin: 0;
-  color: #446754;
+  color: #1D3E2A;
   line-height: 1.72;
-  font-size: 15.5px;
+  font-size: var(--type-body);
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
@@ -342,7 +349,7 @@
 
 .researcherMetaValue {
   font-size: 13.5px;
-  color: #466a55;
+  color: #1D3E2A;
   line-height: 1.45;
 }
 
@@ -418,7 +425,7 @@
   margin: 0;
   color: #1d3e2a;
   line-height: 1.7;
-  font-size: 14px;
+  font-size: var(--type-body);
 }
 
 .ctaSection {
@@ -507,3 +514,5 @@
     min-height: auto;
   }
 }
+
+

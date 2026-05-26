@@ -46,7 +46,7 @@
 }
 
 .heroTitle {
-  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-size: var(--type-hero-title);
   font-weight: 800;
   color: #1d3e2a;
   margin: 0 0 12px;
@@ -56,12 +56,15 @@
 
 .heroTitle span {
   color: #dca15d;
+  font: inherit;
+  font-size: calc(1em - 4px);
+  line-height: inherit;
 }
 
 .heroDesc {
-  font-size: 1rem;
+  font-size: var(--type-hero-desc);
   line-height: 1.75;
-  color: #5a7d66;
+  color: #1D3E2A;
   max-width: 760px;
   margin: 0 0 24px;
 }
@@ -157,7 +160,7 @@
 }
 
 .quickCopy small {
-  color: #5a7d66;
+  color: #1D3E2A;
   font-size: 11.5px;
   line-height: 1.35;
 }
@@ -171,7 +174,7 @@
 }
 
 .quickLink[href="#formacion"] .quickCopy small {
-  color: #2a5a3d;
+  color: #1D3E2A;
 }
 
 .quickArrow {
@@ -227,7 +230,7 @@
 }
 
 .sectionTitle {
-  font-size: 1.4rem;
+  font-size: var(--type-section-title);
   font-weight: 800;
   color: #1d3e2a;
   margin: 0 0 8px;
@@ -259,7 +262,8 @@
 }
 
 .sectionDesc {
-  color: #5a7d66;
+  color: #1D3E2A;
+  font-size: var(--type-body);
   margin: 0 0 28px;
   line-height: 1.7;
   max-width: 640px;
@@ -278,9 +282,9 @@
 
 .emptyResourceCard p {
   margin: 0;
-  color: #5a7d66;
+  color: #1D3E2A;
   line-height: 1.7;
-  font-size: 14px;
+  font-size: var(--type-body);
 }
 
 .section-prevencion .emptyResourceCard {
@@ -329,7 +333,7 @@
 
 .resourceCardTitle {
   font-weight: 700;
-  font-size: 1.03rem;
+  font-size: var(--type-hero-desc);
   color: #1d3e2a;
   margin: 0;
   font-family: ui-sans-serif, system-ui, sans-serif;
@@ -385,7 +389,7 @@
 .resourceCardMeta dt {
   margin: 0;
   font-weight: 800;
-  color: #6a7f71;
+  color: #1D3E2A;
   font-size: 14px;
   letter-spacing: 0.01em;
   font-family: ui-sans-serif, system-ui, sans-serif;
@@ -393,7 +397,7 @@
 
 .resourceCardMeta dd {
   margin: 0;
-  color: #5a7d66;
+  color: #1D3E2A;
   font-size: 14px;
 }
 
@@ -520,3 +524,5 @@
     align-self: flex-start;
   }
 }
+
+

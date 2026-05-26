@@ -38,7 +38,7 @@
 .subtitle {
   margin: 8px 0 0;
   max-width: 760px;
-  color: #5a7d66;
+  color: #1D3E2A;
   line-height: 1.7;
 }
 
@@ -85,7 +85,7 @@
 
 .panelHint {
   margin: 4px 0 0;
-  color: #4f6d5c;
+  color: #1D3E2A;
   line-height: 1.6;
   font-size: 0.95rem;
 }
@@ -126,7 +126,7 @@
   font-size: 0.78rem;
   border: 1px solid rgba(29, 62, 42, 0.14);
   background: rgba(255, 255, 255, 0.9);
-  color: #365a45;
+  color: #1D3E2A;
 }
 
 .rangeBadgeCurrent {
@@ -243,7 +243,7 @@
 
 .loginMeta {
   margin: 0;
-  color: #6b8072;
+  color: #1D3E2A;
   font-size: 0.8rem;
   line-height: 1.45;
 }
@@ -319,7 +319,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #6a7d6d;
+  color: #1D3E2A;
 }
 
 .tabsBar {
@@ -359,7 +359,7 @@
   flex: 0 0 auto;
   border: 1px solid transparent;
   background: transparent;
-  color: #365a45;
+  color: #1D3E2A;
   border-radius: 999px;
   padding: 8px 14px;
   min-height: 38px;
@@ -406,7 +406,7 @@
 .metricLabel {
   margin: 0;
   font-size: 0.83rem;
-  color: #5a7d66;
+  color: #1D3E2A;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -455,7 +455,7 @@
   border-radius: 8px;
   border: 1px solid rgba(0, 85, 90, 0.22);
   background: #fefdf9;
-  color: #244738;
+  color: #1D3E2A;
   font-size: 0.78rem;
   line-height: 1.45;
   box-shadow: 0 8px 20px rgba(16, 46, 31, 0.14);
@@ -481,7 +481,7 @@
 
 .metricSub {
   margin: 0;
-  color: #5a7d66;
+  color: #1D3E2A;
   font-size: 0.9rem;
 }
 
@@ -525,7 +525,7 @@
 }
 
 .metricDelta[data-tone="neutral"] {
-  color: #5a7d66;
+  color: #1D3E2A;
   background: rgba(90, 125, 102, 0.12);
   border-color: rgba(90, 125, 102, 0.22);
 }
@@ -742,7 +742,7 @@
 }
 
 .chartTooltipValue {
-  color: #2f5f48;
+  color: #1D3E2A;
   font-size: 0.76rem;
   line-height: 1.3;
 }
@@ -909,7 +909,7 @@
 }
 
 .supportEditorCancel {
-  color: #365a45;
+  color: #1D3E2A;
   background: #f1eee1;
   border-color: #d9d1b5;
 }
@@ -939,7 +939,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #5a7d66;
+  color: #1D3E2A;
   font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -1030,7 +1030,7 @@
   font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #5a7d66;
+  color: #1D3E2A;
   font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -1083,7 +1083,7 @@
 
 .pagePath {
   font-size: 0.79rem;
-  color: #5a7d66;
+  color: #1D3E2A;
 }
 
 .numericCell {
@@ -1175,7 +1175,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #5a7d66;
+  color: #1D3E2A;
 }
 
 .profileInfoValue {
@@ -1239,7 +1239,7 @@
 }
 
 .supportMetaBadgeTotal {
-  color: #244738;
+  color: #1D3E2A;
   background: rgba(0, 85, 90, 0.1);
   border-color: rgba(0, 85, 90, 0.24);
 }
@@ -1257,7 +1257,7 @@
 }
 
 .userRoleBadge {
-  color: #244738;
+  color: #1D3E2A;
   background: rgba(0, 85, 90, 0.1);
   border-color: rgba(0, 85, 90, 0.24);
 }
@@ -1329,7 +1329,7 @@
 .supportCreateHeader p {
   margin: 4px 0 0;
   font-size: 0.86rem;
-  color: #5a7d66;
+  color: #1D3E2A;
 }
 
 .supportCreateActions {
@@ -1353,7 +1353,7 @@
 .characterCounter {
   margin: 4px 0 0;
   font-size: 0.74rem;
-  color: #5a7d66;
+  color: #1D3E2A;
   font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -1409,7 +1409,7 @@
 .messageFilterButton {
   border: 1px solid #d9d1b5;
   background: #f7f4ea;
-  color: #244738;
+  color: #1D3E2A;
   border-radius: 999px;
   padding: 7px 12px;
   font-size: 0.82rem;
@@ -1425,7 +1425,7 @@
 
 .messageFilterButton:disabled {
   opacity: 1;
-  color: #6b8274;
+  color: #1D3E2A;
   background: #f2efe6;
   border-color: #d8d2c2;
   cursor: not-allowed;
@@ -1475,13 +1475,13 @@
 
 .messageDateText {
   font-size: 0.84rem;
-  color: #2f5f48;
+  color: #1D3E2A;
   white-space: nowrap;
 }
 
 .messageSender {
   margin: 0;
-  color: #2f5f48;
+  color: #1D3E2A;
   overflow-wrap: anywhere;
 }
 
@@ -1495,7 +1495,7 @@
 
 .messageBody {
   margin: 0;
-  color: #305241;
+  color: #1D3E2A;
   line-height: 1.6;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -1504,7 +1504,7 @@
 .messageDate {
   margin: 6px 0 0;
   font-size: 0.86rem;
-  color: #2f5f48;
+  color: #1D3E2A;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1548,7 +1548,7 @@
 .messageReadAt {
   margin: 4px 0 0;
   font-size: 0.82rem;
-  color: #5a7d66;
+  color: #1D3E2A;
 }
 
 .messageStatusEditor {
@@ -1565,7 +1565,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #5a7d66;
+  color: #1D3E2A;
 }
 
 .messagesPagination {
@@ -1578,7 +1578,7 @@
 
 .messagesPageInfo {
   margin: 0;
-  color: #2f5b48;
+  color: #1D3E2A;
   font-size: 0.92rem;
 }
 
@@ -2049,3 +2049,4 @@
     padding-left: 14px;
   }
 }
+
