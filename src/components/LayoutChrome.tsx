@@ -11,12 +11,14 @@ export default function LayoutChrome({
 }) {
   const pathname = usePathname();
   const isAdminArea = pathname.startsWith("/admin");
+  const isStandaloneVisualizer = pathname === "/visualizador";
+  const hideSiteChrome = isAdminArea || isStandaloneVisualizer;
 
   return (
     <>
-      {!isAdminArea && <Header />}
+      {!hideSiteChrome && <Header />}
       <main>{children}</main>
-      {!isAdminArea && <Footer />}
+      {!hideSiteChrome && <Footer />}
     </>
   );
 }
