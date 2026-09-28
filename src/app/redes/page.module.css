@@ -40,6 +40,10 @@
   background: #f5f0e1;
 }
 
+.standaloneSection {
+  background: #ffffff;
+}
+
 .mainContainer {
   padding-top: 52px;
   padding-bottom: 56px;
@@ -196,7 +200,7 @@
   max-height: 850px;
 }
 :global(.redes-panel-graph) {
-  background: var(--bg);
+  background: #ffffff;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -511,7 +515,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
+  background: #ffffff;
   padding: 24px;
   min-height: 400px;
   order: 1;
