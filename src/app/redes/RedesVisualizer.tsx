@@ -200,7 +200,7 @@ export default function RedesVisualizer({ showIntro = true }: RedesVisualizerPro
     const svg = svgRef.current;
     if (!svg) return;
     const serializer = new XMLSerializer();
-    const cssBg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || "#f5f0e1";
+    const graphBackground = "#ffffff";
     const viewBox = svg.viewBox.baseVal;
     const exportWidth = viewBox?.width ? viewBox.width : 540;
     const exportHeight = viewBox?.height ? viewBox.height : 400;
@@ -210,11 +210,11 @@ export default function RedesVisualizer({ showIntro = true }: RedesVisualizerPro
     if (!svgClone.getAttribute("viewBox")) {
       svgClone.setAttribute("viewBox", `0 0 ${exportWidth} ${exportHeight}`);
     }
-    // Embed a white/beige background
+    // Embed the same white background used by the graph canvas.
     const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     bg.setAttribute("width", String(exportWidth));
     bg.setAttribute("height", String(exportHeight));
-    bg.setAttribute("fill", cssBg);
+    bg.setAttribute("fill", graphBackground);
     svgClone.insertBefore(bg, svgClone.firstChild);
     const svgStr = serializer.serializeToString(svgClone);
     const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
@@ -289,7 +289,7 @@ export default function RedesVisualizer({ showIntro = true }: RedesVisualizerPro
       </section>}
 
       {/* Main layout */}
-      <section className="section-cream">
+      <section className={showIntro ? "section-cream" : styles.standaloneSection}>
         <div className={`container ${styles.mainContainer}`}>
           <div className="redes-layout">
             <div className="redes-layout-steps">
@@ -853,7 +853,7 @@ export default function RedesVisualizer({ showIntro = true }: RedesVisualizerPro
                   </div>
                 ) : (
                   <svg ref={svgRef} viewBox="30 0 540 400" style={{ width: "100%", height: "auto" }}>
-                    <rect x="30" y="0" width="540" height="400" fill="var(--bg)" />
+                    <rect x="30" y="0" width="540" height="400" fill="#ffffff" />
                     {/* Background grid circles */}
                     <circle cx="300" cy="200" r="180" fill="none" stroke="#d4cdaf" strokeWidth="0.7" strokeDasharray="5 4" opacity="0.68" />
                     <circle cx="300" cy="200" r="130" fill="none" stroke="#d4cdaf" strokeWidth="0.7" strokeDasharray="5 4" opacity="0.68" />
