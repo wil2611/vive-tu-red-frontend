@@ -796,12 +796,15 @@
     gap: 6px;
   }
   :global(.redes-step) {
-    min-height: 44px;
-    padding: 10px 12px;
+    min-height: 52px;
+    padding: 9px 10px;
     font-size: 12px;
   }
   :global(.redes-step-label) {
-    display: none;
+    display: block;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
   }
   :global(.redes-field-row) {
     flex-direction: column;
@@ -842,6 +845,21 @@
   :global(.redes-hero-note h3) {
     margin-bottom: 12px;
     padding-bottom: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  :global(.redes-layout-steps) {
+    padding: 12px;
+  }
+  :global(.redes-steps) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  :global(.redes-step) {
+    min-height: 56px;
+    padding: 8px;
+    font-size: 11px;
   }
 }
 
